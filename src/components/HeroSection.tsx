@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Github, Mail, Linkedin } from "lucide-react";
+import { Github, Mail, Linkedin, Twitter } from "lucide-react";
 
 const glitchAnimation = {
   initial: { x: 0 },
@@ -57,13 +57,16 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
         <motion.div className="flex gap-4">
           <motion.div className="flex flex-wrap gap-4">
             {[
-              { icon: <Github size={24} />, link: "#", label: "GitHub" },
-              { icon: <Linkedin size={24} />, link: "#", label: "LinkedIn" },
-              { icon: <Mail size={24} />, link: "#", label: "Email" }
+              { icon: <Github size={24} />, link: "https://github.com/mabiorssd/", label: "GitHub" },
+              { icon: <Twitter size={24} />, link: "https://x.com/_CyberMaster", label: "X (Twitter)" },
+              { icon: <Linkedin size={24} />, link: "https://www.linkedin.com/in/mabior-agau-436825210/", label: "LinkedIn" },
+              { icon: <Mail size={24} />, link: "mailto:info@mabioragau.com", label: "Email" }
             ].map((social, index) => (
               <motion.a
                 key={index}
                 href={social.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={social.label}
                 className="p-2 border border-green-500/30 rounded-lg hover:border-green-400 hover:text-green-400 transition-all"
                 whileHover={{ scale: 1.1, borderColor: "#00ff00" }}

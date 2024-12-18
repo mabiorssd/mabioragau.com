@@ -22,33 +22,33 @@ export const AdminSettings = () => {
   const { data: settings } = useQuery({
     queryKey: ["site-settings"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("site_settings")
-        .select("*");
+      const { data, error } = await supabase.from("site_settings").select("*");
       if (error) throw error;
       return data;
     },
-    onSuccess: (data) => {
-      data?.forEach((setting) => {
-        switch (setting.key) {
-          case "site_title":
-            setSiteTitle(setting.value || "");
-            break;
-          case "site_description":
-            setSiteDescription(setting.value || "");
-            break;
-          case "meta_keywords":
-            setMetaKeywords(setting.value || "");
-            break;
-          case "social_links":
-            try {
-              setSocialLinks(JSON.parse(setting.value || "{}"));
-            } catch (e) {
-              console.error("Error parsing social links:", e);
-            }
-            break;
-        }
-      });
+    meta: {
+      onSuccess: (data) => {
+        data?.forEach((setting) => {
+          switch (setting.key) {
+            case "site_title":
+              setSiteTitle(setting.value || "");
+              break;
+            case "site_description":
+              setSiteDescription(setting.value || "");
+              break;
+            case "meta_keywords":
+              setMetaKeywords(setting.value || "");
+              break;
+            case "social_links":
+              try {
+                setSocialLinks(JSON.parse(setting.value || "{}"));
+              } catch (e) {
+                console.error("Error parsing social links:", e);
+              }
+              break;
+          }
+        });
+      },
     },
   });
 

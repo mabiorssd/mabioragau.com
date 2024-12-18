@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
+import { GeneralSettings } from "./admin/GeneralSettings";
+import { SeoSettings } from "./admin/SeoSettings";
+import { SocialSettings } from "./admin/SocialSettings";
 
 export const AdminSettings = () => {
   const { toast } = useToast();
@@ -82,85 +83,39 @@ export const AdminSettings = () => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle>Site Settings</CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="general" className="space-y-4">
-          <TabsList>
+        <Tabs defaultValue="general" className="space-y-6">
+          <TabsList className="w-full justify-start">
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
             <TabsTrigger value="social">Social Media</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="general" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="site-title">Site Title</Label>
-              <Input
-                id="site-title"
-                value={siteTitle}
-                onChange={(e) => setSiteTitle(e.target.value)}
-                placeholder="Enter site title"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="site-description">Site Description</Label>
-              <Input
-                id="site-description"
-                value={siteDescription}
-                onChange={(e) => setSiteDescription(e.target.value)}
-                placeholder="Enter site description"
-              />
-            </div>
+          <TabsContent value="general">
+            <GeneralSettings
+              siteTitle={siteTitle}
+              siteDescription={siteDescription}
+              onSiteTitleChange={setSiteTitle}
+              onSiteDescriptionChange={setSiteDescription}
+            />
           </TabsContent>
 
-          <TabsContent value="seo" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="meta-keywords">Meta Keywords</Label>
-              <Input
-                id="meta-keywords"
-                value={metaKeywords}
-                onChange={(e) => setMetaKeywords(e.target.value)}
-                placeholder="Enter meta keywords (comma-separated)"
-              />
-            </div>
+          <TabsContent value="seo">
+            <SeoSettings
+              metaKeywords={metaKeywords}
+              onMetaKeywordsChange={setMetaKeywords}
+            />
           </TabsContent>
 
-          <TabsContent value="social" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="twitter">Twitter URL</Label>
-              <Input
-                id="twitter"
-                value={socialLinks.twitter}
-                onChange={(e) =>
-                  setSocialLinks({ ...socialLinks, twitter: e.target.value })
-                }
-                placeholder="Enter Twitter URL"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="linkedin">LinkedIn URL</Label>
-              <Input
-                id="linkedin"
-                value={socialLinks.linkedin}
-                onChange={(e) =>
-                  setSocialLinks({ ...socialLinks, linkedin: e.target.value })
-                }
-                placeholder="Enter LinkedIn URL"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="github">GitHub URL</Label>
-              <Input
-                id="github"
-                value={socialLinks.github}
-                onChange={(e) =>
-                  setSocialLinks({ ...socialLinks, github: e.target.value })
-                }
-                placeholder="Enter GitHub URL"
-              />
-            </div>
+          <TabsContent value="social">
+            <SocialSettings
+              socialLinks={socialLinks}
+              onSocialLinksChange={setSocialLinks}
+            />
           </TabsContent>
         </Tabs>
 

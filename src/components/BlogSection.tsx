@@ -22,7 +22,7 @@ export const BlogSection = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-6xl mx-auto space-y-12">
+      <div className="max-w-4xl mx-auto space-y-12">
         <motion.h3 
           className="text-2xl md:text-3xl font-bold text-green-400"
           variants={glitchAnimation}
@@ -31,7 +31,7 @@ export const BlogSection = () => {
         >
           &gt;_Latest Blog Posts
         </motion.h3>
-        <BlogPosts limit={2} />
+        <BlogPosts limit={3} />
       </div>
     </motion.section>
   );

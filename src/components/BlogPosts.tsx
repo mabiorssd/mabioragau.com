@@ -36,30 +36,29 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
     );
   }
 
+  const getExcerpt = (content: string) => {
+    const div = document.createElement('div');
+    div.innerHTML = content;
+    const text = div.textContent || div.innerText;
+    return text.slice(0, 150) + (text.length > 150 ? '...' : '');
+  };
+
   return (
     <div className="space-y-6">
       {posts?.map((post) => (
-        <Card key={post.id} className="border border-green-500/30 hover:border-green-400 transition-colors">
-          <CardHeader>
-            <CardTitle className="text-xl text-green-400">{post.title}</CardTitle>
-            <CardDescription className="text-green-600">
-              Posted {formatDistanceToNow(new Date(post.created_at))} ago
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {post.image_url && (
-              <img 
-                src={post.image_url} 
-                alt={post.image_alt || post.title} 
-                className="w-full h-48 object-cover rounded-md"
-              />
-            )}
-            <div 
-              className="text-green-500 prose prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
-          </CardContent>
-        </Card>
+        <Link to={`/blog/${post.slug}`} key={post.id}>
+          <Card className="border border-green-500/30 hover:border-green-400 transition-colors">
+            <CardHeader>
+              <CardTitle className="text-xl text-green-400">{post.title}</CardTitle>
+              <CardDescription className="text-green-600">
+                Posted {formatDistanceToNow(new Date(post.created_at))} ago
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-green-500">{getExcerpt(post.content)}</p>
+            </CardContent>
+          </Card>
+        </Link>
       ))}
       {limit && posts && posts.length > 0 && (
         <div className="text-center">

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import BlogPosts from "./BlogPosts";
+import { BlogPosts } from "./BlogPosts";
 
 const glitchAnimation = {
   initial: { x: 0 },
@@ -31,7 +31,7 @@ export const BlogSection = () => {
         >
           &gt;_Latest Blog Posts
         </motion.h3>
-        <BlogPosts />
+        <BlogPosts limit={2} />
       </div>
     </motion.section>
   );

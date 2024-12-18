@@ -35,7 +35,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const navigationItems = ["about", "services", "projects", "contact"].map((item) => ({
+  const navigationItems = ["about", "services", "projects", "blog", "contact"].map((item) => ({
     label: item,
     onClick: () => handleSectionClick(item),
     isActive: activeSection === item

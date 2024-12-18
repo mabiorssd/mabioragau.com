@@ -8,11 +8,14 @@ import { useNavigate } from "react-router-dom";
 import { RichTextEditor } from "./RichTextEditor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
+import { Upload } from "lucide-react";
 
 export const AdminDashboard = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageAlt, setImageAlt] = useState("");
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -42,12 +45,39 @@ export const AdminDashboard = () => {
     navigate("/login");
   };
 
+  const handleImageUpload = async () => {
+    if (!imageFile) return null;
+
+    const fileExt = imageFile.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { error: uploadError, data } = await supabase.storage
+      .from('blog-images')
+      .upload(filePath, imageFile);
+
+    if (uploadError) {
+      toast({
+        variant: "destructive",
+        title: "Error uploading image",
+        description: uploadError.message,
+      });
+      return null;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('blog-images')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  };
+
   const handleCreatePost = async () => {
     if (!title || !content) {
       toast({
         variant: "destructive",
         title: "Validation Error",
-        description: "Please fill in all fields",
+        description: "Please fill in all required fields",
       });
       return;
     }
@@ -60,12 +90,19 @@ export const AdminDashboard = () => {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)+/g, "");
 
+    let imageUrl = null;
+    if (imageFile) {
+      imageUrl = await handleImageUpload();
+    }
+
     const { error } = await supabase.from("blog_posts").insert([
       {
         title,
         content,
         slug,
         author_id: user.id,
+        image_url: imageUrl,
+        image_alt: imageAlt,
       },
     ]);
 
@@ -82,6 +119,8 @@ export const AdminDashboard = () => {
       });
       setTitle("");
       setContent("");
+      setImageFile(null);
+      setImageAlt("");
       fetchPosts();
     }
   };
@@ -134,6 +173,26 @@ export const AdminDashboard = () => {
                   placeholder="Enter your post title"
                   className="text-lg"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Featured Image</Label>
+                <div className="flex gap-4">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                    className="flex-1"
+                  />
+                  {imageFile && (
+                    <Input
+                      placeholder="Image alt text"
+                      value={imageAlt}
+                      onChange={(e) => setImageAlt(e.target.value)}
+                      className="flex-1"
+                    />
+                  )}
+                </div>
               </div>
 
               <div className="space-y-2">

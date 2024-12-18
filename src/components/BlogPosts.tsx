@@ -44,24 +44,24 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="grid gap-6">
       {posts?.map((post) => (
         <Link to={`/blog/${post.slug}`} key={post.id}>
           <Card className="border border-green-500/30 hover:border-green-400 transition-colors">
-            <CardHeader>
-              <CardTitle className="text-xl text-green-400">{post.title}</CardTitle>
-              <CardDescription className="text-green-600">
+            <CardHeader className="space-y-2">
+              <CardTitle className="text-xl sm:text-2xl text-green-400">{post.title}</CardTitle>
+              <CardDescription className="text-sm text-green-600">
                 Posted {formatDistanceToNow(new Date(post.created_at))} ago
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-green-500">{getExcerpt(post.content)}</p>
+              <p className="text-green-500 line-clamp-3">{getExcerpt(post.content)}</p>
             </CardContent>
           </Card>
         </Link>
       ))}
       {limit && posts && posts.length > 0 && (
-        <div className="text-center">
+        <div className="text-center mt-8">
           <Link 
             to="/blog" 
             className="inline-block px-6 py-3 border-2 border-green-500 text-green-400 rounded-lg hover:bg-green-500/10 transition-all"

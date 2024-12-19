@@ -18,6 +18,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ['date-fns', 'react-day-picker']
+  },
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,

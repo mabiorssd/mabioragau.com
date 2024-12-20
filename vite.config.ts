@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => ({
     include: ['date-fns', 'react-day-picker']
   },
   build: {
+    outDir: 'dist',
     commonjsOptions: {
       transformMixedEsModules: true,
     },

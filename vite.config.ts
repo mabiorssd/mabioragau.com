@@ -18,21 +18,15 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  optimizeDeps: {
-    include: ['date-fns', 'react-day-picker']
-  },
   build: {
     outDir: 'dist',
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
+    sourcemap: true,
     rollupOptions: {
-      external: ['date-fns'],
       output: {
-        globals: {
-          'date-fns': 'dateFns'
-        }
-      }
-    }
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
   },
 }));

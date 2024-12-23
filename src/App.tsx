@@ -9,12 +9,19 @@ import Admin from "./pages/Admin";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <div className="min-h-screen w-full">
+      <div className="min-h-screen w-full bg-background">
         <Toaster />
         <Sonner />
         <BrowserRouter>

@@ -22,14 +22,38 @@ export const ContactForm = () => {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you can add your form submission logic
-    toast({
-      title: "Message sent",
-      description: "Thank you for your message. I'll get back to you soon!",
-    });
-    setFormData({ name: "", email: "", message: "" });
+    try {
+      const response = await fetch('https://formsubmit.io/send/info@mabioragau.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          _subject: `New contact from ${formData.name}`,
+          _template: "table"
+        })
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Message sent",
+          description: "Thank you for your message. I'll get back to you soon!",
+        });
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again later.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -38,10 +62,10 @@ export const ContactForm = () => {
   };
 
   return (
-    <motion.section id="contact" className="min-h-screen px-6 py-20">
-      <div className="max-w-6xl mx-auto space-y-12">
+    <motion.section id="contact" className="py-12">
+      <div className="max-w-6xl mx-auto px-6">
         <motion.h3 
-          className="text-2xl md:text-3xl font-bold text-green-400"
+          className="text-2xl md:text-3xl font-bold text-green-400 mb-8"
           variants={glitchAnimation}
           initial="initial"
           animate="animate"
@@ -49,7 +73,7 @@ export const ContactForm = () => {
           &gt;_Establish Connection
         </motion.h3>
         <motion.form 
-          className="space-y-6 max-w-2xl mx-auto"
+          className="space-y-4 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleSubmit}

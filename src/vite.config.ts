@@ -19,8 +19,15 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    }
+    outDir: 'dist',
+    sourcemap: true,
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
   },
 }));

@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "./RichTextEditor";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Loader2 } from "lucide-react";
 
 export const BlogPostManager = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [selectedPost, setSelectedPost] = useState<any>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export const BlogPostManager = () => {
   };
 
   const handleTogglePublish = async (post: any) => {
+    setIsUpdating(true);
     const { error } = await supabase
       .from("blog_posts")
       .update({ published: !post.published })
@@ -56,10 +59,12 @@ export const BlogPostManager = () => {
       });
       fetchPosts();
     }
+    setIsUpdating(false);
   };
 
   const handleEditPost = async () => {
     if (!selectedPost) return;
+    setIsUpdating(true);
 
     const { error } = await supabase
       .from("blog_posts")
@@ -81,10 +86,12 @@ export const BlogPostManager = () => {
       toast({
         title: "Success",
         description: "Post updated successfully",
+        className: "bg-green-500",
       });
       setSelectedPost(null);
       fetchPosts();
     }
+    setIsUpdating(false);
   };
 
   const openEditDialog = (post: any) => {
@@ -126,8 +133,19 @@ export const BlogPostManager = () => {
                     <div className="space-y-2">
                       <RichTextEditor value={editContent} onChange={setEditContent} />
                     </div>
-                    <Button onClick={handleEditPost} className="w-full">
-                      Save Changes
+                    <Button 
+                      onClick={handleEditPost} 
+                      className="w-full"
+                      disabled={isUpdating}
+                    >
+                      {isUpdating ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        'Save Changes'
+                      )}
                     </Button>
                   </div>
                 </DialogContent>
@@ -135,8 +153,13 @@ export const BlogPostManager = () => {
               <Button
                 variant={post.published ? "outline" : "default"}
                 onClick={() => handleTogglePublish(post)}
+                disabled={isUpdating}
               >
-                {post.published ? "Unpublish" : "Publish"}
+                {isUpdating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  post.published ? "Unpublish" : "Publish"
+                )}
               </Button>
             </div>
           </div>

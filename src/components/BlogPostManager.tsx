@@ -3,9 +3,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { RichTextEditor } from "./RichTextEditor";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export const BlogPostManager = () => {
   const [posts, setPosts] = useState<any[]>([]);
+  const [selectedPost, setSelectedPost] = useState<any>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -19,6 +25,7 @@ export const BlogPostManager = () => {
       .order("created_at", { ascending: false });
 
     if (error) {
+      console.error("Error fetching posts:", error);
       toast({
         variant: "destructive",
         title: "Error fetching posts",
@@ -36,6 +43,7 @@ export const BlogPostManager = () => {
       .eq("id", post.id);
 
     if (error) {
+      console.error("Error updating post:", error);
       toast({
         variant: "destructive",
         title: "Error updating post",
@@ -50,6 +58,41 @@ export const BlogPostManager = () => {
     }
   };
 
+  const handleEditPost = async () => {
+    if (!selectedPost) return;
+
+    const { error } = await supabase
+      .from("blog_posts")
+      .update({
+        title: editTitle,
+        content: editContent,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", selectedPost.id);
+
+    if (error) {
+      console.error("Error updating post:", error);
+      toast({
+        variant: "destructive",
+        title: "Error updating post",
+        description: error.message,
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Post updated successfully",
+      });
+      setSelectedPost(null);
+      fetchPosts();
+    }
+  };
+
+  const openEditDialog = (post: any) => {
+    setSelectedPost(post);
+    setEditTitle(post.title);
+    setEditContent(post.content);
+  };
+
   return (
     <div className="space-y-4">
       {posts.map((post) => (
@@ -61,12 +104,41 @@ export const BlogPostManager = () => {
                 {new Date(post.created_at).toLocaleDateString()}
               </p>
             </div>
-            <Button
-              variant={post.published ? "outline" : "default"}
-              onClick={() => handleTogglePublish(post)}
-            >
-              {post.published ? "Unpublish" : "Publish"}
-            </Button>
+            <div className="flex gap-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" onClick={() => openEditDialog(post)}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Edit Post</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Input
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        placeholder="Post title"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <RichTextEditor value={editContent} onChange={setEditContent} />
+                    </div>
+                    <Button onClick={handleEditPost} className="w-full">
+                      Save Changes
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button
+                variant={post.published ? "outline" : "default"}
+                onClick={() => handleTogglePublish(post)}
+              >
+                {post.published ? "Unpublish" : "Publish"}
+              </Button>
+            </div>
           </div>
         </Card>
       ))}

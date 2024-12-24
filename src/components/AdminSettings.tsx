@@ -20,15 +20,21 @@ export const AdminSettings = () => {
     github: "",
   });
 
-  const { data: settings } = useQuery({
+  const { data: settings, isError, error } = useQuery({
     queryKey: ["site-settings"],
     queryFn: async () => {
+      console.log("Fetching site settings...");
       const { data, error } = await supabase.from("site_settings").select("*");
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching site settings:", error);
+        throw error;
+      }
+      console.log("Site settings data:", data);
       return data;
     },
     meta: {
       onSuccess: (data) => {
+        console.log("Processing site settings data...");
         data?.forEach((setting) => {
           switch (setting.key) {
             case "site_title":
@@ -50,10 +56,19 @@ export const AdminSettings = () => {
           }
         });
       },
+      onError: (error: any) => {
+        console.error("Query error:", error);
+        toast({
+          variant: "destructive",
+          title: "Error loading settings",
+          description: error.message,
+        });
+      },
     },
   });
 
   const handleSaveSettings = async () => {
+    console.log("Saving settings...");
     const updates = [
       { key: "site_title", value: siteTitle },
       { key: "site_description", value: siteDescription },
@@ -62,11 +77,13 @@ export const AdminSettings = () => {
     ];
 
     for (const update of updates) {
+      console.log("Updating setting:", update);
       const { error } = await supabase
         .from("site_settings")
         .upsert({ key: update.key, value: update.value });
 
       if (error) {
+        console.error("Error saving setting:", error);
         toast({
           variant: "destructive",
           title: "Error saving settings",
@@ -81,6 +98,18 @@ export const AdminSettings = () => {
       description: "Settings saved successfully",
     });
   };
+
+  if (isError) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="p-6">
+          <div className="text-destructive">
+            Error loading settings: {(error as Error).message}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-4xl mx-auto">

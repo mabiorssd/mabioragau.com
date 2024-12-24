@@ -42,29 +42,29 @@ const services = [
 
 export const ServicesSection = () => {
   return (
-    <motion.section id="services" className="py-16 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <motion.section id="services" className="py-12 px-4">
+      <div className="max-w-4xl mx-auto">
         <motion.h3 
-          className="text-2xl sm:text-3xl font-bold text-green-400 mb-6"
+          className="text-2xl md:text-3xl font-bold text-green-400 mb-6 text-center"
           variants={glitchAnimation}
           initial="initial"
           animate="animate"
         >
           &gt;_Security Operations
         </motion.h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {services.map((service, index) => (
             <motion.div
               key={index}
-              className="border border-green-500/30 rounded-xl p-4 sm:p-5 space-y-3 hover:border-green-400 transition-all bg-black/50"
-              whileHover={{ y: -3, borderColor: "#00ff00" }}
+              className="border border-green-500/30 rounded-lg p-4 space-y-2 hover:border-green-400 transition-all bg-black/50"
+              whileHover={{ y: -2, borderColor: "#00ff00" }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
               <div className="text-green-400">{service.icon}</div>
-              <h4 className="text-lg sm:text-xl font-semibold text-green-400">{service.title}</h4>
-              <p className="text-sm sm:text-base text-green-600">{service.description}</p>
+              <h4 className="text-lg font-semibold text-green-400">{service.title}</h4>
+              <p className="text-sm text-green-600">{service.description}</p>
               <div className="flex flex-wrap gap-2">
                 {service.tools.map((tool, i) => (
                   <span key={i} className="text-xs text-green-400 bg-green-500/10 px-2 py-1 rounded-full">

@@ -46,7 +46,7 @@
   }
   
   html, body {
-    @apply min-h-screen w-full m-0 p-0;
+    @apply min-h-screen w-full m-0 p-0 overflow-x-hidden;
   }
   
   body {
@@ -55,6 +55,18 @@
   
   #root {
     @apply min-h-screen w-full;
+  }
+
+  section {
+    @apply py-8;
+  }
+
+  h2, h3, h4 {
+    @apply mb-4;
+  }
+
+  p {
+    @apply mb-2;
   }
 }
 

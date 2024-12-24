@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Terminal, Menu } from "lucide-react";
+import { Shield, Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   DropdownMenu,
@@ -43,23 +43,23 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
 
   return (
     <nav className="fixed w-full bg-black/90 backdrop-blur-sm z-50 border-b border-green-500/30">
-      <div className="max-w-6xl mx-auto px-6 py-4">
+      <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
           <motion.div 
-            className="text-2xl font-bold text-green-400"
+            className="text-xl font-bold text-green-400 flex items-center gap-2"
             variants={glitchAnimation}
             initial="initial"
             animate="animate"
           >
-            <Terminal className="inline-block mr-2" size={24} />
+            <Shield className="inline-block" size={20} />
             ~/mabior_agau
           </motion.div>
 
           {isMobile ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="p-2 hover:bg-green-500/10 rounded-md transition-colors">
-                  <Menu className="h-6 w-6 text-green-400" />
+                <button className="p-1.5 hover:bg-green-500/10 rounded-md transition-colors">
+                  <Menu className="h-5 w-5 text-green-400" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48 bg-black/95 border border-green-500/30">
@@ -67,7 +67,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
                   {navigationItems.map((item) => (
                     <DropdownMenuItem
                       key={item.label}
-                      className={`px-4 py-2 cursor-pointer hover:bg-green-500/10 transition-colors ${
+                      className={`px-3 py-1.5 cursor-pointer hover:bg-green-500/10 transition-colors ${
                         item.isActive ? 'text-green-400' : 'text-green-600'
                       }`}
                       onClick={item.onClick}
@@ -79,7 +79,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex gap-6">
+            <div className="flex gap-4">
               {navigationItems.map((item) => (
                 <motion.button
                   key={item.label}

@@ -140,7 +140,11 @@ export const BlogPostEditor = () => {
           />
         </div>
 
-        <Button onClick={handleCreatePost} className="w-full">
+        <Button 
+          onClick={handleCreatePost} 
+          className="w-full"
+          data-save-button
+        >
           Create Post
         </Button>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Editor } from '@tiptap/react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,17 +29,26 @@ export const ImageToolbar = ({ editor }: ImageToolbarProps) => {
     }
   };
 
-  // Add click event listener to track selected image
-  if (editor) {
-    editor.on('click', ({ event }) => {
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.tagName === 'IMG') {
         setSelectedImage(target as HTMLImageElement);
       } else {
         setSelectedImage(null);
       }
-    });
-  }
+    };
+
+    // Add event listener to the editor's DOM element
+    const editorElement = editor.view.dom;
+    editorElement.addEventListener('click', handleClick);
+
+    return () => {
+      editorElement.removeEventListener('click', handleClick);
+    };
+  }, [editor]);
 
   return (
     <div className="flex gap-2 items-center">

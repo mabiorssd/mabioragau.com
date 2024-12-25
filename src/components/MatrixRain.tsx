@@ -13,48 +13,56 @@ export const MatrixRain = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const chars = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789";
+    const katakana = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const nums = '0123456789';
+    const alphabet = katakana + latin + nums;
+
     const fontSize = 16;
     const columns = canvas.width / fontSize;
-    const drops: number[] = [];
-    const glowIntensity: number[] = [];
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
-      glowIntensity[i] = Math.random();
+    
+    const rainDrops: number[] = [];
+    for (let x = 0; x < columns; x++) {
+      rainDrops[x] = 1;
     }
 
     const draw = () => {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      for (let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        const x = i * fontSize;
-        const y = drops[i] * fontSize;
+      ctx.fillStyle = '#0F0';
+      ctx.font = fontSize + 'px monospace';
 
-        // Create glowing effect
-        const alpha = glowIntensity[i];
-        ctx.shadowBlur = 15;
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+        const x = i * fontSize;
+        const y = rainDrops[i] * fontSize;
+
+        // Create gradient effect for characters
+        const gradient = ctx.createLinearGradient(x, y - fontSize, x, y);
+        gradient.addColorStop(0, 'rgba(0, 255, 0, 0)');
+        gradient.addColorStop(0.8, 'rgba(0, 255, 0, 0.5)');
+        gradient.addColorStop(1, 'rgba(0, 255, 0, 1)');
+        
+        ctx.fillStyle = gradient;
+        
+        // Add glow effect
+        ctx.shadowBlur = 8;
         ctx.shadowColor = '#0F0';
         
-        // Main character
-        ctx.fillStyle = `rgba(0, 255, 0, ${alpha})`;
-        ctx.font = `${fontSize}px monospace`;
         ctx.fillText(text, x, y);
-
+        
         // Reset shadow for next iteration
         ctx.shadowBlur = 0;
 
         if (y > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-          glowIntensity[i] = Math.random();
+          rainDrops[i] = 0;
         }
-        drops[i]++;
+        rainDrops[i]++;
       }
     };
 
-    const interval = setInterval(draw, 33);
+    const interval = setInterval(draw, 33); // Approximately 30 FPS
 
     const handleResize = () => {
       canvas.width = window.innerWidth;
@@ -73,7 +81,7 @@ export const MatrixRain = () => {
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1]"
-      style={{ opacity: 0.3 }} // Increased opacity from 0.15 to 0.3
+      style={{ opacity: 0.4 }}
     />
   );
 };

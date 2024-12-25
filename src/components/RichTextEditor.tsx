@@ -4,6 +4,7 @@ import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import TextStyle from '@tiptap/extension-text-style';
+import Highlight from '@tiptap/extension-highlight';
 import Color from '@tiptap/extension-color';
 import { Button } from './ui/button';
 import {
@@ -11,17 +12,24 @@ import {
   Italic,
   Underline as UnderlineIcon,
   List,
+  ListOrdered,
   Image as ImageIcon,
   AlignLeft,
   AlignCenter,
   AlignRight,
   Heading1,
   Heading2,
-  Link,
   Quote,
+  Highlighter,
+  Palette,
 } from 'lucide-react';
 import { Input } from './ui/input';
 import { useState } from 'react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface RichTextEditorProps {
   value: string;
@@ -30,6 +38,7 @@ interface RichTextEditorProps {
 
 export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   const [imageUrl, setImageUrl] = useState('');
+  const [textColor, setTextColor] = useState('#000000');
 
   const editor = useEditor({
     extensions: [
@@ -38,6 +47,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
       Underline,
       TextStyle,
       Color,
+      Highlight.configure({ multicolor: true }),
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
@@ -86,6 +96,14 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
             className={`p-2 ${editor.isActive('underline') ? 'bg-accent' : ''}`}
           >
             <UnderlineIcon className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => editor.chain().focus().toggleHighlight().run()}
+            className={`p-2 ${editor.isActive('highlight') ? 'bg-accent' : ''}`}
+          >
+            <Highlighter className="h-4 w-4" />
           </Button>
         </div>
 
@@ -147,12 +165,39 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           <Button
             variant="ghost"
             size="sm"
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            className={`p-2 ${editor.isActive('orderedList') ? 'bg-accent' : ''}`}
+          >
+            <ListOrdered className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
             className={`p-2 ${editor.isActive('blockquote') ? 'bg-accent' : ''}`}
           >
             <Quote className="h-4 w-4" />
           </Button>
         </div>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="sm" className="p-2">
+              <Palette className="h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-fit">
+            <Input
+              type="color"
+              value={textColor}
+              onChange={(e) => {
+                setTextColor(e.target.value);
+                editor.chain().focus().setColor(e.target.value).run();
+              }}
+              className="w-32 h-8"
+            />
+          </PopoverContent>
+        </Popover>
 
         <div className="flex gap-1 items-center">
           <Input

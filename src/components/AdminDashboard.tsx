@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BlogPostEditor } from "./BlogPostEditor";
 import { BlogPostManager } from "./BlogPostManager";
 import { AdminSettings } from "./AdminSettings";
+import { ImageLibrary } from "./ImageLibrary";
 
 export const AdminDashboard = () => {
   const { toast } = useToast();
@@ -30,6 +31,7 @@ export const AdminDashboard = () => {
         <TabsList>
           <TabsTrigger value="write">Write New Post</TabsTrigger>
           <TabsTrigger value="manage">Manage Posts</TabsTrigger>
+          <TabsTrigger value="images">Image Library</TabsTrigger>
           <TabsTrigger value="settings">Site Settings</TabsTrigger>
         </TabsList>
 
@@ -39,6 +41,10 @@ export const AdminDashboard = () => {
 
         <TabsContent value="manage">
           <BlogPostManager />
+        </TabsContent>
+
+        <TabsContent value="images">
+          <ImageLibrary />
         </TabsContent>
 
         <TabsContent value="settings">

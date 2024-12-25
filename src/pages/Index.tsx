@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { MatrixBackground } from "@/components/MatrixBackground";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { BlogSection } from "@/components/BlogSection";
 import { ContactForm } from "@/components/ContactForm";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
@@ -59,15 +59,33 @@ const Portfolio = () => {
   }, [fullText, handleScroll]);
 
   return (
-    <div className="min-h-screen bg-black text-green-500 font-mono relative overflow-hidden">
-      <MatrixBackground />
-      <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
-      <HeroSection text={text} showCursor={showCursor} />
-      <ServicesSection />
-      <ProjectsSection />
-      <BlogSection />
-      <ContactForm />
-    </div>
+    <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="min-h-screen bg-black text-green-500 font-mono relative overflow-hidden"
+      >
+        <div className="relative z-10">
+          <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+          <HeroSection text={text} showCursor={showCursor} />
+          <ServicesSection />
+          <ProjectsSection />
+          <BlogSection />
+          <ContactForm />
+        </div>
+
+        {/* Decorative Elements */}
+        <motion.div 
+          className="fixed top-0 left-0 w-full h-full pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.05 }}
+          transition={{ duration: 2 }}
+        >
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-500/20 via-transparent to-transparent" />
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

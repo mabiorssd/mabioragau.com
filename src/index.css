@@ -47,6 +47,7 @@
   
   html, body {
     @apply min-h-screen w-full m-0 p-0 overflow-x-hidden;
+    background-color: black;
   }
   
   body {
@@ -58,7 +59,7 @@
   }
 
   section {
-    @apply py-8;
+    @apply py-8 relative z-10;
   }
 
   h2, h3, h4 {
@@ -82,25 +83,73 @@
 
 .glitch {
   animation: glitch 0.3s infinite;
+  text-shadow: 
+    2px 2px #0f0,
+    -2px -2px #0f0;
 }
 
 @keyframes glitch {
   0% {
     transform: translate(0);
+    text-shadow: 2px 2px #0f0;
   }
   20% {
     transform: translate(-2px, 2px);
+    text-shadow: -2px -2px #0f0;
   }
   40% {
     transform: translate(-2px, -2px);
+    text-shadow: 2px -2px #0f0;
   }
   60% {
     transform: translate(2px, 2px);
+    text-shadow: -2px 2px #0f0;
   }
   80% {
     transform: translate(2px, -2px);
+    text-shadow: 2px 2px #0f0;
   }
   100% {
     transform: translate(0);
+    text-shadow: -2px -2px #0f0;
   }
+}
+
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 255, 0, 0.1);
+  opacity: 0.75;
+  animation: scanline 6s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.crt-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 9998;
 }

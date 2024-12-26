@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -52,7 +53,12 @@ const BlogPost = () => {
   return (
     <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
       <Navigation activeSection="blog" setActiveSection={() => {}} />
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl">
+      <motion.main 
+        className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="flex justify-end mb-4">
           <Button
             variant="ghost"
@@ -65,7 +71,7 @@ const BlogPost = () => {
         </div>
         <Card className="overflow-hidden border-border">
           {post.image_url && (
-            <div className="w-full h-[200px] sm:h-[300px] md:h-[400px] relative">
+            <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] relative">
               <img 
                 src={post.image_url} 
                 alt={post.image_alt || post.title}
@@ -73,22 +79,31 @@ const BlogPost = () => {
               />
             </div>
           )}
-          <div className="p-4 sm:p-6 md:p-8 space-y-6">
-            <div className="space-y-2">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+          <article className="p-6 sm:p-8 md:p-10 space-y-6">
+            <header className="space-y-4 mb-8">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight">
                 {post.title}
               </h1>
               <p className="text-sm text-muted-foreground">
                 Posted {formatDistanceToNow(new Date(post.created_at))} ago
               </p>
-            </div>
+            </header>
             <div 
-              className="prose dark:prose-invert max-w-none prose-pre:bg-muted prose-pre:text-muted-foreground prose-img:rounded-lg prose-headings:text-foreground prose-a:text-primary hover:prose-a:text-primary/80"
+              className="prose dark:prose-invert max-w-none 
+                prose-headings:text-green-400 
+                prose-p:text-green-300 
+                prose-a:text-green-400 hover:prose-a:text-green-300
+                prose-strong:text-green-400
+                prose-img:rounded-lg prose-img:shadow-lg
+                prose-pre:bg-black/50 prose-pre:text-green-300
+                prose-blockquote:border-green-400 prose-blockquote:text-green-300
+                prose-ul:text-green-300 prose-ol:text-green-300
+                [&_img]:my-8 [&_img]:mx-auto [&_img]:max-h-[600px] [&_img]:object-contain"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
-          </div>
+          </article>
         </Card>
-      </main>
+      </motion.main>
     </div>
   );
 };

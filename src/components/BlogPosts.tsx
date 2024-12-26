@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface BlogPostsProps {
   limit?: number;
@@ -40,31 +41,56 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
     const div = document.createElement('div');
     div.innerHTML = content;
     const text = div.textContent || div.innerText;
-    return text.slice(0, 150) + (text.length > 150 ? '...' : '');
+    return text.slice(0, 200) + (text.length > 200 ? '...' : '');
   };
 
   return (
-    <div className="grid gap-4 sm:gap-6">
+    <div className="grid gap-8">
       {posts?.map((post) => (
-        <Link to={`/blog/${post.slug}`} key={post.id}>
-          <Card className="border border-green-500/30 hover:border-green-400 transition-colors">
-            <CardHeader className="space-y-1 p-4 sm:p-5">
-              <CardTitle className="text-lg sm:text-xl text-green-400">{post.title}</CardTitle>
-              <CardDescription className="text-xs sm:text-sm text-green-600">
-                Posted {formatDistanceToNow(new Date(post.created_at))} ago
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-5 pt-0">
-              <p className="text-sm text-green-500 line-clamp-2">{getExcerpt(post.content)}</p>
-            </CardContent>
-          </Card>
-        </Link>
+        <motion.div
+          key={post.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Link to={`/blog/${post.slug}`}>
+            <Card className="group hover:border-green-400/50 transition-all duration-300 overflow-hidden">
+              <div className="grid md:grid-cols-12 gap-6">
+                {post.image_url && (
+                  <div className="md:col-span-4 h-[200px] md:h-full relative overflow-hidden">
+                    <img
+                      src={post.image_url}
+                      alt={post.image_alt || post.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                )}
+                <div className={`p-6 ${post.image_url ? 'md:col-span-8' : 'md:col-span-12'}`}>
+                  <CardHeader className="p-0 mb-4">
+                    <CardTitle className="text-xl md:text-2xl text-green-400 group-hover:text-green-300 transition-colors">
+                      {post.title}
+                    </CardTitle>
+                    <CardDescription className="text-sm text-green-600 mt-2">
+                      Posted {formatDistanceToNow(new Date(post.created_at))} ago
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <p className="text-green-500/90 line-clamp-3">{getExcerpt(post.content)}</p>
+                    <div className="mt-4 text-green-400 text-sm font-medium group-hover:text-green-300 transition-colors">
+                      Read more →
+                    </div>
+                  </CardContent>
+                </div>
+              </div>
+            </Card>
+          </Link>
+        </motion.div>
       ))}
       {limit && posts && posts.length > 0 && (
         <div className="text-center mt-4">
           <Link 
             to="/blog" 
-            className="inline-block px-4 py-2 border-2 border-green-500 text-green-400 rounded-lg hover:bg-green-500/10 transition-all text-sm"
+            className="inline-block px-6 py-3 border-2 border-green-500 text-green-400 rounded-lg hover:bg-green-500/10 transition-all text-sm"
           >
             View All Posts
           </Link>

@@ -37,8 +37,8 @@ export const MatrixRain = () => {
         // Create gradient for each character
         const gradient = ctx.createLinearGradient(x, y - fontSize, x, y);
         gradient.addColorStop(0, 'rgba(0, 255, 70, 0)');
-        gradient.addColorStop(0.8, 'rgba(0, 255, 70, 0.5)');
-        gradient.addColorStop(1, 'rgba(0, 255, 70, 0.8)');
+        gradient.addColorStop(0.8, 'rgba(0, 255, 70, 0.3)');
+        gradient.addColorStop(1, 'rgba(0, 255, 70, 0.5)');
 
         ctx.fillStyle = gradient;
         ctx.font = `${fontSize}px monospace`;
@@ -71,9 +71,9 @@ export const MatrixRain = () => {
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1]"
       style={{
-        opacity: 0.15,
-        filter: 'blur(0.5px)',
-        background: 'linear-gradient(to bottom, #000000, #001100)',
+        opacity: 0.2,
+        filter: 'blur(0.7px)',
+        background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.97), rgba(0, 17, 0, 0.97))',
       }}
     />
   );

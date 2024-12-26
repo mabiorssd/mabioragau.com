@@ -20,8 +20,15 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
-      Image,
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3],
+        },
+      }),
+      Image.configure({
+        inline: true,
+        allowBase64: true,
+      }),
       Underline,
       TextStyle,
       Color,
@@ -34,9 +41,13 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none',
+      },
+    },
   });
 
-  // Scroll to save button when content is long
   useEffect(() => {
     const handleScroll = () => {
       const saveButton = document.querySelector('[data-save-button]');
@@ -61,17 +72,16 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   }
 
   return (
-    <div className="border rounded-md">
+    <div className="border rounded-md overflow-hidden">
       <EditorToolbar 
         editor={editor}
         textColor={textColor}
         setTextColor={setTextColor}
       />
       <ImageToolbar editor={editor} />
-      <EditorContent 
-        editor={editor} 
-        className="prose max-w-none p-4 min-h-[200px] focus:outline-none"
-      />
+      <div className="min-h-[300px] max-h-[500px] overflow-y-auto p-4">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 };

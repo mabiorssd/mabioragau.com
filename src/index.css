@@ -51,22 +51,32 @@
   
   body {
     @apply bg-background text-foreground font-mono;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 17, 0, 0.95));
   }
   
   #root {
     @apply min-h-screen w-full;
+    position: relative;
+    z-index: 1;
   }
 
   section {
-    @apply py-8;
+    @apply py-8 backdrop-blur-sm bg-black/30 rounded-lg my-4;
   }
 
   h2, h3, h4 {
-    @apply mb-4;
+    @apply mb-4 text-green-400 font-bold;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
   }
 
   p {
-    @apply mb-2;
+    @apply mb-2 text-green-300;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+  }
+
+  a {
+    @apply text-green-400 hover:text-green-300 transition-colors duration-200;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
   }
 }
 
@@ -82,6 +92,9 @@
 
 .glitch {
   animation: glitch 0.3s infinite;
+  text-shadow: 
+    2px 2px 0 rgba(0, 255, 0, 0.4),
+    -2px -2px 0 rgba(0, 255, 0, 0.4);
 }
 
 @keyframes glitch {

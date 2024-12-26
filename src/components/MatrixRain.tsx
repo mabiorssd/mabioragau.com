@@ -13,30 +13,41 @@ export const MatrixRain = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
-    const fontSize = 14;
+    const katakana = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const nums = '0123456789';
+    const symbols = '♔♕♖♗♘♙♚♛♜♝♞♟';
+
+    const alphabet = katakana + latin + nums + symbols;
+    
+    const fontSize = 16;
     const columns = canvas.width / fontSize;
-    const drops: number[] = [];
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
-    }
-
+    
+    const rainDrops: number[] = Array(Math.floor(columns)).fill(1);
+    
     const draw = () => {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#0F0';
-      ctx.font = `${fontSize}px monospace`;
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+        const x = i * fontSize;
+        const y = rainDrops[i] * fontSize;
 
-      for (let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        // Create gradient for each character
+        const gradient = ctx.createLinearGradient(x, y - fontSize, x, y);
+        gradient.addColorStop(0, 'rgba(0, 255, 70, 0)');
+        gradient.addColorStop(0.8, 'rgba(0, 255, 70, 0.5)');
+        gradient.addColorStop(1, 'rgba(0, 255, 70, 0.8)');
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
+        ctx.fillStyle = gradient;
+        ctx.font = `${fontSize}px monospace`;
+        ctx.fillText(text, x, y);
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          rainDrops[i] = 0;
         }
-        drops[i]++;
+        rainDrops[i]++;
       }
     };
 
@@ -58,7 +69,12 @@ export const MatrixRain = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-20 z-[-1]"
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1]"
+      style={{
+        opacity: 0.15,
+        filter: 'blur(0.5px)',
+        background: 'linear-gradient(to bottom, #000000, #001100)',
+      }}
     />
   );
 };

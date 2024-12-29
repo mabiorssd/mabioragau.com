@@ -1,10 +1,7 @@
-import { NextResponse } from 'next/server';
-
-export function middleware(request: Request) {
-  const response = NextResponse.next();
-
-  // Add security headers
-  const headers = response.headers;
+// Custom middleware implementation without Next.js dependencies
+export function middleware(request: Request): Response {
+  const response = new Response();
+  const headers = new Headers(response.headers);
   
   // Prevent clickjacking attacks
   headers.set('X-Frame-Options', 'DENY');
@@ -39,9 +36,12 @@ export function middleware(request: Request) {
     'max-age=31536000; includeSubDomains'
   );
 
-  return response;
+  return new Response(null, {
+    headers
+  });
 }
 
+// Export configuration for middleware paths
 export const config = {
-  matcher: '/:path*',
+  matcher: '/:path*'
 };

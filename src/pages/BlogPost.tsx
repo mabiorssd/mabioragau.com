@@ -70,15 +70,6 @@ const BlogPost = () => {
           </Button>
         </div>
         <Card className="overflow-hidden border-border">
-          {post.image_url && (
-            <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] relative">
-              <img 
-                src={post.image_url} 
-                alt={post.image_alt || post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
           <article className="p-6 sm:p-8 md:p-10 space-y-6">
             <header className="space-y-4 mb-8">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight">

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
@@ -7,24 +7,41 @@ import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useToast } from "@/components/ui/use-toast";
 
 const BlogPost = () => {
   const { short_code } = useParams();
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const { data: post, isLoading } = useQuery({
+  const { data: post, isLoading, error } = useQuery({
     queryKey: ["blog-post", short_code],
     queryFn: async () => {
+      if (!short_code) {
+        throw new Error("No short code provided");
+      }
+
       const { data, error } = await supabase
         .from("blog_posts")
         .select("*")
         .eq("short_code", short_code)
         .eq("published", true)
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
+      if (!data) throw new Error("Post not found");
       return data;
     },
+    retry: false,
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Post not found or unavailable",
+      });
+      navigate("/blog");
+    }
   });
 
   useEffect(() => {

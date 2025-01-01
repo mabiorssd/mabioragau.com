@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -53,7 +52,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Link to={`/blog/${post.slug}`}>
+          <Link to={`/blog/${post.short_code}`}>
             <Card className="group hover:border-green-400/50 transition-all duration-300 overflow-hidden">
               <div className="grid md:grid-cols-12 gap-6">
                 {post.image_url && (
@@ -70,9 +69,6 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
                     <CardTitle className="text-xl md:text-2xl text-green-400 group-hover:text-green-300 transition-colors">
                       {post.title}
                     </CardTitle>
-                    <CardDescription className="text-sm text-green-600 mt-2">
-                      Posted {formatDistanceToNow(new Date(post.created_at))} ago
-                    </CardDescription>
                   </CardHeader>
                   <CardContent className="p-0">
                     <p className="text-green-500/90 line-clamp-3">{getExcerpt(post.content)}</p>

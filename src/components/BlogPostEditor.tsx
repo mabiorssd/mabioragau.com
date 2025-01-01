@@ -115,6 +115,9 @@ export const BlogPostEditor = () => {
         finalImageUrl = await handleImageUpload() || "";
       }
 
+      // Generate a random 6-character short code
+      const short_code = Math.random().toString(36).substring(2, 8);
+
       const { error } = await supabase.from("blog_posts").insert([
         {
           title,
@@ -123,6 +126,7 @@ export const BlogPostEditor = () => {
           author_id: user.id,
           image_url: finalImageUrl,
           image_alt: imageAlt,
+          short_code,
         },
       ]);
 

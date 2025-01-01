@@ -2,24 +2,23 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
-import { formatDistanceToNow } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const BlogPost = () => {
-  const { slug } = useParams();
+  const { short_code } = useParams();
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const { data: post, isLoading } = useQuery({
-    queryKey: ["blog-post", slug],
+    queryKey: ["blog-post", short_code],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
         .select("*")
-        .eq("slug", slug)
+        .eq("short_code", short_code)
         .eq("published", true)
         .single();
       
@@ -27,6 +26,18 @@ const BlogPost = () => {
       return data;
     },
   });
+
+  useEffect(() => {
+    const incrementViewCount = async () => {
+      if (post?.id) {
+        await supabase
+          .from("blog_posts")
+          .update({ view_count: (post.view_count || 0) + 1 })
+          .eq("id", post.id);
+      }
+    };
+    incrementViewCount();
+  }, [post?.id]);
 
   if (isLoading) {
     return (
@@ -75,9 +86,6 @@ const BlogPost = () => {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight">
                 {post.title}
               </h1>
-              <p className="text-sm text-muted-foreground">
-                Posted {formatDistanceToNow(new Date(post.created_at))} ago
-              </p>
             </header>
             <div 
               className="prose dark:prose-invert max-w-none 

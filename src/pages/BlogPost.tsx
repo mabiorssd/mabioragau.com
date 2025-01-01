@@ -15,7 +15,7 @@ const BlogPost = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const { data: post, isLoading, error } = useQuery({
+  const { data: post, isLoading } = useQuery({
     queryKey: ["blog-post", short_code],
     queryFn: async () => {
       if (!short_code) {
@@ -30,20 +30,18 @@ const BlogPost = () => {
         .maybeSingle();
       
       if (error) throw error;
-      if (!data) throw new Error("Post not found");
-      return data;
-    },
-    retry: false,
-    meta: {
-      onError: () => {
+      if (!data) {
         toast({
           variant: "destructive",
           title: "Error",
           description: "Post not found or unavailable",
         });
         navigate("/blog");
+        return null;
       }
-    }
+      return data;
+    },
+    retry: false
   });
 
   useEffect(() => {

@@ -34,13 +34,15 @@ const BlogPost = () => {
       return data;
     },
     retry: false,
-    onError: () => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Post not found or unavailable",
-      });
-      navigate("/blog");
+    meta: {
+      onError: () => {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Post not found or unavailable",
+        });
+        navigate("/blog");
+      }
     }
   });
 

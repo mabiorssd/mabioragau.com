@@ -58,6 +58,16 @@ export const BlogPostEditor = () => {
     return publicUrl;
   };
 
+  const generateShortCode = () => {
+    // Generate a random 6-character alphanumeric code
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let shortCode = '';
+    for (let i = 0; i < 6; i++) {
+      shortCode += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return shortCode;
+  };
+
   const validateForm = () => {
     try {
       blogPostSchema.parse({
@@ -115,16 +125,15 @@ export const BlogPostEditor = () => {
         finalImageUrl = await handleImageUpload() || "";
       }
 
-      const { error } = await supabase.from("blog_posts").insert([
-        {
-          title,
-          content,
-          slug,
-          author_id: user.id,
-          image_url: finalImageUrl,
-          image_alt: imageAlt,
-        },
-      ]);
+      const { error } = await supabase.from("blog_posts").insert({
+        title,
+        content,
+        slug,
+        author_id: user.id,
+        image_url: finalImageUrl,
+        image_alt: imageAlt,
+        short_code: generateShortCode(),
+      });
 
       if (error) {
         throw error;

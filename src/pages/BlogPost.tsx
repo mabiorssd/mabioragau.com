@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -77,8 +78,33 @@ const BlogPost = () => {
     );
   }
 
+  const getExcerpt = (content: string) => {
+    const div = document.createElement('div');
+    div.innerHTML = content;
+    const text = div.textContent || div.innerText;
+    return text.slice(0, 160) + (text.length > 160 ? '...' : '');
+  };
+
   return (
     <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
+      <Helmet>
+        <title>{post.title}</title>
+        <meta name="description" content={getExcerpt(post.content)} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={getExcerpt(post.content)} />
+        {post.image_url && <meta property="og:image" content={post.image_url} />}
+        <meta property="og:url" content={window.location.href} />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content={post.image_url ? "summary_large_image" : "summary"} />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={getExcerpt(post.content)} />
+        {post.image_url && <meta name="twitter:image" content={post.image_url} />}
+      </Helmet>
+
       <Navigation activeSection="blog" setActiveSection={() => {}} />
       <motion.main 
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl"

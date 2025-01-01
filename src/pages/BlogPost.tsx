@@ -1,60 +1,32 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
+import { formatDistanceToNow } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { useToast } from "@/components/ui/use-toast";
 
 const BlogPost = () => {
-  const { short_code } = useParams();
+  const { slug } = useParams();
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const navigate = useNavigate();
-  const { toast } = useToast();
 
   const { data: post, isLoading } = useQuery({
-    queryKey: ["blog-post", short_code],
+    queryKey: ["blog-post", slug],
     queryFn: async () => {
-      if (!short_code) {
-        throw new Error("No short code provided");
-      }
-
       const { data, error } = await supabase
         .from("blog_posts")
         .select("*")
-        .eq("short_code", short_code)
+        .eq("slug", slug)
         .eq("published", true)
-        .maybeSingle();
+        .single();
       
       if (error) throw error;
-      if (!data) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Post not found or unavailable",
-        });
-        navigate("/blog");
-        return null;
-      }
       return data;
     },
-    retry: false
   });
-
-  useEffect(() => {
-    const incrementViewCount = async () => {
-      if (post?.id) {
-        await supabase
-          .from("blog_posts")
-          .update({ view_count: (post.view_count || 0) + 1 })
-          .eq("id", post.id);
-      }
-    };
-    incrementViewCount();
-  }, [post?.id]);
 
   if (isLoading) {
     return (
@@ -103,6 +75,9 @@ const BlogPost = () => {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight">
                 {post.title}
               </h1>
+              <p className="text-sm text-muted-foreground">
+                Posted {formatDistanceToNow(new Date(post.created_at))} ago
+              </p>
             </header>
             <div 
               className="prose dark:prose-invert max-w-none 

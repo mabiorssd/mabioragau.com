@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "./RichTextEditor";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Loader2, Trash2, Eye } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export const BlogPostManager = () => {
@@ -132,13 +132,9 @@ export const BlogPostManager = () => {
           <div className="flex justify-between items-center">
             <div className="flex-1">
               <h3 className="font-semibold">{post.title}</h3>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                <Eye className="h-4 w-4" />
-                <span>{post.view_count || 0} views</span>
-                <span className="text-xs text-muted-foreground ml-2">
-                  Code: {post.short_code}
-                </span>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                {new Date(post.created_at).toLocaleDateString()}
+              </p>
             </div>
             <div className="flex gap-2">
               <Dialog>

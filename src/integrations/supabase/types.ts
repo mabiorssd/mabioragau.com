@@ -18,11 +18,9 @@ export type Database = {
           image_alt: string | null
           image_url: string | null
           published: boolean | null
-          short_code: string
           slug: string
           title: string
           updated_at: string
-          view_count: number | null
         }
         Insert: {
           author_id: string
@@ -32,11 +30,9 @@ export type Database = {
           image_alt?: string | null
           image_url?: string | null
           published?: boolean | null
-          short_code: string
           slug: string
           title: string
           updated_at?: string
-          view_count?: number | null
         }
         Update: {
           author_id?: string
@@ -46,11 +42,9 @@ export type Database = {
           image_alt?: string | null
           image_url?: string | null
           published?: boolean | null
-          short_code?: string
           slug?: string
           title?: string
           updated_at?: string
-          view_count?: number | null
         }
         Relationships: []
       }

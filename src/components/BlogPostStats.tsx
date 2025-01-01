@@ -10,7 +10,13 @@ import {
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Globe } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export const BlogPostStats = () => {
   const [stats, setStats] = useState<any[]>([]);
@@ -19,6 +25,26 @@ export const BlogPostStats = () => {
 
   useEffect(() => {
     fetchStats();
+
+    // Subscribe to real-time updates
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'blog_posts'
+        },
+        () => {
+          fetchStats();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchStats = async () => {
@@ -40,6 +66,16 @@ export const BlogPostStats = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getCountryStats = (views: any[]) => {
+    if (!views) return {};
+    const countryCount = views.reduce((acc: any, view: any) => {
+      const country = view.country || 'Unknown';
+      acc[country] = (acc[country] || 0) + 1;
+      return acc;
+    }, {});
+    return countryCount;
   };
 
   if (loading) {
@@ -67,7 +103,27 @@ export const BlogPostStats = () => {
           <TableBody>
             {stats.map((post) => (
               <TableRow key={post.id}>
-                <TableCell className="font-medium">{post.title}</TableCell>
+                <TableCell className="font-medium">
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value={post.id}>
+                      <AccordionTrigger>{post.title}</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-2 p-4 bg-muted/50 rounded-md">
+                          <h4 className="font-semibold flex items-center gap-2">
+                            <Globe className="h-4 w-4" />
+                            Views by Country
+                          </h4>
+                          {Object.entries(getCountryStats(post.views)).map(([country, count]) => (
+                            <div key={country} className="flex justify-between text-sm">
+                              <span>{country}:</span>
+                              <span className="font-medium">{count as number}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </TableCell>
                 <TableCell>{post.view_count || 0}</TableCell>
                 <TableCell>
                   {post.published ? (

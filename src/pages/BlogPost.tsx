@@ -6,7 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const BlogPost = () => {
@@ -27,6 +27,33 @@ const BlogPost = () => {
       return data;
     },
   });
+
+  useEffect(() => {
+    const trackPageView = async () => {
+      if (post?.id) {
+        try {
+          // Get country information
+          const response = await fetch('https://ipapi.co/json/');
+          const locationData = await response.json();
+          const countryCode = locationData.country_code || 'UNKNOWN';
+
+          // Call the increment_view_count function
+          const { error } = await supabase.rpc('increment_view_count', {
+            post_id: post.id,
+            country_code: countryCode
+          });
+
+          if (error) {
+            console.error('Error tracking view:', error);
+          }
+        } catch (error) {
+          console.error('Error getting location:', error);
+        }
+      }
+    };
+
+    trackPageView();
+  }, [post?.id]);
 
   if (isLoading) {
     return (

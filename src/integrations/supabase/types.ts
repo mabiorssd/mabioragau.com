@@ -23,6 +23,7 @@ export type Database = {
           title: string
           updated_at: string
           view_count: number | null
+          views: Json | null
         }
         Insert: {
           author_id: string
@@ -37,6 +38,7 @@ export type Database = {
           title: string
           updated_at?: string
           view_count?: number | null
+          views?: Json | null
         }
         Update: {
           author_id?: string
@@ -51,6 +53,7 @@ export type Database = {
           title?: string
           updated_at?: string
           view_count?: number | null
+          views?: Json | null
         }
         Relationships: []
       }
@@ -98,6 +101,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      increment_view_count: {
+        Args: {
+          post_id: string
+          country_code: string
+        }
+        Returns: undefined
+      }
       is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean

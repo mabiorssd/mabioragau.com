@@ -9,6 +9,7 @@ import { BlogPostManager } from "./BlogPostManager";
 import { AdminSettings } from "./AdminSettings";
 import { ImageLibrary } from "./ImageLibrary";
 import { BlogPostStats } from "./BlogPostStats";
+import { ContactSubmissions } from "./admin/ContactSubmissions";
 
 export const AdminDashboard = () => {
   const { toast } = useToast();
@@ -35,6 +36,7 @@ export const AdminDashboard = () => {
           <TabsTrigger value="stats">Statistics</TabsTrigger>
           <TabsTrigger value="images">Image Library</TabsTrigger>
           <TabsTrigger value="settings">Site Settings</TabsTrigger>
+          <TabsTrigger value="submissions">Contact Submissions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="write">
@@ -55,6 +57,10 @@ export const AdminDashboard = () => {
 
         <TabsContent value="settings">
           <AdminSettings />
+        </TabsContent>
+
+        <TabsContent value="submissions">
+          <ContactSubmissions />
         </TabsContent>
       </Tabs>
     </div>

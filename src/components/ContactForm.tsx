@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const glitchAnimation = {
   initial: { x: 0 },
@@ -28,7 +29,14 @@ export const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Add form submission endpoint
+      // Store in Supabase
+      const { error: supabaseError } = await supabase
+        .from('contact_submissions')
+        .insert([formData]);
+
+      if (supabaseError) throw supabaseError;
+
+      // Also send to email service as backup
       const response = await fetch('https://formsubmit.co/ajax/info@mabioragau.com', {
         method: 'POST',
         headers: {

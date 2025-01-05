@@ -38,16 +38,19 @@ export const ContactSubmissions = () => {
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
           schema: 'public',
           table: 'contact_submissions'
         },
-        () => {
+        (payload) => {
+          console.log('Real-time update received:', payload);
           refetch();
-          toast({
-            title: "New submission received",
-            description: "A new contact form submission has arrived.",
-          });
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: "New message received",
+              description: `From: ${payload.new.name}`,
+            });
+          }
         }
       )
       .subscribe();
@@ -59,25 +62,29 @@ export const ContactSubmissions = () => {
 
   const markAsRead = async (id: string) => {
     setIsUpdating(true);
-    const { error } = await supabase
-      .from("contact_submissions")
-      .update({ read: true })
-      .eq("id", id);
+    try {
+      const { error } = await supabase
+        .from("contact_submissions")
+        .update({ read: true })
+        .eq("id", id);
 
-    if (error) {
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Message marked as read",
+      });
+      refetch();
+    } catch (error) {
+      console.error('Error marking as read:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to mark submission as read",
+        description: "Failed to mark message as read",
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Submission marked as read",
-      });
-      refetch();
+    } finally {
+      setIsUpdating(false);
     }
-    setIsUpdating(false);
   };
 
   if (isLoading) {

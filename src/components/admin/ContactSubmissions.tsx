@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Loader2, Mail, Check } from "lucide-react";
 import {
   Table,
@@ -32,13 +32,13 @@ export const ContactSubmissions = () => {
   });
 
   useEffect(() => {
-    // Subscribe to real-time updates
+    // Enable real-time updates
     const channel = supabase
       .channel('schema-db-changes')
       .on(
         'postgres_changes',
         {
-          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          event: '*',
           schema: 'public',
           table: 'contact_submissions'
         },

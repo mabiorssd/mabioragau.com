@@ -32,7 +32,6 @@ export const ContactSubmissions = () => {
   });
 
   useEffect(() => {
-    // Enable real-time updates
     const channel = supabase
       .channel('schema-db-changes')
       .on(

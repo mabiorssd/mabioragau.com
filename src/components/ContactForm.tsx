@@ -29,38 +29,17 @@ export const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Store in Supabase
       const { error: supabaseError } = await supabase
         .from('contact_submissions')
         .insert([formData]);
 
       if (supabaseError) throw supabaseError;
 
-      // Also send to email service as backup
-      const response = await fetch('https://formsubmit.co/ajax/info@mabioragau.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          ...formData,
-          _template: "table",
-          _subject: `New contact from ${formData.name}`
-        })
+      toast({
+        title: "Message sent",
+        description: "Thank you for your message. I'll get back to you soon!",
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        toast({
-          title: "Message sent",
-          description: "Thank you for your message. I'll get back to you soon!",
-        });
-        setFormData({ name: "", email: "", message: "" });
-      } else {
-        throw new Error(data.message || 'Failed to send message');
-      }
+      setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error('Form submission error:', error);
       toast({

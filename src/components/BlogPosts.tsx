@@ -10,9 +10,6 @@ interface BlogPostsProps {
 }
 
 export const BlogPosts = ({ limit }: BlogPostsProps) => {
-  const hostname = window.location.hostname;
-  const isBlogSubdomain = hostname.startsWith('blog.');
-  
   const { data: posts, isLoading } = useQuery({
     queryKey: ["blog-posts", limit],
     queryFn: async () => {
@@ -56,7 +53,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Link to={isBlogSubdomain ? `/${post.slug}` : `/blog/${post.slug}`}>
+          <Link to={`/blog/${post.slug}`}>
             <Card className="group hover:border-green-400/50 transition-all duration-300 overflow-hidden">
               <div className="grid md:grid-cols-12 gap-6">
                 {post.image_url && (
@@ -89,7 +86,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
           </Link>
         </motion.div>
       ))}
-      {limit && posts && posts.length > 0 && !isBlogSubdomain && (
+      {limit && posts && posts.length > 0 && (
         <div className="text-center mt-4">
           <Link 
             to="/blog" 

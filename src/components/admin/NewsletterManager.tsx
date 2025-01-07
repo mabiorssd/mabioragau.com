@@ -5,12 +5,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { useQuery } from "@tanstack/react-query";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+type Subscriber = {
+  id: string;
+  email: string;
+  created_at: string;
+  confirmed: boolean;
+};
 
 export const NewsletterManager = () => {
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
+
+  const { data: subscribers } = useQuery({
+    queryKey: ["subscribers"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('newsletter_subscriptions')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Subscriber[];
+    },
+  });
 
   const { data: subscriberCount } = useQuery({
     queryKey: ["subscriber-count"],
@@ -39,6 +60,35 @@ export const NewsletterManager = () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       
+      const emailTemplate = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${subject}</title>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { text-align: center; padding: 20px 0; }
+              .content { padding: 20px 0; }
+              .footer { text-align: center; padding: 20px 0; font-size: 12px; color: #666; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>${subject}</h1>
+            </div>
+            <div class="content">
+              ${content}
+            </div>
+            <div class="footer">
+              <p>You're receiving this email because you subscribed to our newsletter.</p>
+              <p>© ${new Date().getFullYear()} Mabior Agau. All rights reserved.</p>
+            </div>
+          </body>
+        </html>
+      `;
+
       const response = await fetch(
         'https://zrvzcsdxbhzwfabvndbo.supabase.co/functions/v1/send-newsletter',
         {
@@ -47,7 +97,10 @@ export const NewsletterManager = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${session?.access_token}`,
           },
-          body: JSON.stringify({ subject, content }),
+          body: JSON.stringify({ 
+            subject,
+            content: emailTemplate
+          }),
         }
       );
 
@@ -109,6 +162,34 @@ export const NewsletterManager = () => {
         >
           {isSending ? "Sending..." : "Send Newsletter"}
         </Button>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold mb-4">Subscriber List</h3>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Email</TableHead>
+              <TableHead>Subscription Date</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {subscribers?.map((subscriber) => (
+              <TableRow key={subscriber.id}>
+                <TableCell>{subscriber.email}</TableCell>
+                <TableCell>{new Date(subscriber.created_at).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    subscriber.confirmed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {subscriber.confirmed ? 'Confirmed' : 'Pending'}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

@@ -27,15 +27,68 @@ export const NewsletterForm = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase
+      // First, check if the email is already subscribed
+      const { data: existingSubscription } = await supabase
         .from('newsletter_subscriptions')
-        .insert([{ email }]);
+        .select('*')
+        .eq('email', email)
+        .single();
+
+      if (existingSubscription?.confirmed) {
+        toast({
+          title: "Already subscribed",
+          description: "This email is already subscribed to our newsletter.",
+        });
+        setEmail("");
+        return;
+      }
+
+      // Create or update subscription
+      const { data: subscription, error } = await supabase
+        .from('newsletter_subscriptions')
+        .upsert({
+          email,
+          confirmed: false,
+          confirmation_token: crypto.randomUUID(),
+          subscribed: true
+        }, {
+          onConflict: 'email'
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
+      // Send confirmation email
+      const response = await supabase.functions.invoke('send-newsletter', {
+        body: {
+          to: [email],
+          subject: "Confirm your newsletter subscription",
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h1 style="color: #333; text-align: center;">Confirm Your Subscription</h1>
+              <p style="color: #666; line-height: 1.6;">
+                Thank you for subscribing to our newsletter! Please click the button below to confirm your subscription:
+              </p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${window.location.origin}/confirm-subscription?token=${subscription.confirmation_token}"
+                   style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                  Confirm Subscription
+                </a>
+              </div>
+              <p style="color: #666; font-size: 14px; text-align: center;">
+                If you didn't request this subscription, you can safely ignore this email.
+              </p>
+            </div>
+          `
+        }
+      });
+
+      if (response.error) throw response.error;
+
       toast({
         title: "Success!",
-        description: "Thank you for subscribing to our newsletter!",
+        description: "Please check your email to confirm your subscription.",
       });
       setEmail("");
     } catch (error) {

@@ -27,11 +27,14 @@ export const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    console.log('Submitting form with data:', formData);
     
     try {
-      const { error: supabaseError } = await supabase
+      const { data, error: supabaseError } = await supabase
         .from('contact_submissions')
         .insert([formData]);
+
+      console.log('Supabase response:', { data, error: supabaseError });
 
       if (supabaseError) throw supabaseError;
 

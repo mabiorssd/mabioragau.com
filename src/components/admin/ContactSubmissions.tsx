@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
@@ -13,10 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ContactMessageModal } from "./ContactMessageModal";
 
 export const ContactSubmissions = () => {
   const { toast } = useToast();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
 
   const { data: submissions, isLoading, refetch } = useQuery({
     queryKey: ["contact-submissions"],
@@ -30,34 +32,6 @@ export const ContactSubmissions = () => {
       return data;
     },
   });
-
-  useEffect(() => {
-    const channel = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'contact_submissions'
-        },
-        (payload) => {
-          console.log('Real-time update received:', payload);
-          refetch();
-          if (payload.eventType === 'INSERT') {
-            toast({
-              title: "New message received",
-              description: `From: ${payload.new.name}`,
-            });
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [refetch, toast]);
 
   const markAsRead = async (id: string) => {
     setIsUpdating(true);
@@ -110,9 +84,9 @@ export const ContactSubmissions = () => {
               <TableHead>Status</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Message</TableHead>
+              <TableHead>Message Preview</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead>Action</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -125,8 +99,14 @@ export const ContactSubmissions = () => {
                 </TableCell>
                 <TableCell className="font-medium">{submission.name}</TableCell>
                 <TableCell>{submission.email}</TableCell>
-                <TableCell className="max-w-md truncate">
-                  {submission.message}
+                <TableCell className="max-w-md">
+                  <Button
+                    variant="ghost"
+                    className="h-auto p-0 text-left hover:bg-transparent"
+                    onClick={() => setSelectedMessage(submission)}
+                  >
+                    <span className="line-clamp-1">{submission.message}</span>
+                  </Button>
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
                   {new Date(submission.created_at).toLocaleString()}
@@ -160,6 +140,12 @@ export const ContactSubmissions = () => {
           </div>
         )}
       </div>
+
+      <ContactMessageModal
+        isOpen={!!selectedMessage}
+        onClose={() => setSelectedMessage(null)}
+        message={selectedMessage}
+      />
     </div>
   );
 };

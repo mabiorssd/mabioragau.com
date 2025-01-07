@@ -10,6 +10,7 @@ import { AdminSettings } from "./AdminSettings";
 import { ImageLibrary } from "./ImageLibrary";
 import { BlogPostStats } from "./BlogPostStats";
 import { ContactSubmissions } from "./admin/ContactSubmissions";
+import { NewsletterManager } from "./admin/NewsletterManager";
 
 export const AdminDashboard = () => {
   const { toast } = useToast();
@@ -37,6 +38,7 @@ export const AdminDashboard = () => {
           <TabsTrigger value="images">Image Library</TabsTrigger>
           <TabsTrigger value="settings">Site Settings</TabsTrigger>
           <TabsTrigger value="submissions">Contact Submissions</TabsTrigger>
+          <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
         </TabsList>
 
         <TabsContent value="write">
@@ -61,6 +63,10 @@ export const AdminDashboard = () => {
 
         <TabsContent value="submissions">
           <ContactSubmissions />
+        </TabsContent>
+
+        <TabsContent value="newsletter">
+          <NewsletterManager />
         </TabsContent>
       </Tabs>
     </div>

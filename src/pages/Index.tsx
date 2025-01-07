@@ -6,6 +6,7 @@ import { ServicesSection } from "@/components/ServicesSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { BlogSection } from "@/components/BlogSection";
 import { ContactForm } from "@/components/ContactForm";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
@@ -66,6 +67,14 @@ const Portfolio = () => {
       <ServicesSection />
       <ProjectsSection />
       <BlogSection />
+      <div className="py-12 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-green-400 mb-8 text-center">
+            Subscribe to My Newsletter
+          </h2>
+          <NewsletterForm />
+        </div>
+      </div>
       <ContactForm />
     </div>
   );

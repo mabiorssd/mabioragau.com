@@ -1,136 +1,119 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface EmailRequest {
-  to: string[];
+interface EmailPayload {
   subject: string;
-  html: string;
+  content: string;
+  from?: string;
 }
 
-const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
+serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    console.log("Starting newsletter sending process");
-    
     const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    const emailRequest: EmailRequest = await req.json();
-    console.log('Email request:', { 
-      subject: emailRequest.subject,
-      recipients: emailRequest.to 
-    });
-
-    // If it's a single recipient, it's a confirmation email
-    const isConfirmation = emailRequest.to.length === 1;
-
-    if (!isConfirmation) {
-      // Verify admin status for newsletter sending
-      const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
-        req.headers.get('Authorization')?.split('Bearer ')[1] ?? ''
-      );
-
-      if (authError || !user) {
-        console.error('Authentication error:', authError);
-        throw new Error('Unauthorized');
-      }
-
-      const { data: profile } = await supabaseClient
-        .from('profiles')
-        .select('is_admin')
-        .eq('id', user.id)
-        .single();
-
-      if (!profile?.is_admin) {
-        throw new Error('Unauthorized - Admin only');
-      }
-
-      // Get confirmed subscribers for newsletter
-      const { data: subscribers, error: subscribersError } = await supabaseClient
-        .from('newsletter_subscriptions')
-        .select('email')
-        .eq('confirmed', true)
-        .eq('subscribed', true);
-
-      if (subscribersError) {
-        console.error('Error fetching subscribers:', subscribersError);
-        throw subscribersError;
-      }
-
-      if (!subscribers?.length) {
-        console.log('No confirmed subscribers found');
-        throw new Error('No confirmed subscribers found');
-      }
-
-      emailRequest.to = subscribers.map(sub => sub.email);
+    // Verify admin status
+    const authHeader = req.headers.get("Authorization")?.split(" ")[1];
+    if (!authHeader) {
+      throw new Error("No authorization header");
     }
 
-    console.log(`Sending email to ${emailRequest.to.length} recipient(s)`);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseClient.auth.getUser(authHeader);
 
-    // Send email using Resend
-    const res = await fetch("https://api.resend.com/emails", {
+    if (authError || !user) {
+      throw new Error("Invalid credentials");
+    }
+
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.is_admin) {
+      throw new Error("Unauthorized: Admin access required");
+    }
+
+    // Get active subscribers
+    const { data: subscribers, error: subscribersError } = await supabaseClient
+      .from("newsletter_subscriptions")
+      .select("email")
+      .eq("confirmed", true)
+      .eq("subscribed", true);
+
+    if (subscribersError) {
+      throw new Error(`Error fetching subscribers: ${subscribersError.message}`);
+    }
+
+    if (!subscribers || subscribers.length === 0) {
+      throw new Error("No active subscribers found");
+    }
+
+    const { subject, content, from = "news@newsletter.mabioragau.com" } = await req.json() as EmailPayload;
+
+    if (!subject || !content) {
+      throw new Error("Missing required fields");
+    }
+
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    if (!RESEND_API_KEY) {
+      throw new Error("Missing Resend API key");
+    }
+
+    // Send to all subscribers
+    const emails = subscribers.map((subscriber) => subscriber.email);
+    
+    const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Mabior Agau <news@newsletter.mabioragau.com>",
-        to: isConfirmation ? emailRequest.to : undefined,
-        bcc: isConfirmation ? undefined : emailRequest.to,
-        subject: emailRequest.subject,
-        html: emailRequest.html,
+        from,
+        to: from, // Send to yourself
+        bcc: emails, // BCC all subscribers
+        subject,
+        html: content,
       }),
     });
 
-    const responseText = await res.text();
-    console.log('Resend API response:', responseText);
-
-    if (!res.ok) {
-      throw new Error(`Resend API error: ${responseText}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Resend API error: ${JSON.stringify(errorData)}`);
     }
 
-    // Record the newsletter in the database (only for newsletters, not confirmations)
-    if (!isConfirmation) {
-      const { error: insertError } = await supabaseClient
-        .from('newsletters')
-        .insert({
-          subject: emailRequest.subject,
-          content: emailRequest.html,
-          sent_at: new Date().toISOString(),
-        });
-
-      if (insertError) {
-        console.error('Error recording newsletter:', insertError);
-        throw insertError;
+    return new Response(
+      JSON.stringify({ message: "Newsletter sent successfully" }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
       }
-    }
-
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
-  } catch (error: any) {
-    console.error("Error in send-newsletter function:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    );
+  } catch (error) {
+    console.error("Error sending newsletter:", error);
+    return new Response(
+      JSON.stringify({
+        error: error instanceof Error ? error.message : "An unknown error occurred",
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400,
+      }
+    );
   }
-};
-
-serve(handler);
+});

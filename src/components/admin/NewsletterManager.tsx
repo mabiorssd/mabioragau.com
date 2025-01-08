@@ -6,12 +6,14 @@ import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { useQuery } from "@tanstack/react-query";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Loader2 } from "lucide-react";
 
 type Subscriber = {
   id: string;
   email: string;
   created_at: string;
   confirmed: boolean;
+  subscribed: boolean;
 };
 
 export const NewsletterManager = () => {
@@ -20,7 +22,7 @@ export const NewsletterManager = () => {
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
 
-  const { data: subscribers } = useQuery({
+  const { data: subscribers, isLoading: isLoadingSubscribers } = useQuery({
     queryKey: ["subscribers"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -28,19 +30,27 @@ export const NewsletterManager = () => {
         .select('*')
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching subscribers:', error);
+        throw error;
+      }
       return data as Subscriber[];
     },
   });
 
-  const { data: subscriberCount } = useQuery({
+  const { data: subscriberCount, isLoading: isLoadingCount } = useQuery({
     queryKey: ["subscriber-count"],
     queryFn: async () => {
-      const { count } = await supabase
+      const { count, error } = await supabase
         .from('newsletter_subscriptions')
         .select('*', { count: 'exact', head: true })
         .eq('confirmed', true)
         .eq('subscribed', true);
+      
+      if (error) {
+        console.error('Error fetching subscriber count:', error);
+        throw error;
+      }
       return count;
     },
   });
@@ -59,6 +69,9 @@ export const NewsletterManager = () => {
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('No active session');
+      }
       
       const emailTemplate = `
         <!DOCTYPE html>
@@ -95,17 +108,33 @@ export const NewsletterManager = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session?.access_token}`,
+            'Authorization': `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({ 
             subject,
-            content: emailTemplate
+            content: emailTemplate,
+            from: 'news@newsletter.mabioragau.com'
           }),
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to send newsletter');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send newsletter');
+      }
+
+      // Store the newsletter in the database
+      const { error: dbError } = await supabase
+        .from('newsletters')
+        .insert({
+          subject,
+          content: emailTemplate,
+          sent_at: new Date().toISOString(),
+        });
+
+      if (dbError) {
+        console.error('Error storing newsletter:', dbError);
+        throw dbError;
       }
 
       toast({
@@ -120,12 +149,20 @@ export const NewsletterManager = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send newsletter. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to send newsletter. Please try again.",
       });
     } finally {
       setIsSending(false);
     }
   };
+
+  if (isLoadingSubscribers || isLoadingCount) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -160,7 +197,14 @@ export const NewsletterManager = () => {
           onClick={handleSendNewsletter}
           disabled={isSending || !subject.trim() || !content.trim()}
         >
-          {isSending ? "Sending..." : "Send Newsletter"}
+          {isSending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Sending...
+            </>
+          ) : (
+            "Send Newsletter"
+          )}
         </Button>
       </div>
 
@@ -172,6 +216,7 @@ export const NewsletterManager = () => {
               <TableHead>Email</TableHead>
               <TableHead>Subscription Date</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Subscribed</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -184,6 +229,13 @@ export const NewsletterManager = () => {
                     subscriber.confirmed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                   }`}>
                     {subscriber.confirmed ? 'Confirmed' : 'Pending'}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    subscriber.subscribed ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
+                    {subscriber.subscribed ? 'Active' : 'Unsubscribed'}
                   </span>
                 </TableCell>
               </TableRow>

@@ -18,6 +18,8 @@ serve(async (req) => {
   }
 
   try {
+    console.log("Starting newsletter sending process");
+    
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
@@ -56,10 +58,12 @@ serve(async (req) => {
       .eq("subscribed", true);
 
     if (subscribersError) {
+      console.error("Error fetching subscribers:", subscribersError);
       throw new Error(`Error fetching subscribers: ${subscribersError.message}`);
     }
 
     if (!subscribers || subscribers.length === 0) {
+      console.log("No active subscribers found");
       throw new Error("No active subscribers found");
     }
 
@@ -74,14 +78,16 @@ serve(async (req) => {
       throw new Error("Missing Resend API key");
     }
 
+    console.log(`Sending newsletter to ${subscribers.length} subscribers`);
+    
     // Send to all subscribers
     const emails = subscribers.map((subscriber) => subscriber.email);
     
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
         from,
@@ -94,11 +100,32 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorData = await response.json();
+      console.error("Resend API error:", errorData);
       throw new Error(`Resend API error: ${JSON.stringify(errorData)}`);
     }
 
+    const responseData = await response.json();
+    console.log("Newsletter sent successfully:", responseData);
+
+    // Store the newsletter in the database
+    const { error: dbError } = await supabaseClient
+      .from("newsletters")
+      .insert({
+        subject,
+        content,
+        sent_at: new Date().toISOString(),
+      });
+
+    if (dbError) {
+      console.error("Error storing newsletter:", dbError);
+      // Don't throw here as the email was already sent
+    }
+
     return new Response(
-      JSON.stringify({ message: "Newsletter sent successfully" }),
+      JSON.stringify({ 
+        message: "Newsletter sent successfully",
+        recipientCount: subscribers.length
+      }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,

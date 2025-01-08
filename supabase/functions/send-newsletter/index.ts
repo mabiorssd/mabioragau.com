@@ -19,9 +19,11 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("Starting newsletter sending process");
+    
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     // Verify admin status
@@ -30,6 +32,7 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     if (authError || !user) {
+      console.error('Authentication error:', authError);
       throw new Error('Unauthorized');
     }
 
@@ -44,19 +47,27 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const newsletterRequest: NewsletterRequest = await req.json();
+    console.log('Newsletter request:', { subject: newsletterRequest.subject });
 
-    // Get confirmed subscribers
-    const { data: subscribers } = await supabaseClient
+    // Get confirmed subscribers only
+    const { data: subscribers, error: subscribersError } = await supabaseClient
       .from('newsletter_subscriptions')
       .select('email')
       .eq('confirmed', true)
       .eq('subscribed', true);
 
+    if (subscribersError) {
+      console.error('Error fetching subscribers:', subscribersError);
+      throw subscribersError;
+    }
+
     if (!subscribers?.length) {
+      console.log('No confirmed subscribers found');
       throw new Error('No confirmed subscribers found');
     }
 
     const emails = subscribers.map(sub => sub.email);
+    console.log(`Sending newsletter to ${emails.length} subscribers`);
 
     // Send newsletter with improved template
     const res = await fetch("https://api.resend.com/emails", {
@@ -66,87 +77,33 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Mabior Agau <newsletter@your-domain.com>",
+        from: "Your Blog <newsletter@yourdomain.com>", // Replace with your verified domain
         bcc: emails,
         subject: newsletterRequest.subject,
-        html: `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>${newsletterRequest.subject}</title>
-              <style>
-                body {
-                  font-family: Arial, sans-serif;
-                  line-height: 1.6;
-                  color: #333;
-                  max-width: 600px;
-                  margin: 0 auto;
-                  padding: 20px;
-                }
-                .header {
-                  text-align: center;
-                  padding: 20px 0;
-                  border-bottom: 2px solid #eee;
-                }
-                .content {
-                  padding: 20px 0;
-                }
-                .footer {
-                  text-align: center;
-                  padding: 20px 0;
-                  font-size: 12px;
-                  color: #666;
-                  border-top: 1px solid #eee;
-                }
-                .button {
-                  display: inline-block;
-                  padding: 10px 20px;
-                  background-color: #4CAF50;
-                  color: white;
-                  text-decoration: none;
-                  border-radius: 4px;
-                  margin: 10px 0;
-                }
-              </style>
-            </head>
-            <body>
-              <div class="header">
-                <h1>${newsletterRequest.subject}</h1>
-              </div>
-              <div class="content">
-                ${newsletterRequest.content}
-              </div>
-              <div class="footer">
-                <p>You're receiving this email because you subscribed to our newsletter.</p>
-                <p>© ${new Date().getFullYear()} Mabior Agau. All rights reserved.</p>
-                <p>
-                  <a href="[unsubscribe_url]" style="color: #666; text-decoration: underline;">
-                    Unsubscribe
-                  </a>
-                </p>
-              </div>
-            </body>
-          </html>
-        `,
+        html: newsletterRequest.content,
       }),
     });
 
+    const responseText = await res.text();
+    console.log('Resend API response:', responseText);
+
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Resend API error:', errorText);
-      throw new Error(errorText);
+      throw new Error(`Resend API error: ${responseText}`);
     }
 
     // Record the newsletter in the database
-    await supabaseClient
+    const { error: insertError } = await supabaseClient
       .from('newsletters')
       .insert({
         subject: newsletterRequest.subject,
         content: newsletterRequest.content,
         sent_at: new Date().toISOString(),
       });
+
+    if (insertError) {
+      console.error('Error recording newsletter:', insertError);
+      throw insertError;
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

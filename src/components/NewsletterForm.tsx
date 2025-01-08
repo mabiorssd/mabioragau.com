@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 export const NewsletterForm = () => {
   const [email, setEmail] = useState("");
@@ -119,13 +120,21 @@ export const NewsletterForm = () => {
             placeholder="Enter your email"
             required
             className="bg-black border border-green-500/30 text-green-400 placeholder:text-green-600"
+            disabled={isLoading}
           />
           <Button
             type="submit"
             disabled={isLoading}
             className="border-2 border-green-500 text-green-400 hover:bg-green-500/10"
           >
-            {isLoading ? "Subscribing..." : "Subscribe"}
+            {isLoading ? (
+              <div className="flex items-center">
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Subscribing...
+              </div>
+            ) : (
+              "Subscribe"
+            )}
           </Button>
         </div>
       </form>

@@ -5,15 +5,18 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
-interface NewsletterRequest {
+interface EmailRequest {
+  to: string[];
   subject: string;
-  content: string;
+  html: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -46,8 +49,8 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Unauthorized - Admin only');
     }
 
-    const newsletterRequest: NewsletterRequest = await req.json();
-    console.log('Newsletter request:', { subject: newsletterRequest.subject });
+    const emailRequest: EmailRequest = await req.json();
+    console.log('Newsletter request:', { subject: emailRequest.subject });
 
     // Get confirmed subscribers only
     const { data: subscribers, error: subscribersError } = await supabaseClient
@@ -69,7 +72,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emails = subscribers.map(sub => sub.email);
     console.log(`Sending newsletter to ${emails.length} subscribers`);
 
-    // Send newsletter with improved template
+    // Send newsletter with improved template and verified domain
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -77,10 +80,10 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Your Blog <newsletter@yourdomain.com>", // Replace with your verified domain
+        from: "Mabior Agau <news@newsletter.mabioragau.com>",
         bcc: emails,
-        subject: newsletterRequest.subject,
-        html: newsletterRequest.content,
+        subject: emailRequest.subject,
+        html: emailRequest.html,
       }),
     });
 
@@ -95,8 +98,8 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: insertError } = await supabaseClient
       .from('newsletters')
       .insert({
-        subject: newsletterRequest.subject,
-        content: newsletterRequest.content,
+        subject: emailRequest.subject,
+        content: emailRequest.html,
         sent_at: new Date().toISOString(),
       });
 

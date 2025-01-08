@@ -26,6 +26,7 @@ export const NewsletterForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    console.log('Submitting subscription for:', email);
 
     try {
       // First, check if the email is already subscribed

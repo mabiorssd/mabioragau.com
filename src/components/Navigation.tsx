@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   DropdownMenu,
@@ -51,8 +51,12 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
             initial="initial"
             animate="animate"
           >
-            <Shield className="inline-block" size={20} />
-            ~/mabior_agau
+            <img 
+              src="/lovable-uploads/c03a3f36-4ec5-4eed-9142-f4bc651ea572.png" 
+              alt="Mabior Agau Logo" 
+              className="h-8 w-auto"
+            />
+            <span className="hidden sm:inline">~/mabior_agau</span>
           </motion.div>
 
           {isMobile ? (

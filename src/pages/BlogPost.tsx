@@ -85,42 +85,37 @@ const BlogPost = () => {
     return text.slice(0, 160) + (text.length > 160 ? '...' : '');
   };
 
-  const metaTags = post ? {
-    title: String(post.title || ''),
-    description: getExcerpt(post.content),
-    url: String(currentUrl || ''),
-    image: post.image_url ? String(post.image_url) : undefined,
-  } : null;
+  // Prepare meta tags with proper type handling
+  const metaDescription = getExcerpt(post.content);
+  const pageTitle = post.title?.toString() || 'Blog Post';
+  const imageUrl = post.image_url?.toString();
 
   return (
     <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
-      {metaTags && (
-        <Helmet>
-          <title>{metaTags.title}</title>
-          <meta name="description" content={metaTags.description} />
-          
-          <meta property="og:type" content="article" />
-          <meta property="og:title" content={metaTags.title} />
-          <meta property="og:description" content={metaTags.description} />
-          <meta property="og:url" content={metaTags.url} />
-          {metaTags.image && (
-            <>
-              <meta property="og:image" content={metaTags.image} />
-              <meta property="og:image:width" content="1200" />
-              <meta property="og:image:height" content="630" />
-            </>
-          )}
-          
-          <meta name="twitter:card" content={metaTags.image ? "summary_large_image" : "summary"} />
-          <meta name="twitter:site" content="@yourtwitterhandle" />
-          <meta name="twitter:title" content={metaTags.title} />
-          <meta name="twitter:description" content={metaTags.description} />
-          {metaTags.image && <meta name="twitter:image" content={metaTags.image} />}
-          
-          <meta property="og:site_name" content="Your Site Name" />
-          <meta property="og:locale" content="en_US" />
-        </Helmet>
-      )}
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={metaDescription} />
+        
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:url" content={currentUrl} />
+        {imageUrl && (
+          <>
+            <meta property="og:image" content={imageUrl} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+          </>
+        )}
+        
+        <meta name="twitter:card" content={imageUrl ? "summary_large_image" : "summary"} />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+        
+        <meta property="og:site_name" content="Your Site Name" />
+        <meta property="og:locale" content="en_US" />
+      </Helmet>
 
       <Navigation activeSection="blog" setActiveSection={() => {}} />
       <motion.main 

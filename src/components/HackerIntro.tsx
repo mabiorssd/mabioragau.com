@@ -24,6 +24,7 @@ export const HackerIntro = ({ onComplete }: { onComplete: () => void }) => {
   const [showResponse, setShowResponse] = useState(false);
   const command = "whoami";
   const response = [
+    "> Welcome to the Cybersecurity Terminal...",
     "> Initializing system...",
     "> Running security protocols...",
     "> Accessing encrypted database...",
@@ -39,7 +40,7 @@ export const HackerIntro = ({ onComplete }: { onComplete: () => void }) => {
       setShowCommand(false);
       setShowResponse(false);
       onComplete();
-    }, 4000);
+    }, 5000);
 
     return () => {
       clearTimeout(timer1);

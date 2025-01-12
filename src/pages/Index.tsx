@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { MatrixBackground } from "@/components/MatrixBackground";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
@@ -7,11 +8,13 @@ import { ProjectsSection } from "@/components/ProjectsSection";
 import { BlogSection } from "@/components/BlogSection";
 import { ContactForm } from "@/components/ContactForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { HackerIntro } from "@/components/HackerIntro";
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
   const [text, setText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
+  const [showContent, setShowContent] = useState(false);
   const fullText = "Security Researcher | Penetration Tester | Ethical Hacker";
 
   const handleScroll = useCallback(() => {
@@ -34,21 +37,23 @@ const Portfolio = () => {
     let typingInterval: NodeJS.Timeout;
     let cursorInterval: NodeJS.Timeout;
 
-    const startTyping = () => {
-      typingInterval = setInterval(() => {
-        setText(fullText.slice(0, index));
-        index++;
-        if (index > fullText.length) {
-          clearInterval(typingInterval);
-        }
-      }, 100);
-    };
+    if (showContent) {
+      const startTyping = () => {
+        typingInterval = setInterval(() => {
+          setText(fullText.slice(0, index));
+          index++;
+          if (index > fullText.length) {
+            clearInterval(typingInterval);
+          }
+        }, 100);
+      };
 
-    startTyping();
+      startTyping();
 
-    cursorInterval = setInterval(() => {
-      setShowCursor(prev => !prev);
-    }, 500);
+      cursorInterval = setInterval(() => {
+        setShowCursor(prev => !prev);
+      }, 500);
+    }
 
     window.addEventListener("scroll", handleScroll);
 
@@ -57,26 +62,38 @@ const Portfolio = () => {
       clearInterval(cursorInterval);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [fullText, handleScroll]);
+  }, [fullText, handleScroll, showContent]);
 
   return (
-    <div className="min-h-screen bg-black text-green-500 font-mono relative overflow-hidden">
-      <MatrixBackground />
-      <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
-      <HeroSection text={text} showCursor={showCursor} />
-      <ServicesSection />
-      <ProjectsSection />
-      <BlogSection />
-      <div className="py-12 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-green-400 mb-8 text-center">
-            Subscribe to My Newsletter
-          </h2>
-          <NewsletterForm />
-        </div>
-      </div>
-      <ContactForm />
-    </div>
+    <>
+      <HackerIntro onComplete={() => setShowContent(true)} />
+      <AnimatePresence>
+        {showContent && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="min-h-screen bg-black text-green-500 font-mono relative overflow-hidden"
+          >
+            <MatrixBackground />
+            <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+            <HeroSection text={text} showCursor={showCursor} />
+            <ServicesSection />
+            <ProjectsSection />
+            <BlogSection />
+            <div className="py-12 px-6">
+              <div className="max-w-6xl mx-auto">
+                <h2 className="text-2xl md:text-3xl font-bold text-green-400 mb-8 text-center">
+                  Subscribe to My Newsletter
+                </h2>
+                <NewsletterForm />
+              </div>
+            </div>
+            <ContactForm />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

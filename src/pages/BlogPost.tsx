@@ -77,10 +77,11 @@ const BlogPost = () => {
     );
   }
 
-  const getExcerpt = (content: string) => {
+  const getExcerpt = (content: string | null | undefined) => {
+    if (!content) return '';
     const div = document.createElement('div');
     div.innerHTML = content;
-    const text = div.textContent || div.innerText;
+    const text = div.textContent || div.innerText || '';
     return text.slice(0, 160) + (text.length > 160 ? '...' : '');
   };
 
@@ -89,11 +90,11 @@ const BlogPost = () => {
       {post && (
         <Helmet>
           <title>{String(post.title || '')}</title>
-          <meta name="description" content={String(getExcerpt(post.content || ''))} />
+          <meta name="description" content={getExcerpt(post.content)} />
           
           <meta property="og:type" content="article" />
           <meta property="og:title" content={String(post.title || '')} />
-          <meta property="og:description" content={String(getExcerpt(post.content || ''))} />
+          <meta property="og:description" content={getExcerpt(post.content)} />
           <meta property="og:url" content={String(currentUrl)} />
           {post.image_url && (
             <>
@@ -106,7 +107,7 @@ const BlogPost = () => {
           <meta name="twitter:card" content={post.image_url ? "summary_large_image" : "summary"} />
           <meta name="twitter:site" content="@yourtwitterhandle" />
           <meta name="twitter:title" content={String(post.title || '')} />
-          <meta name="twitter:description" content={String(getExcerpt(post.content || ''))} />
+          <meta name="twitter:description" content={getExcerpt(post.content)} />
           {post.image_url && <meta name="twitter:image" content={String(post.image_url)} />}
           
           <meta property="og:site_name" content="Your Site Name" />

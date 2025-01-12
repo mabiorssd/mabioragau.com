@@ -34,12 +34,10 @@ const BlogPost = () => {
     const trackPageView = async () => {
       if (post?.id) {
         try {
-          // Get country information
           const response = await fetch('https://ipapi.co/json/');
           const locationData = await response.json();
           const countryCode = locationData.country_code || 'UNKNOWN';
 
-          // Call the increment_view_count function
           const { error } = await supabase.rpc('increment_view_count', {
             post_id: post.id,
             country_code: countryCode
@@ -88,34 +86,33 @@ const BlogPost = () => {
 
   return (
     <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
-      <Helmet>
-        <title>{post.title}</title>
-        <meta name="description" content={getExcerpt(post.content)} />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={getExcerpt(post.content)} />
-        <meta property="og:url" content={currentUrl} />
-        {post.image_url && (
-          <>
-            <meta property="og:image" content={post.image_url} />
-            <meta property="og:image:width" content="1200" />
-            <meta property="og:image:height" content="630" />
-          </>
-        )}
-        
-        {/* Twitter Card */}
-        <meta name="twitter:card" content={post.image_url ? "summary_large_image" : "summary"} />
-        <meta name="twitter:site" content="@yourtwitterhandle" />
-        <meta name="twitter:title" content={post.title} />
-        <meta name="twitter:description" content={getExcerpt(post.content)} />
-        {post.image_url && <meta name="twitter:image" content={post.image_url} />}
-        
-        {/* WhatsApp specific */}
-        <meta property="og:site_name" content="Your Site Name" />
-        <meta property="og:locale" content="en_US" />
-      </Helmet>
+      {post && (
+        <Helmet>
+          <title>{String(post.title || '')}</title>
+          <meta name="description" content={String(getExcerpt(post.content || ''))} />
+          
+          <meta property="og:type" content="article" />
+          <meta property="og:title" content={String(post.title || '')} />
+          <meta property="og:description" content={String(getExcerpt(post.content || ''))} />
+          <meta property="og:url" content={String(currentUrl)} />
+          {post.image_url && (
+            <>
+              <meta property="og:image" content={String(post.image_url)} />
+              <meta property="og:image:width" content="1200" />
+              <meta property="og:image:height" content="630" />
+            </>
+          )}
+          
+          <meta name="twitter:card" content={post.image_url ? "summary_large_image" : "summary"} />
+          <meta name="twitter:site" content="@yourtwitterhandle" />
+          <meta name="twitter:title" content={String(post.title || '')} />
+          <meta name="twitter:description" content={String(getExcerpt(post.content || ''))} />
+          {post.image_url && <meta name="twitter:image" content={String(post.image_url)} />}
+          
+          <meta property="og:site_name" content="Your Site Name" />
+          <meta property="og:locale" content="en_US" />
+        </Helmet>
+      )}
 
       <Navigation activeSection="blog" setActiveSection={() => {}} />
       <motion.main 

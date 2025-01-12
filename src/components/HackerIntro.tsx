@@ -24,14 +24,14 @@ export const HackerIntro = ({ onComplete }: { onComplete: () => void }) => {
   const [showResponse, setShowResponse] = useState(false);
   const command = "whoami";
   const response = [
-    "> Welcome to the Cybersecurity Terminal...",
-    "> Initializing system...",
-    "> Running security protocols...",
-    "> Accessing encrypted database...",
-    "> Identity confirmed: Mabior Agau",
-    "> Security clearance: Level 5",
-    "> Status: Active",
-    "> Loading secure environment..."
+    "[system]$ Welcome to the Terminal...",
+    "[system]$ Initializing secure connection...",
+    "[system]$ Running security protocols...",
+    "[system]$ Authenticating user credentials...",
+    "[system]$ Access granted: Mabior Agau",
+    "[system]$ Security clearance: Level 5",
+    "[system]$ Status: Active",
+    "[system]$ Loading secure environment..."
   ];
 
   useEffect(() => {
@@ -57,13 +57,15 @@ export const HackerIntro = ({ onComplete }: { onComplete: () => void }) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="w-full max-w-2xl p-8 font-mono text-green-500">
+          <div className="w-full max-w-2xl p-8 font-mono text-green-500 bg-black/80 border border-green-500/20 rounded-lg shadow-lg">
             {showCommand && (
               <motion.div
                 variants={typewriterVariants}
                 initial="hidden"
                 animate="visible"
+                className="flex items-center"
               >
+                <span className="text-green-600 mr-2">[root@mabior-terminal]# </span>
                 <motion.span className="text-2xl">
                   {command.split("").map((char, index) => (
                     <motion.span
@@ -78,10 +80,8 @@ export const HackerIntro = ({ onComplete }: { onComplete: () => void }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ repeat: Infinity, duration: 0.7 }}
-                    className="inline-block ml-1"
-                  >
-                    _
-                  </motion.span>
+                    className="inline-block w-3 h-5 bg-green-500 ml-1"
+                  />
                 </motion.span>
               </motion.div>
             )}
@@ -98,11 +98,25 @@ export const HackerIntro = ({ onComplete }: { onComplete: () => void }) => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="text-green-400"
+                    className="text-green-400 font-mono"
                   >
                     {line}
                   </motion.div>
                 ))}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: response.length * 0.1 }}
+                  className="text-green-500 mt-4"
+                >
+                  <span className="text-green-600">[system]$ </span>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ repeat: Infinity, duration: 0.7 }}
+                    className="inline-block w-3 h-5 bg-green-500 ml-1"
+                  />
+                </motion.div>
               </motion.div>
             )}
           </div>

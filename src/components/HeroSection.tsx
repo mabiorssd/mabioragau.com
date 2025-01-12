@@ -47,31 +47,26 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
           animate="visible"
         >
           <motion.div variants={terminalAnimation} className="font-mono">
-            <motion.p className="text-green-400 text-sm mb-2">$ whoami</motion.p>
-            <motion.p className="text-green-500 text-xl font-bold">[SYSTEM] Identifying user...</motion.p>
-            <motion.p className="text-green-400 text-sm opacity-80 mt-2">
-              &gt; Access Level: Administrator<br />
-              &gt; Location: Undisclosed<br />
-              &gt; Status: Active<br />
-              &gt; Specialization: Advanced Penetration Testing
-            </motion.p>
+            <motion.p className="text-green-400 text-sm mb-2">[root@mabior-terminal]# cat profile.txt</motion.p>
+            <motion.div className="text-green-500 text-xl font-bold">
+              [SYSTEM] Loading profile data...
+            </motion.div>
+            <motion.div className="text-green-400 text-sm opacity-80 mt-2 space-y-1">
+              <p>&gt; User: Mabior Agau</p>
+              <p>&gt; Access Level: Administrator</p>
+              <p>&gt; Location: Undisclosed</p>
+              <p>&gt; Status: Active</p>
+              <p>&gt; Specialization: Advanced Penetration Testing</p>
+            </motion.div>
           </motion.div>
 
-          <motion.h2 
-            className="text-3xl md:text-4xl font-bold text-green-500 tracking-tight text-center mt-6"
-            variants={glitchAnimation}
-            initial="initial"
-            animate="animate"
-          >
-            Mabior Agau
-          </motion.h2>
-
-          <div className="text-base md:text-lg text-green-400 font-medium text-center">
-            {text}{showCursor ? "_" : " "}
+          <div className="text-base md:text-lg text-green-400 font-medium">
+            <span className="text-green-600 mr-2">[system]$</span>
+            {text}{showCursor && <span className="inline-block w-3 h-5 bg-green-500 ml-1 animate-pulse"/>}
           </div>
 
-          <p className="text-sm md:text-base text-green-600 max-w-2xl mx-auto text-center leading-relaxed">
-            Specialized in advanced penetration testing, zero-day research, and red team operations. 
+          <p className="text-sm md:text-base text-green-600 max-w-2xl mx-auto leading-relaxed">
+            <span className="text-green-500">[INFO]</span> Specialized in advanced penetration testing, zero-day research, and red team operations. 
             Committed to strengthening cybersecurity through ethical hacking and comprehensive security assessments.
           </p>
 

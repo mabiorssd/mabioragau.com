@@ -77,49 +77,41 @@ const BlogPost = () => {
     );
   }
 
-  const getExcerpt = (content: string | null | undefined) => {
-    if (!content) return '';
+  const getExcerpt = (content: string) => {
     const div = document.createElement('div');
     div.innerHTML = content;
     const text = div.textContent || div.innerText || '';
     return text.slice(0, 160) + (text.length > 160 ? '...' : '');
   };
 
-  const renderMetaTags = () => {
-    if (!post) return null;
-    
-    const title = String(post.title || 'Blog Post');
-    const description = String(getExcerpt(post.content));
-    const imageUrl = post.image_url ? String(post.image_url) : undefined;
-
-    return (
+  return (
+    <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
       <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
+        <title>{post.title}</title>
+        <meta name="description" content={getExcerpt(post.content)} />
         <meta property="og:type" content="article" />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content={String(currentUrl)} />
-        {imageUrl && (
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={getExcerpt(post.content)} />
+        <meta property="og:url" content={currentUrl} />
+        {post.image_url && (
           <>
-            <meta property="og:image" content={imageUrl} />
+            <meta property="og:image" content={post.image_url} />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
           </>
         )}
-        <meta name="twitter:card" content={imageUrl ? "summary_large_image" : "summary"} />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
-        {imageUrl && <meta name="twitter:image" content={imageUrl} />}
-        <meta property="og:site_name" content="Your Site Name" />
+        <meta 
+          name="twitter:card" 
+          content={post.image_url ? "summary_large_image" : "summary"} 
+        />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={getExcerpt(post.content)} />
+        {post.image_url && (
+          <meta name="twitter:image" content={post.image_url} />
+        )}
+        <meta property="og:site_name" content="Mabior Blog" />
         <meta property="og:locale" content="en_US" />
       </Helmet>
-    );
-  };
-
-  return (
-    <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
-      {renderMetaTags()}
       <Navigation activeSection="blog" setActiveSection={() => {}} />
       <motion.main 
         className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl"

@@ -26,25 +26,41 @@ serve(async (req) => {
 
     // First, get the access token
     console.log('Getting MTN API access token...');
+    
+    // Create Basic Auth token - MTN requires the Primary Key as username with empty password
+    const basicAuthToken = btoa(`${mtnPrimaryKey}:`);
+    console.log('Using Basic Auth token for authentication');
+
     const tokenResponse = await fetch(
       'https://sandbox.momodeveloper.mtn.com/collection/token/',
       {
         method: 'POST',
         headers: {
-          'Authorization': `Basic ${btoa(`${mtnPrimaryKey}:`)}`,
+          'Authorization': `Basic ${basicAuthToken}`,
           'Ocp-Apim-Subscription-Key': mtnSecondaryKey,
+          'Content-Type': 'application/json',
         },
       }
     );
 
+    console.log('Token response status:', tokenResponse.status);
+    const tokenResponseText = await tokenResponse.text();
+    console.log('Token response body:', tokenResponseText);
+
     if (!tokenResponse.ok) {
-      const tokenError = await tokenResponse.text();
-      console.error('MTN Token Error:', tokenError);
+      console.error('MTN Token Error:', tokenResponseText);
       throw new Error(`Failed to get MTN access token: ${tokenResponse.status} ${tokenResponse.statusText}`);
     }
 
-    const { access_token } = await tokenResponse.json();
-    console.log('Successfully obtained MTN access token');
+    let access_token;
+    try {
+      const tokenData = JSON.parse(tokenResponseText);
+      access_token = tokenData.access_token;
+      console.log('Successfully parsed access token');
+    } catch (error) {
+      console.error('Error parsing token response:', error);
+      throw new Error('Invalid token response format');
+    }
 
     // Generate X-Reference-Id for MTN API
     const xReferenceId = crypto.randomUUID();
@@ -63,7 +79,12 @@ serve(async (req) => {
       ...corsHeaders
     };
 
-    console.log('Making request to MTN API...');
+    console.log('Making request to MTN API with headers:', {
+      'X-Reference-Id': xReferenceId,
+      'X-Target-Environment': 'sandbox',
+      'Content-Type': 'application/json',
+      // Don't log Authorization header for security
+    });
     
     // Call MTN Mobile Money API
     const response = await fetch(mtnEndpoint, {

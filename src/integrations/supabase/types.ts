@@ -84,39 +84,6 @@ export type Database = {
         }
         Relationships: []
       }
-      donations: {
-        Row: {
-          amount: number
-          created_at: string
-          currency: string
-          id: string
-          payer_phone: string | null
-          reference: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          currency?: string
-          id?: string
-          payer_phone?: string | null
-          reference: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          currency?: string
-          id?: string
-          payer_phone?: string | null
-          reference?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       newsletter_subscriptions: {
         Row: {
           confirmation_token: string | null

@@ -13,12 +13,14 @@ serve(async (req) => {
 
   try {
     const { amount, reference } = await req.json();
+    console.log('Received donation request:', { amount, reference });
     
     // Get the MTN API keys from environment variables
     const mtnPrimaryKey = Deno.env.get('MTN_PRIMARY_KEY');
     const mtnSecondaryKey = Deno.env.get('MTN_SECONDARY_KEY');
     
     if (!mtnPrimaryKey || !mtnSecondaryKey) {
+      console.error('MTN API keys missing');
       throw new Error('MTN API keys not configured');
     }
 
@@ -27,6 +29,7 @@ serve(async (req) => {
 
     // Generate X-Reference-Id for MTN API
     const xReferenceId = crypto.randomUUID();
+    console.log('Generated X-Reference-Id:', xReferenceId);
 
     // Create request headers with API key
     const headers = {
@@ -38,6 +41,8 @@ serve(async (req) => {
       ...corsHeaders
     };
 
+    console.log('Making request to MTN API...');
+    
     // Call MTN Mobile Money API
     const response = await fetch(mtnEndpoint, {
       method: 'POST',
@@ -60,6 +65,12 @@ serve(async (req) => {
       statusText: response.statusText,
       headers: Object.fromEntries(response.headers.entries())
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('MTN API Error:', errorText);
+      throw new Error(`MTN API Error: ${response.status} ${response.statusText}`);
+    }
 
     const data = await response.json();
     console.log('MTN API Response data:', data);

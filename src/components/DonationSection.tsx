@@ -13,34 +13,48 @@ export const DonationSection = () => {
   const handleDonation = async (amount: number) => {
     setIsProcessing(true);
     try {
+      console.log('Starting donation process for amount:', amount);
       const reference = `DONATION_${amount}_${Date.now()}`;
       
       // Create donation record in Supabase
+      console.log('Creating donation record in Supabase...');
       const { error: dbError } = await supabase
         .from('donations')
-        .insert([{ amount, reference }]);
+        .insert([{ 
+          amount, 
+          reference,
+          status: 'pending'
+        }]);
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error('Supabase error:', dbError);
+        throw dbError;
+      }
 
+      console.log('Calling process-donation function...');
       // Call MTN MoMo API via Edge Function
       const { data, error } = await supabase.functions.invoke('process-donation', {
         body: { amount, reference }
       });
 
+      console.log('Edge function response:', { data, error });
+
       if (error) throw error;
 
-      // Initialize MTN Widget with the returned data
-      if (data?.redirectUrl) {
-        window.location.href = data.redirectUrl;
+      if (data?.success) {
+        toast({
+          title: "Success",
+          description: "Donation initiated. Please check your phone for the payment prompt.",
+        });
       } else {
-        throw new Error('No redirect URL received');
+        throw new Error(data?.error || 'Failed to process donation');
       }
 
     } catch (error) {
       console.error('Donation error:', error);
       toast({
         title: "Error",
-        description: "Failed to process donation. Please try again.",
+        description: error.message || "Failed to process donation. Please try again.",
         variant: "destructive"
       });
     } finally {

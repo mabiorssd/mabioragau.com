@@ -24,17 +24,39 @@ serve(async (req) => {
       throw new Error('MTN API keys not configured');
     }
 
-    // MTN Mobile Money API endpoint (sandbox for testing)
-    const mtnEndpoint = 'https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay';
+    // First, get the access token
+    console.log('Getting MTN API access token...');
+    const tokenResponse = await fetch(
+      'https://sandbox.momodeveloper.mtn.com/collection/token/',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${btoa(`${mtnPrimaryKey}:`)}`,
+          'Ocp-Apim-Subscription-Key': mtnSecondaryKey,
+        },
+      }
+    );
+
+    if (!tokenResponse.ok) {
+      const tokenError = await tokenResponse.text();
+      console.error('MTN Token Error:', tokenError);
+      throw new Error(`Failed to get MTN access token: ${tokenResponse.status} ${tokenResponse.statusText}`);
+    }
+
+    const { access_token } = await tokenResponse.json();
+    console.log('Successfully obtained MTN access token');
 
     // Generate X-Reference-Id for MTN API
     const xReferenceId = crypto.randomUUID();
     console.log('Generated X-Reference-Id:', xReferenceId);
 
-    // Create request headers with API key
+    // MTN Mobile Money API endpoint (sandbox for testing)
+    const mtnEndpoint = 'https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay';
+
+    // Create request headers with the obtained access token
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${mtnPrimaryKey}`,
+      'Authorization': `Bearer ${access_token}`,
       'X-Reference-Id': xReferenceId,
       'X-Target-Environment': 'sandbox',
       'Ocp-Apim-Subscription-Key': mtnSecondaryKey,
@@ -72,14 +94,12 @@ serve(async (req) => {
       throw new Error(`MTN API Error: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json();
-    console.log('MTN API Response data:', data);
+    console.log('Payment request successful');
 
     return new Response(
       JSON.stringify({
         success: true,
-        reference: xReferenceId,
-        data
+        reference: xReferenceId
       }),
       { 
         headers: { 

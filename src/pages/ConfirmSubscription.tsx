@@ -4,12 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 
 const ConfirmSubscription = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const [isConfirming, setIsConfirming] = useState(true);
+  const [isSuccess, setIsSuccess] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -35,12 +36,14 @@ const ConfirmSubscription = () => {
 
         if (error) throw error;
 
+        setIsSuccess(true);
         toast({
           title: "Subscription confirmed!",
           description: "Thank you for subscribing to our newsletter.",
         });
       } catch (error) {
         console.error("Error confirming subscription:", error);
+        setIsSuccess(false);
         toast({
           variant: "destructive",
           title: "Error",
@@ -65,7 +68,17 @@ const ConfirmSubscription = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center space-y-4">
-            <p>Your subscription has been processed.</p>
+            {isSuccess ? (
+              <>
+                <CheckCircle2 className="w-16 h-16 text-green-500 animate-pulse" />
+                <p className="text-center">Your subscription has been confirmed successfully!</p>
+              </>
+            ) : (
+              <>
+                <XCircle className="w-16 h-16 text-red-500 animate-pulse" />
+                <p className="text-center text-red-400">Failed to confirm your subscription.</p>
+              </>
+            )}
             <Button
               onClick={() => navigate("/")}
               className="border border-green-500 hover:bg-green-500/10"

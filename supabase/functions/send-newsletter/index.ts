@@ -10,7 +10,6 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  to: string[];
   subject: string;
   html: string;
 }
@@ -29,57 +28,48 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const emailRequest: EmailRequest = await req.json();
-    console.log('Email request:', { 
-      subject: emailRequest.subject,
-      recipients: emailRequest.to 
-    });
+    // Verify admin status
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
+      req.headers.get('Authorization')?.split('Bearer ')[1] ?? ''
+    );
 
-    // If it's a single recipient, it's a confirmation email
-    const isConfirmation = emailRequest.to.length === 1;
-
-    if (!isConfirmation) {
-      // Verify admin status for newsletter sending
-      const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
-        req.headers.get('Authorization')?.split('Bearer ')[1] ?? ''
-      );
-
-      if (authError || !user) {
-        console.error('Authentication error:', authError);
-        throw new Error('Unauthorized');
-      }
-
-      const { data: profile } = await supabaseClient
-        .from('profiles')
-        .select('is_admin')
-        .eq('id', user.id)
-        .single();
-
-      if (!profile?.is_admin) {
-        throw new Error('Unauthorized - Admin only');
-      }
-
-      // Get confirmed subscribers for newsletter
-      const { data: subscribers, error: subscribersError } = await supabaseClient
-        .from('newsletter_subscriptions')
-        .select('email')
-        .eq('confirmed', true)
-        .eq('subscribed', true);
-
-      if (subscribersError) {
-        console.error('Error fetching subscribers:', subscribersError);
-        throw subscribersError;
-      }
-
-      if (!subscribers?.length) {
-        console.log('No confirmed subscribers found');
-        throw new Error('No confirmed subscribers found');
-      }
-
-      emailRequest.to = subscribers.map(sub => sub.email);
+    if (authError || !user) {
+      console.error('Authentication error:', authError);
+      throw new Error('Unauthorized');
     }
 
-    console.log(`Sending email to ${emailRequest.to.length} recipient(s)`);
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile?.is_admin) {
+      throw new Error('Unauthorized - Admin only');
+    }
+
+    // Get confirmed subscribers
+    const { data: subscribers, error: subscribersError } = await supabaseClient
+      .from('newsletter_subscriptions')
+      .select('email')
+      .eq('confirmed', true)
+      .eq('subscribed', true);
+
+    if (subscribersError) {
+      console.error('Error fetching subscribers:', subscribersError);
+      throw subscribersError;
+    }
+
+    if (!subscribers?.length) {
+      console.log('No confirmed subscribers found');
+      throw new Error('No confirmed subscribers found');
+    }
+
+    const emailRequest: EmailRequest = await req.json();
+    console.log('Newsletter request:', { 
+      subject: emailRequest.subject,
+      recipientCount: subscribers.length 
+    });
 
     // Send email using Resend
     const res = await fetch("https://api.resend.com/emails", {
@@ -90,8 +80,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: "Mabior Agau <news@newsletter.mabioragau.com>",
-        to: isConfirmation ? emailRequest.to : undefined,
-        bcc: isConfirmation ? undefined : emailRequest.to,
+        bcc: subscribers.map(sub => sub.email),
         subject: emailRequest.subject,
         html: emailRequest.html,
       }),
@@ -104,20 +93,18 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(`Resend API error: ${responseText}`);
     }
 
-    // Record the newsletter in the database (only for newsletters, not confirmations)
-    if (!isConfirmation) {
-      const { error: insertError } = await supabaseClient
-        .from('newsletters')
-        .insert({
-          subject: emailRequest.subject,
-          content: emailRequest.html,
-          sent_at: new Date().toISOString(),
-        });
+    // Record the newsletter in the database
+    const { error: insertError } = await supabaseClient
+      .from('newsletters')
+      .insert({
+        subject: emailRequest.subject,
+        content: emailRequest.html,
+        sent_at: new Date().toISOString(),
+      });
 
-      if (insertError) {
-        console.error('Error recording newsletter:', insertError);
-        throw insertError;
-      }
+    if (insertError) {
+      console.error('Error recording newsletter:', insertError);
+      throw insertError;
     }
 
     return new Response(JSON.stringify({ success: true }), {

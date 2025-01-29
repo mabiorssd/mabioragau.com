@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { useQuery } from "@tanstack/react-query";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Loader2 } from "lucide-react";
 
 type Subscriber = {
   id: string;
@@ -20,7 +23,7 @@ export const NewsletterManager = () => {
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
 
-  const { data: subscribers } = useQuery({
+  const { data: subscribers, refetch: refetchSubscribers } = useQuery({
     queryKey: ["subscribers"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -89,24 +92,14 @@ export const NewsletterManager = () => {
         </html>
       `;
 
-      const response = await fetch(
-        'https://zrvzcsdxbhzwfabvndbo.supabase.co/functions/v1/send-newsletter',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session?.access_token}`,
-          },
-          body: JSON.stringify({ 
-            subject,
-            content: emailTemplate
-          }),
-        }
-      );
+      const response = await supabase.functions.invoke('send-newsletter', {
+        body: { 
+          subject,
+          html: emailTemplate
+        },
+      });
 
-      if (!response.ok) {
-        throw new Error('Failed to send newsletter');
-      }
+      if (response.error) throw response.error;
 
       toast({
         title: "Success",
@@ -115,17 +108,20 @@ export const NewsletterManager = () => {
 
       setSubject("");
       setContent("");
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending newsletter:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send newsletter. Please try again.",
+        description: error.message || "Failed to send newsletter. Please try again.",
       });
     } finally {
       setIsSending(false);
     }
   };
+
+  const confirmedSubscribers = subscribers?.filter(sub => sub.confirmed) || [];
+  const pendingSubscribers = subscribers?.filter(sub => !sub.confirmed) || [];
 
   return (
     <div className="space-y-6">
@@ -136,61 +132,103 @@ export const NewsletterManager = () => {
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="subject" className="block text-sm font-medium mb-1">
-            Subject
-          </label>
-          <Input
-            id="subject"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            placeholder="Newsletter subject"
-          />
-        </div>
+      <Tabs defaultValue="compose" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="compose">Compose Newsletter</TabsTrigger>
+          <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
+        </TabsList>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Content
-          </label>
-          <RichTextEditor value={content} onChange={setContent} />
-        </div>
+        <TabsContent value="compose" className="space-y-4">
+          <div>
+            <label htmlFor="subject" className="block text-sm font-medium mb-1">
+              Subject
+            </label>
+            <Input
+              id="subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              placeholder="Newsletter subject"
+            />
+          </div>
 
-        <Button
-          onClick={handleSendNewsletter}
-          disabled={isSending || !subject.trim() || !content.trim()}
-        >
-          {isSending ? "Sending..." : "Send Newsletter"}
-        </Button>
-      </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Content
+            </label>
+            <RichTextEditor value={content} onChange={setContent} />
+          </div>
 
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4">Subscriber List</h3>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Email</TableHead>
-              <TableHead>Subscription Date</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {subscribers?.map((subscriber) => (
-              <TableRow key={subscriber.id}>
-                <TableCell>{subscriber.email}</TableCell>
-                <TableCell>{new Date(subscriber.created_at).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    subscriber.confirmed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {subscriber.confirmed ? 'Confirmed' : 'Pending'}
-                  </span>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          <Button
+            onClick={handleSendNewsletter}
+            disabled={isSending || !subject.trim() || !content.trim()}
+          >
+            {isSending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send Newsletter"
+            )}
+          </Button>
+        </TabsContent>
+
+        <TabsContent value="subscribers">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Confirmed Subscribers ({confirmedSubscribers.length})</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Subscription Date</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {confirmedSubscribers.map((subscriber) => (
+                    <TableRow key={subscriber.id}>
+                      <TableCell>{subscriber.email}</TableCell>
+                      <TableCell>{new Date(subscriber.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500/20 text-green-500 hover:bg-green-500/30">
+                          Confirmed
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Pending Confirmations ({pendingSubscribers.length})</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Subscription Date</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pendingSubscribers.map((subscriber) => (
+                    <TableRow key={subscriber.id}>
+                      <TableCell>{subscriber.email}</TableCell>
+                      <TableCell>{new Date(subscriber.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        <Badge className="bg-yellow-500/20 text-yellow-500 hover:bg-yellow-500/30">
+                          Pending
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

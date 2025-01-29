@@ -10,6 +10,7 @@ import Admin from "./pages/Admin";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
+import ConfirmSubscription from "./pages/ConfirmSubscription";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/confirm-subscription" element={<ConfirmSubscription />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

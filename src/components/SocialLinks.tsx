@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Github, Mail, Linkedin, Twitter } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const socialLinks = [
   { icon: <Github size={20} />, link: "https://github.com/mabiorssd/", label: "GitHub" },
@@ -10,21 +11,37 @@ const socialLinks = [
 
 export const SocialLinks = () => {
   return (
-    <motion.div className="flex gap-3">
-      {socialLinks.map((social, index) => (
-        <motion.a
-          key={index}
-          href={social.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={social.label}
-          className="p-2 border border-green-500/30 rounded-lg hover:border-green-400 hover:text-green-400 transition-all"
-          whileHover={{ scale: 1.05, borderColor: "#00ff00" }}
-          whileTap={{ scale: 0.95 }}
-        >
-          {social.icon}
-        </motion.a>
-      ))}
+    <motion.div 
+      className="flex gap-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <TooltipProvider>
+        {socialLinks.map((social, index) => (
+          <Tooltip key={index}>
+            <TooltipTrigger asChild>
+              <motion.a
+                href={social.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+                className="p-3 cyber-border rounded-lg hover:bg-green-500/10 transition-all duration-300 hover-glow"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                {social.icon}
+              </motion.a>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{social.label}</p>
+            </TooltipContent>
+          </Tooltip>
+        ))}
+      </TooltipProvider>
     </motion.div>
   );
 };

@@ -51,7 +51,7 @@
   
   body {
     @apply bg-background text-foreground font-mono;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 20, 20, 0.95));
+    background: radial-gradient(circle at center, rgba(0, 40, 0, 0.95) 0%, rgba(0, 0, 0, 1) 100%);
   }
   
   #root {
@@ -61,23 +61,38 @@
   }
 
   section {
-    @apply py-8 backdrop-blur-sm bg-black/30 rounded-lg my-4;
-    box-shadow: 0 4px 6px -1px rgba(0, 255, 255, 0.1);
+    @apply py-8 backdrop-blur-sm bg-black/30 rounded-lg my-8 transform transition-all duration-300 hover:scale-[1.02] hover:bg-black/40;
+    box-shadow: 0 8px 32px -4px rgba(0, 255, 0, 0.2);
+    border: 1px solid rgba(0, 255, 0, 0.1);
   }
 
   h2, h3, h4 {
-    @apply mb-4 text-green-400 font-bold;
-    text-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    @apply mb-6 text-green-400 font-bold relative;
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  }
+
+  h2::after, h3::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-green-500/30;
   }
 
   p {
-    @apply mb-2 text-green-300;
-    text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    @apply mb-4 text-green-300 leading-relaxed;
+    text-shadow: 0 0 12px rgba(0, 255, 0, 0.3);
   }
 
   a {
-    @apply text-green-400 hover:text-green-300 transition-colors duration-200;
-    text-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+    @apply text-green-400 hover:text-green-300 transition-all duration-300 relative;
+    text-shadow: 0 0 12px rgba(0, 255, 0, 0.4);
+  }
+
+  a::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all duration-300;
+  }
+
+  a:hover::after {
+    @apply w-full;
   }
 }
 
@@ -94,8 +109,8 @@
 .glitch {
   animation: glitch 0.3s infinite;
   text-shadow: 
-    2px 2px 0 rgba(0, 255, 255, 0.4),
-    -2px -2px 0 rgba(0, 255, 255, 0.4);
+    2px 2px 0 rgba(0, 255, 0, 0.4),
+    -2px -2px 0 rgba(0, 255, 0, 0.4);
 }
 
 @keyframes glitch {
@@ -116,5 +131,75 @@
   }
   100% {
     transform: translate(0);
+  }
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  filter: drop-shadow(0 0 8px rgba(0, 255, 0, 0.6));
+  transform: translateY(-2px);
+}
+
+.cyber-border {
+  position: relative;
+  border: 1px solid rgba(0, 255, 0, 0.2);
+}
+
+.cyber-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1px solid rgba(0, 255, 0, 0.1);
+  border-radius: inherit;
+  animation: borderPulse 2s infinite;
+}
+
+@keyframes borderPulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.matrix-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.matrix-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 255, 0, 0.05) 25%,
+    transparent 25%,
+    transparent 75%,
+    rgba(0, 255, 0, 0.05) 75%
+  );
+  background-size: 4px 4px;
+  animation: matrixShift 20s linear infinite;
+}
+
+@keyframes matrixShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
   }
 }

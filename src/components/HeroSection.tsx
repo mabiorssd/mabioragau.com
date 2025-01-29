@@ -34,45 +34,74 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
   return (
     <motion.section 
       id="about"
-      className="min-h-[80vh] flex items-center justify-center px-4 relative"
+      className="min-h-[90vh] flex items-center justify-center px-4 relative matrix-bg"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="max-w-3xl mx-auto w-full">
+      <div className="max-w-4xl mx-auto w-full">
         <motion.div 
-          className="space-y-4 text-left bg-black/50 p-6 rounded-lg border border-green-500/20"
+          className="space-y-6 text-left bg-black/50 p-8 rounded-lg cyber-border backdrop-blur-md"
           variants={terminalAnimation}
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={terminalAnimation} className="font-mono">
-            <motion.p className="text-green-400 text-sm mb-2">[root@mabior-terminal]# cat profile.txt</motion.p>
-            <motion.div className="text-green-500 text-xl font-bold">
-              [SYSTEM] Loading profile data...
+          <motion.div variants={terminalAnimation} className="font-mono space-y-3">
+            <motion.p className="text-green-400 text-sm mb-4 opacity-80">
+              [root@mabior-terminal]# cat profile.txt
+            </motion.p>
+            <motion.div 
+              className="text-green-500 text-2xl font-bold mb-6 glitch"
+              variants={glitchAnimation}
+            >
+              [SYSTEM] Initializing secure connection...
             </motion.div>
-            <motion.div className="text-green-400 text-sm opacity-80 mt-2 space-y-1">
-              <p>&gt; User: Mabior Agau</p>
-              <p>&gt; Access Level: Administrator</p>
-              <p>&gt; Location: Undisclosed</p>
-              <p>&gt; Status: Active</p>
-              <p>&gt; Specialization: Advanced Penetration Testing</p>
+            <motion.div className="text-green-400 text-sm opacity-80 space-y-2">
+              <p className="flex items-center gap-2">
+                <span className="text-green-600">&gt;</span> User: Mabior Agau
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-green-600">&gt;</span> Access Level: Administrator
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-green-600">&gt;</span> Location: Undisclosed
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-green-600">&gt;</span> Status: Active
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-green-600">&gt;</span> Specialization: Advanced Penetration Testing
+              </p>
             </motion.div>
           </motion.div>
 
-          <div className="text-base md:text-lg text-green-400 font-medium">
+          <div className="text-lg md:text-xl text-green-400 font-medium">
             <span className="text-green-600 mr-2">[system]$</span>
-            {text}{showCursor && <span className="inline-block w-3 h-5 bg-green-500 ml-1 animate-pulse"/>}
+            {text}
+            {showCursor && (
+              <motion.span 
+                className="inline-block w-3 h-6 bg-green-500 ml-1"
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 0.8, repeat: Infinity }}
+              />
+            )}
           </div>
 
-          <p className="text-sm md:text-base text-green-600 max-w-2xl mx-auto leading-relaxed">
-            <span className="text-green-500">[INFO]</span> Specialized in advanced penetration testing, zero-day research, and red team operations. 
-            Committed to strengthening cybersecurity through ethical hacking and comprehensive security assessments.
-          </p>
+          <motion.p 
+            className="text-base md:text-lg text-green-300 max-w-2xl leading-relaxed"
+            variants={terminalAnimation}
+          >
+            <span className="text-green-500">[INFO]</span> Specialized in advanced penetration testing, 
+            zero-day research, and red team operations. Committed to strengthening cybersecurity 
+            through ethical hacking and comprehensive security assessments.
+          </motion.p>
 
-          <div className="flex justify-center pt-2">
+          <motion.div 
+            className="flex justify-center pt-4"
+            variants={terminalAnimation}
+          >
             <SocialLinks />
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </motion.section>

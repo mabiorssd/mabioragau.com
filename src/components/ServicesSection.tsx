@@ -42,25 +42,25 @@ const services = [
 
 export const ServicesSection = () => {
   return (
-    <motion.section id="services" className="py-12 px-4">
+    <motion.section id="services" className="py-8 sm:py-12 px-2 sm:px-4">
       <div className="max-w-4xl mx-auto">
-        <motion.div className="bg-black/50 p-6 rounded-lg border border-green-500/20">
-          <motion.p className="text-green-400 text-sm mb-4">
+        <motion.div className="bg-black/50 p-4 sm:p-6 rounded-lg border border-green-500/20">
+          <motion.p className="text-green-400 text-xs sm:text-sm mb-2 sm:mb-4">
             [root@mabior-terminal]# ls -la /services/
           </motion.p>
           <motion.h3 
-            className="text-2xl md:text-3xl font-bold text-green-400 mb-6"
+            className="text-xl sm:text-3xl font-bold text-green-400 mb-4 sm:mb-6"
             variants={glitchAnimation}
             initial="initial"
             animate="animate"
           >
             &gt;_Security Operations
           </motion.h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {services.map((service, index) => (
               <motion.div
                 key={index}
-                className="border border-green-500/30 rounded-lg p-4 space-y-2 hover:border-green-400 transition-all bg-black/50"
+                className="border border-green-500/30 rounded-lg p-3 sm:p-4 space-y-1.5 sm:space-y-2 hover:border-green-400 transition-all bg-black/50"
                 whileHover={{ y: -2, borderColor: "#00ff00" }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -70,11 +70,11 @@ export const ServicesSection = () => {
                   <span className="text-green-600">[service]$</span>
                   <div className="text-green-400">{service.icon}</div>
                 </div>
-                <h4 className="text-lg font-semibold text-green-400">{service.title}</h4>
-                <p className="text-sm text-green-600">{service.description}</p>
-                <div className="flex flex-wrap gap-2">
+                <h4 className="text-base sm:text-lg font-semibold text-green-400">{service.title}</h4>
+                <p className="text-xs sm:text-sm text-green-600">{service.description}</p>
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {service.tools.map((tool, i) => (
-                    <span key={i} className="text-xs text-green-400 bg-green-500/10 px-2 py-1 rounded-full">
+                    <span key={i} className="text-xs text-green-400 bg-green-500/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
                       {tool}
                     </span>
                   ))}

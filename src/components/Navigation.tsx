@@ -48,10 +48,10 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
       animate={{ y: 0 }}
       transition={{ duration: 0.5, type: "spring", stiffness: 120 }}
     >
-      <div className="max-w-6xl mx-auto px-4 py-4">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3">
         <div className="flex justify-between items-center">
           <motion.div 
-            className="text-xl font-bold text-green-400 flex items-center gap-3 hover-glow"
+            className="text-lg sm:text-xl font-bold text-green-400 flex items-center gap-2 sm:gap-3 hover-glow"
             variants={glitchAnimation}
             initial="initial"
             animate="animate"
@@ -59,7 +59,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
             <img 
               src="/lovable-uploads/c03a3f36-4ec5-4eed-9142-f4bc651ea572.png" 
               alt="Mabior Agau Logo" 
-              className="h-8 w-auto rounded-full border border-green-500/30"
+              className="h-6 sm:h-8 w-auto rounded-full border border-green-500/30"
             />
             <span className="hidden sm:inline font-mono">&gt; ~/mabior_agau</span>
           </motion.div>
@@ -67,7 +67,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
           {isMobile ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="p-2 hover:bg-green-500/10 rounded-md transition-all duration-300 cyber-border">
+                <button className="p-1.5 sm:p-2 hover:bg-green-500/10 rounded-md transition-all duration-300 cyber-border">
                   <Menu className="h-5 w-5 text-green-400" />
                 </button>
               </DropdownMenuTrigger>
@@ -76,7 +76,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
                   {navigationItems.map((item) => (
                     <DropdownMenuItem
                       key={item.label}
-                      className={`px-4 py-2.5 cursor-pointer hover:bg-green-500/10 transition-all duration-300 ${
+                      className={`px-3 py-2 cursor-pointer hover:bg-green-500/10 transition-all duration-300 ${
                         item.isActive ? 'text-green-400' : 'text-green-600'
                       }`}
                       onClick={item.onClick}

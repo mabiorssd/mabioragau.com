@@ -3,16 +3,16 @@ import { Github, Mail, Linkedin, Twitter } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const socialLinks = [
-  { icon: <Github size={20} />, link: "https://github.com/mabiorssd/", label: "GitHub" },
-  { icon: <Twitter size={20} />, link: "https://x.com/_CyberMaster", label: "X (Twitter)" },
-  { icon: <Linkedin size={20} />, link: "https://www.linkedin.com/in/mabior-agau-436825210/", label: "LinkedIn" },
-  { icon: <Mail size={20} />, link: "mailto:info@mabioragau.com", label: "Email" }
+  { icon: <Github size={18} />, link: "https://github.com/mabiorssd/", label: "GitHub" },
+  { icon: <Twitter size={18} />, link: "https://x.com/_CyberMaster", label: "X (Twitter)" },
+  { icon: <Linkedin size={18} />, link: "https://www.linkedin.com/in/mabior-agau-436825210/", label: "LinkedIn" },
+  { icon: <Mail size={18} />, link: "mailto:info@mabioragau.com", label: "Email" }
 ];
 
 export const SocialLinks = () => {
   return (
     <motion.div 
-      className="flex gap-4"
+      className="flex gap-2 sm:gap-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -26,7 +26,7 @@ export const SocialLinks = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className="p-3 cyber-border rounded-lg hover:bg-green-500/10 transition-all duration-300 hover-glow"
+                className="p-2 sm:p-3 cyber-border rounded-lg hover:bg-green-500/10 transition-all duration-300 hover-glow"
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: 20 }}

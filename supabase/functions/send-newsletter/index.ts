@@ -1,22 +1,24 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Resend } from "npm:resend@2.0.0";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const resend = new Resend(RESEND_API_KEY);
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface EmailRequest {
+interface NewsletterRequest {
   subject: string;
   html: string;
+  to?: string[];
 }
 
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
@@ -29,8 +31,13 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     // Verify admin status
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('No authorization header');
+    }
+
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
-      req.headers.get('Authorization')?.split('Bearer ')[1] ?? ''
+      authHeader.replace('Bearer ', '')
     );
 
     if (authError || !user) {
@@ -61,44 +68,48 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (!subscribers?.length) {
-      console.log('No confirmed subscribers found');
-      throw new Error('No confirmed subscribers found');
+      return new Response(
+        JSON.stringify({ error: 'No confirmed subscribers found' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
 
-    const emailRequest: EmailRequest = await req.json();
+    const { subject, html }: NewsletterRequest = await req.json();
+    
+    if (!subject || !html) {
+      return new Response(
+        JSON.stringify({ error: 'Missing required fields' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
     console.log('Newsletter request:', { 
-      subject: emailRequest.subject,
+      subject,
       recipientCount: subscribers.length 
     });
 
     // Send email using Resend
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "Mabior Agau <news@newsletter.mabioragau.com>",
-        bcc: subscribers.map(sub => sub.email),
-        subject: emailRequest.subject,
-        html: emailRequest.html,
-      }),
+    const emailResponse = await resend.emails.send({
+      from: "Mabior Agau <news@newsletter.mabioragau.com>",
+      bcc: subscribers.map(sub => sub.email),
+      subject: subject,
+      html: html,
     });
 
-    const responseText = await res.text();
-    console.log('Resend API response:', responseText);
-
-    if (!res.ok) {
-      throw new Error(`Resend API error: ${responseText}`);
-    }
+    console.log('Resend API response:', emailResponse);
 
     // Record the newsletter in the database
     const { error: insertError } = await supabaseClient
       .from('newsletters')
       .insert({
-        subject: emailRequest.subject,
-        content: emailRequest.html,
+        subject: subject,
+        content: html,
         sent_at: new Date().toISOString(),
       });
 
@@ -107,16 +118,25 @@ const handler = async (req: Request): Promise<Response> => {
       throw insertError;
     }
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
+    return new Response(
+      JSON.stringify({ success: true, message: 'Newsletter sent successfully' }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
   } catch (error: any) {
     console.error("Error in send-newsletter function:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ 
+        error: error.message || 'Failed to send newsletter',
+        details: error.toString()
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
   }
 };
 

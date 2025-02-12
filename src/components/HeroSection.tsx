@@ -42,11 +42,28 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
     >
       <div className="max-w-4xl mx-auto w-full">
         <motion.div 
-          className="space-y-4 sm:space-y-6 text-left bg-black/50 p-4 sm:p-8 rounded-lg cyber-border backdrop-blur-md"
+          className="space-y-4 sm:space-y-6 text-left bg-black/50 p-4 sm:p-8 rounded-lg cyber-border backdrop-blur-md relative"
           variants={terminalAnimation}
           initial="hidden"
           animate="visible"
         >
+          {/* TryHackMe Badge - Floating Position */}
+          <motion.div 
+            className="absolute -top-4 sm:-right-4 right-2 w-[200px] sm:w-[300px] transform hover:scale-105 transition-transform duration-300 z-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <div className="cyber-border bg-black/80 p-2 rounded-lg shadow-[0_0_15px_rgba(0,255,0,0.3)] hover:shadow-[0_0_25px_rgba(0,255,0,0.5)] transition-shadow duration-300">
+              <iframe 
+                src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=501291" 
+                className="w-full h-[70px]"
+                title="TryHackMe Badge"
+                loading="lazy"
+              />
+            </div>
+          </motion.div>
+
           <motion.div variants={terminalAnimation} className="font-mono space-y-2 sm:space-y-3">
             <motion.p className="text-green-400 text-xs sm:text-sm mb-2 sm:mb-4 opacity-80">
               [root@mabior-terminal]# cat profile.txt
@@ -98,24 +115,10 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
           </motion.p>
 
           <motion.div 
-            className="flex flex-col items-center gap-4 pt-2 sm:pt-4"
+            className="flex justify-center pt-2 sm:pt-4"
             variants={terminalAnimation}
           >
             <SocialLinks />
-            <motion.div 
-              className="w-full max-w-[300px] h-[70px] cyber-border p-2 bg-black/30 rounded-lg overflow-hidden"
-              whileHover={{ scale: 1.02 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <iframe 
-                src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=501291" 
-                className="w-full h-full"
-                title="TryHackMe Badge"
-                loading="lazy"
-              />
-            </motion.div>
           </motion.div>
         </motion.div>
       </div>

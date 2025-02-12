@@ -47,34 +47,6 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
           initial="hidden"
           animate="visible"
         >
-          {/* TryHackMe Badge - Floating Position */}
-          <motion.div 
-            className="absolute -top-4 sm:-right-4 right-2 w-[200px] sm:w-[300px] transform hover:scale-105 transition-transform duration-300 z-10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-          >
-            <div className="cyber-border bg-black/80 p-2 rounded-lg shadow-[0_0_15px_rgba(0,255,0,0.3)] hover:shadow-[0_0_25px_rgba(0,255,0,0.5)] transition-shadow duration-300">
-              <div className="text-green-400 text-xs mb-1 text-center opacity-80">[TryHackMe Profile Stats]</div>
-              <iframe 
-                src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=501291" 
-                className="w-full h-[70px]"
-                title="TryHackMe Badge"
-                loading="lazy"
-              />
-              <div className="text-green-500 text-xs mt-1 text-center">
-                <a 
-                  href="https://tryhackme.com/p/501291" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:text-green-400 transition-colors"
-                >
-                  View Full Profile →
-                </a>
-              </div>
-            </div>
-          </motion.div>
-
           <motion.div variants={terminalAnimation} className="font-mono space-y-2 sm:space-y-3">
             <motion.p className="text-green-400 text-xs sm:text-sm mb-2 sm:mb-4 opacity-80">
               [root@mabior-terminal]# cat profile.txt
@@ -130,6 +102,42 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
             variants={terminalAnimation}
           >
             <SocialLinks />
+          </motion.div>
+
+          {/* TryHackMe Badge - Larger and Below Profile */}
+          <motion.div 
+            className="mt-6 sm:mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <div className="cyber-border bg-black/80 p-3 sm:p-4 rounded-lg shadow-[0_0_15px_rgba(0,255,0,0.3)] hover:shadow-[0_0_25px_rgba(0,255,0,0.5)] transition-shadow duration-300">
+              <div className="text-green-400 text-sm sm:text-base mb-2 text-center opacity-80">[TryHackMe Profile Stats]</div>
+              <a 
+                href="https://tryhackme.com/p/Mab10r" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block hover:scale-105 transition-transform duration-300"
+              >
+                <iframe 
+                  src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=Mab10r" 
+                  className="w-full h-[100px] sm:h-[120px]"
+                  title="TryHackMe Badge"
+                  loading="lazy"
+                />
+              </a>
+              <div className="text-green-500 text-sm sm:text-base mt-2 text-center">
+                <a 
+                  href="https://tryhackme.com/p/Mab10r" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-green-400 transition-colors inline-flex items-center gap-2"
+                >
+                  <span>View Full Profile</span>
+                  <span className="text-green-600">→</span>
+                </a>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       </div>

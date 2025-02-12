@@ -114,13 +114,13 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
             <div className="cyber-border bg-black/80 p-3 sm:p-4 rounded-lg shadow-[0_0_15px_rgba(0,255,0,0.3)] hover:shadow-[0_0_25px_rgba(0,255,0,0.5)] transition-shadow duration-300">
               <div className="text-green-400 text-sm sm:text-base mb-2 text-center opacity-80">[TryHackMe Profile Stats]</div>
               <a 
-                href="https://tryhackme.com/p/Mab10r" 
+                href="https://tryhackme.com/p/501291" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="block hover:scale-105 transition-transform duration-300"
               >
                 <iframe 
-                  src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=Mab10r" 
+                  src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=501291" 
                   className="w-full h-[100px] sm:h-[120px]"
                   title="TryHackMe Badge"
                   loading="lazy"
@@ -128,7 +128,7 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
               </a>
               <div className="text-green-500 text-sm sm:text-base mt-2 text-center">
                 <a 
-                  href="https://tryhackme.com/p/Mab10r" 
+                  href="https://tryhackme.com/p/501291" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="hover:text-green-400 transition-colors inline-flex items-center gap-2"

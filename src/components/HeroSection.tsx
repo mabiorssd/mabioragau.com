@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { SocialLinks } from "./SocialLinks";
 
@@ -97,10 +98,24 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
           </motion.p>
 
           <motion.div 
-            className="flex justify-center pt-2 sm:pt-4"
+            className="flex flex-col items-center gap-4 pt-2 sm:pt-4"
             variants={terminalAnimation}
           >
             <SocialLinks />
+            <motion.div 
+              className="w-full max-w-[300px] h-[70px] cyber-border p-2 bg-black/30 rounded-lg overflow-hidden"
+              whileHover={{ scale: 1.02 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <iframe 
+                src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=501291" 
+                className="w-full h-full"
+                title="TryHackMe Badge"
+                loading="lazy"
+              />
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>

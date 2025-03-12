@@ -215,13 +215,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      increment_view_count: {
-        Args: {
-          post_id: string
-          country_code: string
-        }
-        Returns: undefined
-      }
+      increment_view_count:
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: undefined
+          }
+        | {
+            Args: {
+              post_id: string
+              country_code: string
+            }
+            Returns: undefined
+          }
       is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean

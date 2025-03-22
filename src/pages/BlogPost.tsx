@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,6 +55,25 @@ const BlogPost = () => {
 
     trackPageView();
   }, [post?.id]);
+
+  // Process content to fix image links if they exist
+  const processContent = (content: string) => {
+    // Create a temporary div to work with the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    
+    // Find all images in the content
+    const images = tempDiv.querySelectorAll('img');
+    
+    // Add onError handler to each image
+    images.forEach(img => {
+      // Add an inline fallback to prevent broken images
+      const originalSrc = img.getAttribute('src') || '';
+      img.setAttribute('onerror', `this.onerror=null; this.src='/placeholder.svg';`);
+    });
+    
+    return tempDiv.innerHTML;
+  };
 
   if (isLoading) {
     return (
@@ -131,6 +151,19 @@ const BlogPost = () => {
         </div>
         <Card className="overflow-hidden border-border">
           <article className="p-6 sm:p-8 md:p-10 space-y-6">
+            {post.image_url && (
+              <div className="w-full h-[300px] md:h-[400px] mb-8 overflow-hidden rounded-lg">
+                <img 
+                  src={post.image_url} 
+                  alt={post.image_alt || post.title} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg";
+                    e.currentTarget.onerror = null;
+                  }}
+                />
+              </div>
+            )}
             <header className="space-y-4 mb-8">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight">
                 {post.title}
@@ -150,7 +183,7 @@ const BlogPost = () => {
                 prose-blockquote:border-green-400 prose-blockquote:text-green-300
                 prose-ul:text-green-300 prose-ol:text-green-300
                 [&_img]:my-8 [&_img]:mx-auto [&_img]:max-h-[600px] [&_img]:object-contain"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: processContent(post.content) }}
             />
           </article>
         </Card>

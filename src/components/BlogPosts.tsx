@@ -1,9 +1,11 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface BlogPostsProps {
   limit?: number;
@@ -62,6 +64,11 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
                       src={post.image_url}
                       alt={post.image_alt || post.title}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      onError={(e) => {
+                        // Replace with a placeholder image on error
+                        e.currentTarget.src = "/placeholder.svg";
+                        e.currentTarget.onerror = null; // Prevent infinite loop
+                      }}
                     />
                   </div>
                 )}

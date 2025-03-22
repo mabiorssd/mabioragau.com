@@ -56,6 +56,27 @@ const BlogPost = () => {
     trackPageView();
   }, [post?.id]);
 
+  // Get the correct image URL from Supabase storage if needed
+  const getImageUrl = (url: string | null) => {
+    if (!url) return null;
+    
+    // Check if the URL is already a full URL
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    
+    // If it's a storage path, get the public URL
+    try {
+      const { data: { publicUrl } } = supabase.storage
+        .from('blog-images')
+        .getPublicUrl(url);
+      return publicUrl;
+    } catch (error) {
+      console.error('Error generating public URL:', error);
+      return url; // Return original URL as fallback
+    }
+  };
+
   // Process content to fix image links if they exist
   const processContent = (content: string) => {
     // Create a temporary div to work with the HTML
@@ -65,10 +86,24 @@ const BlogPost = () => {
     // Find all images in the content
     const images = tempDiv.querySelectorAll('img');
     
-    // Add onError handler to each image
+    // Process each image
     images.forEach(img => {
-      // Add an inline fallback to prevent broken images
       const originalSrc = img.getAttribute('src') || '';
+      
+      // If the source is not a full URL and doesn't start with /
+      if (!originalSrc.startsWith('http') && !originalSrc.startsWith('/')) {
+        // Try to get the public URL from Supabase
+        try {
+          const { data: { publicUrl } } = supabase.storage
+            .from('blog-images')
+            .getPublicUrl(originalSrc);
+          img.setAttribute('src', publicUrl);
+        } catch (error) {
+          console.error('Error processing image URL:', error);
+        }
+      }
+      
+      // Add fallback for broken images
       img.setAttribute('onerror', `this.onerror=null; this.src='/placeholder.svg';`);
     });
     
@@ -115,7 +150,7 @@ const BlogPost = () => {
         <meta property="og:url" content={currentUrl} />
         {post.image_url && (
           <>
-            <meta property="og:image" content={post.image_url} />
+            <meta property="og:image" content={getImageUrl(post.image_url)} />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
           </>
@@ -127,7 +162,7 @@ const BlogPost = () => {
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={getExcerpt(post.content)} />
         {post.image_url && (
-          <meta name="twitter:image" content={post.image_url} />
+          <meta name="twitter:image" content={getImageUrl(post.image_url)} />
         )}
         <meta property="og:site_name" content="Mabior Blog" />
         <meta property="og:locale" content="en_US" />
@@ -154,10 +189,11 @@ const BlogPost = () => {
             {post.image_url && (
               <div className="w-full h-[300px] md:h-[400px] mb-8 overflow-hidden rounded-lg">
                 <img 
-                  src={post.image_url} 
+                  src={getImageUrl(post.image_url)} 
                   alt={post.image_alt || post.title} 
                   className="w-full h-full object-cover"
                   onError={(e) => {
+                    console.log('Featured image error:', post.image_url);
                     e.currentTarget.src = "/placeholder.svg";
                     e.currentTarget.onerror = null;
                   }}

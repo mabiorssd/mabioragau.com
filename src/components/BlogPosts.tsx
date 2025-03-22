@@ -46,6 +46,26 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
     return text.slice(0, 200) + (text.length > 200 ? '...' : '');
   };
 
+  const getImageUrl = (url: string | null) => {
+    if (!url) return null;
+    
+    // Check if the URL is already a full URL (starts with http:// or https://)
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    
+    // If it's a storage path, get the public URL
+    try {
+      const { data: { publicUrl } } = supabase.storage
+        .from('blog-images')
+        .getPublicUrl(url);
+      return publicUrl;
+    } catch (error) {
+      console.error('Error generating public URL:', error);
+      return url; // Return original URL as fallback
+    }
+  };
+
   return (
     <div className="grid gap-8">
       {posts?.map((post) => (
@@ -61,11 +81,11 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
                 {post.image_url && (
                   <div className="md:col-span-4 h-[200px] md:h-full relative overflow-hidden">
                     <img
-                      src={post.image_url}
+                      src={getImageUrl(post.image_url)}
                       alt={post.image_alt || post.title}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       onError={(e) => {
-                        // Replace with a placeholder image on error
+                        console.log('Image error:', post.image_url);
                         e.currentTarget.src = "/placeholder.svg";
                         e.currentTarget.onerror = null; // Prevent infinite loop
                       }}

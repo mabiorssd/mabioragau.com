@@ -54,15 +54,13 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
       return url;
     }
     
-    // If it's a storage path, get the public URL
+    // Use Supabase storage to get the public URL
     try {
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(url);
-      return publicUrl;
+      const { data } = supabase.storage.from('blog-images').getPublicUrl(url);
+      return data.publicUrl;
     } catch (error) {
       console.error('Error generating public URL:', error);
-      return url; // Return original URL as fallback
+      return '/placeholder.svg'; // Return placeholder as fallback
     }
   };
 

@@ -1,3 +1,4 @@
+
 import { BlogPosts } from "@/components/BlogPosts";
 import { Navigation } from "@/components/Navigation";
 import { motion } from "framer-motion";
@@ -14,7 +15,7 @@ const Blog = () => {
       >
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl sm:text-4xl font-bold text-green-400 mb-12">&gt;_Blog Posts</h1>
-          <BlogPosts limit={undefined} />
+          <BlogPosts />
         </div>
       </motion.div>
     </div>

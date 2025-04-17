@@ -47,7 +47,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
   };
 
   const getImageUrl = (url: string | null) => {
-    if (!url) return null;
+    if (!url) return "/placeholder.svg";
     
     // Check if the URL is already a full URL (starts with http:// or https://)
     if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -57,10 +57,10 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
     // Use Supabase storage to get the public URL
     try {
       const { data } = supabase.storage.from('blog-images').getPublicUrl(url);
-      return data.publicUrl;
+      return data?.publicUrl || "/placeholder.svg";
     } catch (error) {
       console.error('Error generating public URL:', error);
-      return '/placeholder.svg'; // Return placeholder as fallback
+      return "/placeholder.svg";
     }
   };
 
@@ -85,7 +85,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
                       onError={(e) => {
                         console.log('Image error:', post.image_url);
                         e.currentTarget.src = "/placeholder.svg";
-                        e.currentTarget.onerror = null; // Prevent infinite loop
+                        e.currentTarget.onerror = null;
                       }}
                     />
                   </div>

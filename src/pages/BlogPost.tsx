@@ -58,7 +58,7 @@ const BlogPost = () => {
 
   // Get the correct image URL from Supabase storage if needed
   const getImageUrl = (url: string | null) => {
-    if (!url) return null;
+    if (!url) return "/placeholder.svg";
     
     // Check if the URL is already a full URL
     if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -70,10 +70,10 @@ const BlogPost = () => {
       const { data } = supabase.storage
         .from('blog-images')
         .getPublicUrl(url);
-      return data.publicUrl;
+      return data?.publicUrl || "/placeholder.svg";
     } catch (error) {
       console.error('Error generating public URL:', error);
-      return '/placeholder.svg'; // Return placeholder as fallback
+      return "/placeholder.svg"; // Return placeholder as fallback
     }
   };
 
@@ -102,7 +102,7 @@ const BlogPost = () => {
             img.setAttribute('src', data.publicUrl);
           }
         } catch (error) {
-          console.error('Error processing image URL:', error);
+          console.error('Error processing image URL:', error, originalSrc);
           // Set to placeholder on error
           img.setAttribute('src', '/placeholder.svg');
         }

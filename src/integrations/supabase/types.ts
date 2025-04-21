@@ -217,8 +217,8 @@ export type Database = {
     Functions: {
       increment_view_count: {
         Args:
-          | { post_id: string; country_code: string }
           | Record<PropertyKey, never>
+          | { post_id: string; country_code: string }
         Returns: undefined
       }
       is_admin: {

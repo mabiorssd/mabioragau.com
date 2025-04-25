@@ -56,7 +56,10 @@ const BlogPost = () => {
       <div className="min-h-screen bg-background">
         <Navigation activeSection="blog" setActiveSection={() => {}} />
         <div className="flex justify-center items-center min-h-[50vh]">
-          <div className="animate-pulse text-primary">Loading post...</div>
+          <div className="animate-pulse text-green-500">
+            <div className="h-6 w-64 bg-green-500/20 rounded mb-4"></div>
+            <div className="h-4 w-32 bg-green-500/10 rounded"></div>
+          </div>
         </div>
       </div>
     );
@@ -66,8 +69,11 @@ const BlogPost = () => {
     return (
       <div className="min-h-screen bg-background">
         <Navigation activeSection="blog" setActiveSection={() => {}} />
-        <div className="flex justify-center items-center min-h-[50vh]">
-          <div className="text-destructive">Post not found</div>
+        <div className="flex justify-center items-center min-h-[50vh] flex-col">
+          <div className="text-destructive text-xl">Post not found</div>
+          <a href="/blog" className="mt-4 text-green-400 hover:text-green-300 transition-colors">
+            Return to blog
+          </a>
         </div>
       </div>
     );
@@ -109,6 +115,6 @@ const BlogPost = () => {
       />
     </div>
   );
-};
+}
 
 export default BlogPost;

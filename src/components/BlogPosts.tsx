@@ -111,7 +111,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
                     <CardTitle className="text-xl md:text-2xl text-green-400 group-hover:text-green-300 transition-colors">
                       {post.title}
                     </CardTitle>
-                    <CardDescription className="mt-2 flex flex-wrap gap-4 text-green-600">
+                    <CardDescription className="mt-2 flex flex-wrap gap-4 text-sm text-green-600">
                       <span className="flex items-center">
                         <Calendar className="h-3.5 w-3.5 mr-1" />
                         {format(new Date(post.created_at), "MMM d, yyyy")}

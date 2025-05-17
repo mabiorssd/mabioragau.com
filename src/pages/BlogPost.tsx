@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { BlogPostContent } from "@/components/BlogPostContent";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
+import { toast } from "sonner";
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -15,7 +16,7 @@ const BlogPost = () => {
   const { getImageUrl, getExcerpt } = useBlogPostUtils();
   const currentUrl = window.location.href;
 
-  const { data: post, isLoading } = useQuery({
+  const { data: post, isLoading, error } = useQuery({
     queryKey: ["blog-post", slug],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -28,6 +29,14 @@ const BlogPost = () => {
       return data;
     },
   });
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to load blog post", {
+        description: "Please try again later or check the URL"
+      });
+    }
+  }, [error]);
 
   useEffect(() => {
     const trackPageView = async () => {

@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export const useBlogPostUtils = () => {
@@ -13,13 +12,17 @@ export const useBlogPostUtils = () => {
     
     // Handle Supabase storage URLs
     try {
-      // Get the public URL from Supabase storage
-      const { data } = supabase.storage.from("blog-images").getPublicUrl(url);
-      
-      console.log("Generated image URL:", data?.publicUrl);
-      return data?.publicUrl || "/placeholder.svg";
+      // Check if the URL already includes the bucket name
+      if (url.includes("blog-images/")) {
+        const { data } = supabase.storage.from("blog-images").getPublicUrl(url);
+        return data?.publicUrl || "/placeholder.svg";
+      } else {
+        // Otherwise, assume it's just the filename
+        const { data } = supabase.storage.from("blog-images").getPublicUrl(`blog-images/${url}`);
+        return data?.publicUrl || "/placeholder.svg";
+      }
     } catch (error) {
-      console.error("Error generating public URL:", error);
+      console.error("Error generating public URL:", error, url);
       return "/placeholder.svg";
     }
   };
@@ -38,7 +41,13 @@ export const useBlogPostUtils = () => {
       // Only modify relative URLs that need to be processed
       if (originalSrc && !originalSrc.startsWith("http") && !originalSrc.startsWith("/")) {
         try {
-          const { data } = supabase.storage.from("blog-images").getPublicUrl(originalSrc);
+          let bucketPath = originalSrc;
+          // Check if the path already includes the bucket name
+          if (!bucketPath.includes("blog-images/")) {
+            bucketPath = `blog-images/${bucketPath}`;
+          }
+          
+          const { data } = supabase.storage.from("blog-images").getPublicUrl(bucketPath);
           if (data && data.publicUrl) {
             img.setAttribute("src", data.publicUrl);
           }

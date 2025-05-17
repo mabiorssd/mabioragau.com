@@ -5,6 +5,7 @@ import { Sun, Moon, Calendar, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
+import { useEffect, useState } from "react";
 
 interface BlogPostContentProps {
   post: any;
@@ -14,6 +15,14 @@ interface BlogPostContentProps {
 
 export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostContentProps) {
   const { getImageUrl, processContent } = useBlogPostUtils();
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
+  // Reset image state when post changes
+  useEffect(() => {
+    setImageLoaded(false);
+    setImageError(false);
+  }, [post?.id]);
 
   return (
     <motion.main 
@@ -38,16 +47,37 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
         <article className="p-6 sm:p-8 md:p-10 space-y-6">
           {post.image_url && (
             <div className="w-full h-[300px] md:h-[400px] mb-8 overflow-hidden rounded-lg relative group">
+              {!imageLoaded && !imageError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                  <div className="animate-pulse">
+                    <div className="h-16 w-16 rounded-full border-4 border-t-green-500 border-r-green-500/30 border-b-green-500/30 border-l-green-500/30 animate-spin"></div>
+                  </div>
+                </div>
+              )}
               <img
                 src={getImageUrl(post.image_url)}
                 alt={post.image_alt || post.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+                  imageLoaded && !imageError ? "opacity-100" : "opacity-0"
+                }`}
+                onLoad={() => setImageLoaded(true)}
                 onError={(e) => {
                   console.log("Image error:", post.image_url);
+                  setImageError(true);
                   e.currentTarget.src = "/placeholder.svg";
-                  e.currentTarget.onerror = null;
+                  e.currentTarget.onError = null;
+                  setImageLoaded(true); // Show the placeholder
                 }}
               />
+              {imageError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                  <img
+                    src="/placeholder.svg" 
+                    alt="Placeholder" 
+                    className="w-32 h-32 opacity-50"
+                  />
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
           )}

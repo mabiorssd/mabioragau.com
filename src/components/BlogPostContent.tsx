@@ -61,11 +61,11 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
                   imageLoaded && !imageError ? "opacity-100" : "opacity-0"
                 }`}
                 onLoad={() => setImageLoaded(true)}
-                onError={(e) => {
+                onerror={(e) => {
                   console.log("Image error:", post.image_url);
                   setImageError(true);
                   e.currentTarget.src = "/placeholder.svg";
-                  e.currentTarget.onError = null;
+                  e.currentTarget.onerror = null;
                   setImageLoaded(true); // Show the placeholder
                 }}
               />

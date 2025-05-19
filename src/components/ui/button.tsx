@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -5,19 +6,20 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary/80 text-primary-foreground hover:bg-primary/60 backdrop-blur-sm shadow-[0_0_10px_rgba(0,255,0,0.2)]",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive/80 text-destructive-foreground hover:bg-destructive/60",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-green-500/30 bg-transparent hover:bg-green-500/10 text-green-400",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+          "bg-secondary/80 text-secondary-foreground hover:bg-secondary/60 backdrop-blur-sm",
+        ghost: "hover:bg-green-900/20 hover:text-green-400 text-green-500",
         link: "text-primary underline-offset-4 hover:underline",
+        cyber: "border border-green-500/40 bg-black/70 text-green-400 hover:bg-green-900/30 shadow-[0_0_10px_rgba(0,255,0,0.15)] cyber-glow relative overflow-hidden after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-gradient-to-r after:from-transparent after:via-green-500/10 after:to-transparent after:transform after:-translate-x-full hover:after:translate-x-full after:transition-all after:duration-500",
       },
       size: {
         default: "h-10 px-4 py-2",

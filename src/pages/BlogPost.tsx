@@ -88,30 +88,35 @@ const BlogPost = () => {
     );
   }
 
+  // Safely extract and convert values for meta tags
+  const title = String(post.title || "Blog Post");
+  const description = String(getExcerpt(post.content) || "Read this blog post");
+  const imageUrl = post.image_url ? String(getImageUrl(post.image_url)) : "";
+
   return (
     <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
       <Helmet>
-        <title>{post.title}</title>
-        <meta name="description" content={getExcerpt(post.content)} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
         <meta property="og:type" content="article" />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={getExcerpt(post.content)} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
         <meta property="og:url" content={currentUrl} />
-        {post.image_url && (
+        {imageUrl && (
           <>
-            <meta property="og:image" content={getImageUrl(post.image_url)} />
+            <meta property="og:image" content={imageUrl} />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
           </>
         )}
         <meta
           name="twitter:card"
-          content={post.image_url ? "summary_large_image" : "summary"}
+          content={imageUrl ? "summary_large_image" : "summary"}
         />
-        <meta name="twitter:title" content={post.title} />
-        <meta name="twitter:description" content={getExcerpt(post.content)} />
-        {post.image_url && (
-          <meta name="twitter:image" content={getImageUrl(post.image_url)} />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {imageUrl && (
+          <meta name="twitter:image" content={imageUrl} />
         )}
         <meta property="og:site_name" content="Mabior Blog" />
         <meta property="og:locale" content="en_US" />

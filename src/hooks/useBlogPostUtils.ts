@@ -1,8 +1,9 @@
+
 import { supabase } from "@/integrations/supabase/client";
 
 export const useBlogPostUtils = () => {
   // Improved helper to get the correct image URL from Supabase storage
-  const getImageUrl = (url: string | null) => {
+  const getImageUrl = (url: string | null): string => {
     if (!url) return "/placeholder.svg";
     
     // If it's already a full URL, return it directly
@@ -28,7 +29,7 @@ export const useBlogPostUtils = () => {
   };
 
   // Enhanced helper to process content and fix any relative image links
-  const processContent = (content: string) => {
+  const processContent = (content: string): string => {
     if (!content) return "";
     
     const tempDiv = document.createElement("div");
@@ -78,16 +79,16 @@ export const useBlogPostUtils = () => {
     return tempDiv.innerHTML;
   };
 
-  // Improved excerpt generator with better formatting
-  const getExcerpt = (content: string) => {
+  // Improved excerpt generator with better formatting - ensures string return
+  const getExcerpt = (content: string): string => {
     if (!content) return "";
     
     const div = document.createElement("div");
-    div.innerHTML = content;
+    div.innerHTML = String(content); // Ensure content is a string
     const text = div.textContent || div.innerText || "";
     
     // Get approximately 30 words instead of character count for better readability
-    const words = text.split(/\s+/);
+    const words = text.split(/\s+/).filter(word => word.length > 0);
     const excerpt = words.slice(0, 30).join(" ");
     
     return excerpt + (words.length > 30 ? "..." : "");

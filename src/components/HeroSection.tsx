@@ -1,30 +1,8 @@
 
 import { motion } from "framer-motion";
+import { Terminal, Download, Eye } from "lucide-react";
 import { SocialLinks } from "./SocialLinks";
-
-const glitchAnimation = {
-  initial: { x: 0 },
-  animate: {
-    x: [-2, 2, -2, 0],
-    transition: {
-      duration: 0.2,
-      repeat: Infinity,
-      repeatType: "loop" as const
-    }
-  }
-};
-
-const terminalAnimation = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.5,
-      staggerChildren: 0.1
-    }
-  }
-};
+import { Button } from "./ui/button";
 
 interface HeroSectionProps {
   text: string;
@@ -33,114 +11,102 @@ interface HeroSectionProps {
 
 export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
   return (
-    <motion.section 
-      id="about"
-      className="min-h-[90vh] flex items-center justify-center px-2 sm:px-4 relative matrix-bg"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-    >
-      <div className="max-w-4xl mx-auto w-full">
+    <section id="about" className="min-h-screen flex items-center justify-center py-20 px-4 sm:px-6 relative">
+      <div className="max-w-6xl mx-auto text-center relative z-10">
+        {/* Terminal Header */}
         <motion.div 
-          className="space-y-4 sm:space-y-6 text-left bg-black/50 p-4 sm:p-8 rounded-lg cyber-border backdrop-blur-md relative"
-          variants={terminalAnimation}
-          initial="hidden"
-          animate="visible"
+          className="inline-flex items-center gap-3 mb-8 px-6 py-3 bg-black/60 border border-green-500/30 rounded-lg backdrop-blur-sm"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <motion.div variants={terminalAnimation} className="font-mono space-y-2 sm:space-y-3">
-            <motion.p className="text-green-400 text-xs sm:text-sm mb-2 sm:mb-4 opacity-80">
-              [root@mabior-terminal]# cat profile.txt
-            </motion.p>
-            <motion.div 
-              className="text-green-500 text-xl sm:text-2xl font-bold mb-4 sm:mb-6 glitch"
-              variants={glitchAnimation}
-            >
-              [SYSTEM] Initializing secure connection...
-            </motion.div>
-            <motion.div className="text-green-400 text-xs sm:text-sm opacity-80 space-y-1.5 sm:space-y-2">
-              <p className="flex items-center gap-2">
-                <span className="text-green-600">&gt;</span> User: Mabior Agau
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-green-600">&gt;</span> Access Level: Administrator
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-green-600">&gt;</span> Location: Undisclosed
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-green-600">&gt;</span> Status: Active
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-green-600">&gt;</span> Specialization: Advanced Penetration Testing
-              </p>
-            </motion.div>
-          </motion.div>
+          <Terminal className="h-5 w-5 text-green-400" />
+          <span className="text-green-400 text-sm font-mono">root@mabior-agau:~$</span>
+          <span className="text-green-300 text-sm">whoami</span>
+        </motion.div>
 
-          <div className="text-base sm:text-xl text-green-400 font-medium">
-            <span className="text-green-600 mr-2">[system]$</span>
+        {/* Main Title */}
+        <motion.h1 
+          className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.7 }}
+        >
+          <span className="text-green-400 block mb-2">MABIOR</span>
+          <span className="text-green-300 glitch" data-text="AGAU">AGAU</span>
+        </motion.h1>
+
+        {/* Typing Effect */}
+        <motion.div 
+          className="text-lg sm:text-xl md:text-2xl text-green-500 mb-8 h-16 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          <span className="font-mono border-r-2 border-green-400 pr-2">
             {text}
-            {showCursor && (
-              <motion.span 
-                className="inline-block w-2 sm:w-3 h-4 sm:h-6 bg-green-500 ml-1"
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
-              />
-            )}
+            {showCursor && <span className="animate-pulse">|</span>}
+          </span>
+        </motion.div>
+
+        {/* Description */}
+        <motion.p 
+          className="text-green-300/80 text-lg sm:text-xl max-w-3xl mx-auto mb-12 leading-relaxed"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+        >
+          Specializing in advanced penetration testing, zero-day research, and red team operations. 
+          I help organizations strengthen their cyber defenses against sophisticated threats.
+        </motion.p>
+
+        {/* Action Buttons */}
+        <motion.div 
+          className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.6 }}
+        >
+          <Button 
+            variant="cyber" 
+            size="lg" 
+            className="text-base px-8 py-6 min-w-[200px]"
+          >
+            <Eye className="h-5 w-5 mr-2" />
+            View Portfolio
+          </Button>
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="text-base px-8 py-6 min-w-[200px]"
+          >
+            <Download className="h-5 w-5 mr-2" />
+            Download CV
+          </Button>
+        </motion.div>
+
+        {/* Social Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+        >
+          <SocialLinks />
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div 
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.5 }}
+        >
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-green-500/60 text-sm font-mono">scroll down</span>
+            <div className="w-px h-12 bg-gradient-to-b from-green-500/60 to-transparent"></div>
           </div>
-
-          <motion.p 
-            className="text-sm sm:text-lg text-green-300 max-w-2xl leading-relaxed"
-            variants={terminalAnimation}
-          >
-            <span className="text-green-500">[INFO]</span> Specialized in advanced penetration testing, 
-            zero-day research, and red team operations. Committed to strengthening cybersecurity 
-            through ethical hacking and comprehensive security assessments.
-          </motion.p>
-
-          <motion.div 
-            className="flex justify-center pt-2 sm:pt-4"
-            variants={terminalAnimation}
-          >
-            <SocialLinks />
-          </motion.div>
-
-          {/* TryHackMe Badge - Larger and Below Profile */}
-          <motion.div 
-            className="mt-6 sm:mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-          >
-            <div className="cyber-border bg-black/80 p-3 sm:p-4 rounded-lg shadow-[0_0_15px_rgba(0,255,0,0.3)] hover:shadow-[0_0_25px_rgba(0,255,0,0.5)] transition-shadow duration-300">
-              <div className="text-green-400 text-sm sm:text-base mb-2 text-center opacity-80">[TryHackMe Profile Stats]</div>
-              <a 
-                href="https://tryhackme.com/p/501291" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block hover:scale-105 transition-transform duration-300"
-              >
-                <iframe 
-                  src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=501291" 
-                  className="w-full h-[100px] sm:h-[120px]"
-                  title="TryHackMe Badge"
-                  loading="lazy"
-                />
-              </a>
-              <div className="text-green-500 text-sm sm:text-base mt-2 text-center">
-                <a 
-                  href="https://tryhackme.com/p/501291" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:text-green-400 transition-colors inline-flex items-center gap-2"
-                >
-                  <span>View Full Profile</span>
-                  <span className="text-green-600">→</span>
-                </a>
-              </div>
-            </div>
-          </motion.div>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 };

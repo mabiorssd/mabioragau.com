@@ -1,46 +1,10 @@
 
 import { motion } from "framer-motion";
-import { Terminal, Clock, ArrowRight, FileText, Eye, Calendar } from "lucide-react";
+import { Terminal, FileText, ArrowRight } from "lucide-react";
 import { ModernCard } from "./ModernCard";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import { Link } from "react-router-dom";
-
-const blogPosts = [
-  {
-    title: "Advanced Persistent Threats: Detection and Mitigation",
-    excerpt: "Deep dive into APT tactics, techniques, and procedures used by nation-state actors and comprehensive strategies for defending against sophisticated threats.",
-    date: "2024-05-15",
-    readTime: "8 min read",
-    category: "Threat Intelligence",
-    slug: "apt-detection-mitigation",
-    views: 1247
-  },
-  {
-    title: "Zero-Day Exploitation in Modern Web Applications",
-    excerpt: "Comprehensive analysis of recent zero-day vulnerabilities and advanced exploitation techniques targeting contemporary web frameworks and applications.",
-    date: "2024-05-10", 
-    readTime: "12 min read",
-    category: "Web Security",
-    slug: "zero-day-web-exploitation",
-    views: 892
-  },
-  {
-    title: "Building Resilient Red Team Infrastructure",
-    excerpt: "Best practices and advanced methodologies for setting up and maintaining covert command and control infrastructure for red team operations.",
-    date: "2024-05-05",
-    readTime: "15 min read", 
-    category: "Red Teaming",
-    slug: "red-team-infrastructure",
-    views: 1534
-  }
-];
-
-const categoryColors = {
-  "Threat Intelligence": "bg-red-500/20 text-red-400 border-red-500/30",
-  "Web Security": "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  "Red Teaming": "bg-purple-500/20 text-purple-400 border-purple-500/30"
-};
+import { BlogPosts } from "./BlogPosts";
 
 export const BlogSection = () => {
   return (
@@ -75,75 +39,16 @@ export const BlogSection = () => {
           </div>
         </motion.div>
 
-        {/* Enhanced Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {blogPosts.map((post, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15, duration: 0.8 }}
-            >
-              <ModernCard variant="premium" glow className="h-full cursor-pointer group">
-                <Link to={`/blog/${post.slug}`} className="block h-full">
-                  <div className="space-y-6 h-full flex flex-col">
-                    {/* Enhanced Header */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className={`text-xs px-3 py-1.5 rounded-full border font-mono ${categoryColors[post.category as keyof typeof categoryColors]}`}>
-                          {post.category}
-                        </span>
-                        <div className="flex items-center gap-1 text-green-500 text-xs font-mono">
-                          <Clock className="h-3 w-3" />
-                          {post.readTime}
-                        </div>
-                      </div>
-                      
-                      <h3 className="text-xl font-bold text-green-400 leading-tight group-hover:text-green-300 transition-colors duration-300">
-                        {post.title}
-                      </h3>
-                    </div>
-
-                    {/* Enhanced Content */}
-                    <div className="flex-1">
-                      <p className="text-green-300/80 leading-relaxed">
-                        {post.excerpt}
-                      </p>
-                    </div>
-
-                    {/* Enhanced Footer */}
-                    <div className="space-y-4">
-                      {/* Stats */}
-                      <div className="flex items-center gap-4 text-xs text-green-500/70 font-mono">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(post.date).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Eye className="h-3 w-3" />
-                          {post.views.toLocaleString()} views
-                        </div>
-                      </div>
-                      
-                      {/* Read more indicator */}
-                      <div className="pt-4 border-t border-green-500/20">
-                        <div className="flex items-center justify-between">
-                          <span className="text-green-400 text-sm font-mono group-hover:text-green-300 transition-colors">
-                            Read article
-                          </span>
-                          <div className="flex items-center gap-1 text-green-400 group-hover:gap-2 transition-all duration-300">
-                            <ArrowRight className="h-4 w-4" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </ModernCard>
-            </motion.div>
-          ))}
-        </div>
+        {/* Dynamic Blog Posts */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="mb-16"
+        >
+          <BlogPosts limit={6} />
+        </motion.div>
 
         {/* Enhanced View All Button */}
         <motion.div 

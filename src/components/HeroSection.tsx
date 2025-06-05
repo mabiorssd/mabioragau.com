@@ -116,13 +116,21 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
           </Button>
         </motion.div>
 
-        {/* Enhanced Social Links */}
+        {/* Enhanced Social Links with better alignment */}
         <motion.div
+          className="flex justify-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.6 }}
         >
-          <SocialLinks />
+          <div className="bg-black/40 border border-green-500/20 rounded-2xl p-6 backdrop-blur-sm shadow-lg">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-green-500/30"></div>
+              <span className="text-green-400/70 text-sm font-mono px-3">Connect with me</span>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-green-500/30"></div>
+            </div>
+            <SocialLinks />
+          </div>
         </motion.div>
 
         {/* Enhanced Scroll Indicator */}

@@ -88,10 +88,16 @@ const BlogPost = () => {
     );
   }
 
-  // Safely extract and convert values for meta tags
-  const title = String(post.title || "Blog Post");
-  const description = String(getExcerpt(post.content) || "Read this blog post");
-  const imageUrl = post.image_url ? String(getImageUrl(post.image_url)) : "";
+  // Safely extract and convert values for meta tags with extra sanitization
+  const safeTitle = post.title ? String(post.title).replace(/[^\w\s-]/g, '').trim() : "Blog Post";
+  const safeContent = post.content ? String(post.content).replace(/[^\w\s.,!?-]/g, ' ') : "";
+  const safeDescription = safeContent ? getExcerpt(safeContent) : "Read this blog post";
+  const safeImageUrl = post.image_url ? getImageUrl(post.image_url) : "";
+
+  // Extra validation to ensure we're not passing any Symbols or objects
+  const title = typeof safeTitle === 'string' ? safeTitle : "Blog Post";
+  const description = typeof safeDescription === 'string' ? safeDescription : "Read this blog post";
+  const imageUrl = typeof safeImageUrl === 'string' ? safeImageUrl : "";
 
   return (
     <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>

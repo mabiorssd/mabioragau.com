@@ -79,13 +79,21 @@ export const useBlogPostUtils = () => {
     return tempDiv.innerHTML;
   };
 
-  // Improved excerpt generator with better formatting - ensures string return
+  // Improved excerpt generator with better formatting and enhanced sanitization
   const getExcerpt = (content: string): string => {
     if (!content) return "";
     
+    // Ensure content is a string and sanitize it
+    const safeContent = String(content);
+    
     const div = document.createElement("div");
-    div.innerHTML = String(content); // Ensure content is a string
-    const text = div.textContent || div.innerText || "";
+    div.innerHTML = safeContent;
+    
+    // Get plain text and remove any potential symbols or special characters
+    const text = (div.textContent || div.innerText || "")
+      .replace(/[^\w\s.,!?-]/g, ' ') // Remove special characters that might contain symbols
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
     
     // Get approximately 30 words instead of character count for better readability
     const words = text.split(/\s+/).filter(word => word.length > 0);

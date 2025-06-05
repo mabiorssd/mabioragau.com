@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Eye, Calendar, ChevronRight, Clock } from "lucide-react";
+import { Eye, Calendar, ChevronRight, Clock, FileText } from "lucide-react";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
 import { ModernCard } from "./ModernCard";
 

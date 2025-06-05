@@ -5,121 +5,150 @@ import { ModernCard } from "./ModernCard";
 
 const services = [
   { 
-    icon: <Shield size={24} />, 
+    icon: <Shield size={28} />, 
     title: "Advanced Penetration Testing", 
-    description: "Comprehensive security assessments using cutting-edge exploitation techniques and custom-built tools to identify vulnerabilities.",
+    description: "Comprehensive security assessments using cutting-edge exploitation techniques and custom-built tools to identify vulnerabilities before attackers do.",
     tools: ["Metasploit", "Burp Suite", "Nmap", "Custom Scripts"],
-    color: "from-green-400 to-emerald-500"
+    color: "from-green-400 to-emerald-500",
+    highlight: "Advanced"
   },
   { 
-    icon: <Bug size={24} />, 
+    icon: <Bug size={28} />, 
     title: "Zero-Day Research", 
-    description: "Discovery and responsible disclosure of previously unknown security vulnerabilities through advanced research methodologies.",
+    description: "Discovery and responsible disclosure of previously unknown security vulnerabilities through advanced research methodologies and reverse engineering.",
     tools: ["Fuzzing Tools", "Reverse Engineering", "Exploit Development"],
-    color: "from-emerald-400 to-teal-500"
+    color: "from-emerald-400 to-teal-500",
+    highlight: "Research"
   },
   { 
-    icon: <Lock size={24} />, 
+    icon: <Lock size={28} />, 
     title: "Red Team Operations", 
-    description: "Sophisticated adversarial simulations to test organizational security posture and incident response capabilities.",
+    description: "Sophisticated adversarial simulations to test organizational security posture and incident response capabilities against real-world attacks.",
     tools: ["C2 Frameworks", "Social Engineering", "Custom Malware"],
-    color: "from-teal-400 to-cyan-500"
+    color: "from-teal-400 to-cyan-500",
+    highlight: "Operations"
   },
   { 
-    icon: <Server size={24} />, 
+    icon: <Server size={28} />, 
     title: "Infrastructure Security", 
-    description: "Comprehensive network security assessments and hardening against advanced persistent threats and nation-state actors.",
+    description: "Comprehensive network security assessments and hardening strategies against advanced persistent threats and nation-state level attacks.",
     tools: ["Network Analysis", "IDS/IPS", "Firewall Configuration"],
-    color: "from-cyan-400 to-blue-500"
+    color: "from-cyan-400 to-blue-500",
+    highlight: "Infrastructure"
   },
   { 
-    icon: <Code size={24} />, 
+    icon: <Code size={28} />, 
     title: "Secure Code Review", 
-    description: "In-depth analysis of application source code to identify security flaws and implementation vulnerabilities.",
+    description: "In-depth analysis of application source code to identify security flaws, implementation vulnerabilities, and design weaknesses.",
     tools: ["Static Analysis", "Dynamic Testing", "Code Auditing"],
-    color: "from-blue-400 to-indigo-500"
+    color: "from-blue-400 to-indigo-500",
+    highlight: "Code"
   },
   { 
-    icon: <Search size={24} />, 
+    icon: <Search size={28} />, 
     title: "Threat Intelligence", 
-    description: "Advanced threat hunting and intelligence gathering to identify emerging attack vectors and threat actors.",
+    description: "Advanced threat hunting and intelligence gathering to identify emerging attack vectors, threat actors, and indicators of compromise.",
     tools: ["OSINT", "Dark Web Monitoring", "IOC Analysis"],
-    color: "from-indigo-400 to-purple-500"
+    color: "from-indigo-400 to-purple-500",
+    highlight: "Intelligence"
   }
 ];
 
 export const ServicesSection = () => {
   return (
-    <section id="services" className="py-20 px-4 sm:px-6">
+    <section id="services" className="py-24 px-4 sm:px-6 relative">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-cyber-grid bg-cyber-grid opacity-5"></div>
+      
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
+        {/* Enhanced Section Header */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-3 mb-6 px-4 py-2 bg-black/60 border border-green-500/30 rounded-full backdrop-blur-sm">
-            <Terminal className="h-4 w-4 text-green-400" />
+          <div className="inline-flex items-center gap-3 mb-8 px-6 py-3 bg-black/80 border border-green-500/40 rounded-full backdrop-blur-sm shadow-lg">
+            <Terminal className="h-5 w-5 text-green-400 animate-pulse" />
             <span className="text-green-400 text-sm font-mono">ls -la /services/</span>
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-ping ml-2"></div>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-400 mb-6">
+          
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-green-400 mb-8 drop-shadow-[0_0_20px_rgba(0,255,0,0.3)]">
             Security <span className="text-green-300">Operations</span>
           </h2>
-          <p className="text-green-300/80 text-lg max-w-3xl mx-auto leading-relaxed">
-            Comprehensive cybersecurity services designed to protect against advanced threats 
-            and strengthen your organization's security posture.
-          </p>
+          
+          <div className="max-w-4xl mx-auto">
+            <p className="text-green-300/90 text-xl leading-relaxed">
+              Comprehensive cybersecurity services designed to protect against advanced threats 
+              and strengthen your organization's security posture through cutting-edge methodologies.
+            </p>
+          </div>
         </motion.div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Enhanced Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.6 }}
+              transition={{ delay: index * 0.15, duration: 0.8 }}
             >
-              <ModernCard className="h-full" glow>
-                <div className="space-y-4">
-                  {/* Icon and Header */}
-                  <div className="flex items-start gap-3">
-                    <div className={`p-3 rounded-lg bg-gradient-to-br ${service.color} bg-opacity-20 border border-green-500/30`}>
+              <ModernCard variant="premium" glow>
+                <div className="space-y-6">
+                  {/* Enhanced Icon and Header */}
+                  <div className="flex items-start gap-4">
+                    <div className={`p-4 rounded-xl bg-gradient-to-br ${service.color} bg-opacity-20 border border-green-500/30 shadow-lg`}>
                       <div className="text-green-400">
                         {service.icon}
                       </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-green-400 mb-2">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2 text-green-500 text-xs font-mono">
+                        <span>[{service.highlight.toLowerCase()}]$</span>
+                        <span className="text-green-400">active</span>
+                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+                      </div>
+                      <h3 className="text-xl font-bold text-green-400 leading-tight">
                         {service.title}
                       </h3>
-                      <div className="flex items-center gap-2 text-green-600 text-sm font-mono">
-                        <span>[service]$</span>
-                        <span className="text-green-500">active</span>
-                      </div>
                     </div>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-green-300/80 text-sm leading-relaxed">
+                  {/* Enhanced Description */}
+                  <p className="text-green-300/85 leading-relaxed">
                     {service.description}
                   </p>
 
-                  {/* Tools */}
-                  <div className="space-y-2">
-                    <div className="text-green-500 text-xs font-mono">Technologies:</div>
+                  {/* Enhanced Tools Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-green-500" />
+                      <span className="text-green-500 text-sm font-mono">Technologies:</span>
+                    </div>
                     <div className="flex flex-wrap gap-2">
                       {service.tools.map((tool, i) => (
                         <span 
                           key={i} 
-                          className="text-xs text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-1 rounded-full font-mono"
+                          className="text-xs text-green-400 bg-green-500/15 border border-green-500/30 px-3 py-1.5 rounded-full font-mono hover:bg-green-500/25 transition-colors duration-300"
                         >
                           {tool}
                         </span>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* Status indicator */}
+                  <div className="pt-4 border-t border-green-500/20">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-green-500/70 font-mono">Status: Operational</span>
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                        <span className="text-green-400 font-mono">24/7</span>
+                      </div>
                     </div>
                   </div>
                 </div>

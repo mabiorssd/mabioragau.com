@@ -21,12 +21,22 @@ export const useBlogPostUtils = () => {
         cleanPath = cleanPath.split("blog-images/")[1] || cleanPath;
       }
       
-      // Get the public URL for the file in the blog-images bucket
+      // Try to get the public URL for the file in the blog-images bucket
       const { data } = supabase.storage.from("blog-images").getPublicUrl(cleanPath);
       
       console.log('Original URL:', url, 'Clean path:', cleanPath, 'Generated URL:', data?.publicUrl);
       
-      return data?.publicUrl || "/placeholder.svg";
+      // If we get a valid URL back, use it, otherwise fall back to placeholder
+      if (data?.publicUrl && data.publicUrl !== 'https://zrvzcsdxbhzwfabvndbo.supabase.co/storage/v1/object/public/blog-images/') {
+        return data.publicUrl;
+      }
+      
+      // If the URL doesn't work with storage, try it as a direct path
+      if (url.startsWith('/')) {
+        return url;
+      }
+      
+      return "/placeholder.svg";
     } catch (error) {
       console.error("Error generating public URL:", error, url);
       return "/placeholder.svg";

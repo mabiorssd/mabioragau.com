@@ -17,6 +17,7 @@ interface BlogPostsProps {
 export const BlogPosts = ({ limit }: BlogPostsProps) => {
   const { getImageUrl, getExcerpt } = useBlogPostUtils();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ["blog-posts", limit],
@@ -36,6 +37,27 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
       return data;
     },
   });
+
+  // Pre-process image URLs when posts are loaded
+  useEffect(() => {
+    const processImageUrls = async () => {
+      if (posts) {
+        const urlPromises = posts.map(async (post) => {
+          if (post.image_url) {
+            const processedUrl = await getImageUrl(post.image_url);
+            return [post.id, processedUrl];
+          }
+          return [post.id, "/placeholder.svg"];
+        });
+        
+        const urlResults = await Promise.all(urlPromises);
+        const urlMap = Object.fromEntries(urlResults);
+        setImageUrls(urlMap);
+      }
+    };
+
+    processImageUrls();
+  }, [posts, getImageUrl]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
@@ -105,7 +127,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
                   {post.image_url && (
                     <div className="aspect-video w-full overflow-hidden rounded-lg relative">
                       <img
-                        src={getImageUrl(post.image_url)}
+                        src={imageUrls[post.id] || "/placeholder.svg"}
                         alt={post.image_alt || post.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         onError={(e) => {

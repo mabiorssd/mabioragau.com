@@ -1,9 +1,11 @@
-
 import { supabase } from "@/integrations/supabase/client";
+import { useBlogStorageSetup } from "./useBlogStorageSetup";
 
 export const useBlogPostUtils = () => {
+  const { setupBlogStorage } = useBlogStorageSetup();
+
   // Improved helper to get the correct image URL from Supabase storage
-  const getImageUrl = (url: string | null): string => {
+  const getImageUrl = async (url: string | null): Promise<string> => {
     if (!url) return "/placeholder.svg";
     
     // If it's already a full URL, return it directly
@@ -13,6 +15,9 @@ export const useBlogPostUtils = () => {
     
     // Handle Supabase storage URLs
     try {
+      // Ensure storage is set up
+      await setupBlogStorage();
+      
       // Remove any leading slashes and blog-images prefix to get clean filename
       let cleanPath = url.replace(/^\/+/, ''); // Remove leading slashes
       
@@ -44,20 +49,22 @@ export const useBlogPostUtils = () => {
   };
 
   // Enhanced helper to process content and fix any relative image links
-  const processContent = (content: string): string => {
+  const processContent = async (content: string): Promise<string> => {
     if (!content) return "";
     
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = content;
     
     const images = tempDiv.querySelectorAll("img");
-    images.forEach((img) => {
+    
+    // Process images sequentially to handle async getImageUrl
+    for (const img of images) {
       const originalSrc = img.getAttribute("src") || "";
       
       // Only modify relative URLs that need to be processed
       if (originalSrc && !originalSrc.startsWith("http") && !originalSrc.startsWith("/")) {
         try {
-          const processedUrl = getImageUrl(originalSrc);
+          const processedUrl = await getImageUrl(originalSrc);
           img.setAttribute("src", processedUrl);
         } catch (error) {
           console.error("Error processing image URL:", error, originalSrc);
@@ -70,7 +77,7 @@ export const useBlogPostUtils = () => {
       
       // Add additional styling for better appearance
       img.classList.add("rounded-md", "shadow-md", "my-4");
-    });
+    }
     
     // Add styling to other elements for a more professional look
     const headings = tempDiv.querySelectorAll("h1, h2, h3, h4, h5, h6");

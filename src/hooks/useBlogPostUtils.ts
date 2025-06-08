@@ -13,15 +13,20 @@ export const useBlogPostUtils = () => {
     
     // Handle Supabase storage URLs
     try {
-      // Check if the URL already includes the bucket name
-      if (url.includes("blog-images/")) {
-        const { data } = supabase.storage.from("blog-images").getPublicUrl(url);
-        return data?.publicUrl || "/placeholder.svg";
-      } else {
-        // Otherwise, assume it's just the filename
-        const { data } = supabase.storage.from("blog-images").getPublicUrl(`blog-images/${url}`);
-        return data?.publicUrl || "/placeholder.svg";
+      // Remove any leading slashes and blog-images prefix to get clean filename
+      let cleanPath = url.replace(/^\/+/, ''); // Remove leading slashes
+      
+      // If the path already includes blog-images/, extract just the filename
+      if (cleanPath.includes("blog-images/")) {
+        cleanPath = cleanPath.split("blog-images/")[1] || cleanPath;
       }
+      
+      // Get the public URL for the file in the blog-images bucket
+      const { data } = supabase.storage.from("blog-images").getPublicUrl(cleanPath);
+      
+      console.log('Original URL:', url, 'Clean path:', cleanPath, 'Generated URL:', data?.publicUrl);
+      
+      return data?.publicUrl || "/placeholder.svg";
     } catch (error) {
       console.error("Error generating public URL:", error, url);
       return "/placeholder.svg";
@@ -42,16 +47,8 @@ export const useBlogPostUtils = () => {
       // Only modify relative URLs that need to be processed
       if (originalSrc && !originalSrc.startsWith("http") && !originalSrc.startsWith("/")) {
         try {
-          let bucketPath = originalSrc;
-          // Check if the path already includes the bucket name
-          if (!bucketPath.includes("blog-images/")) {
-            bucketPath = `blog-images/${bucketPath}`;
-          }
-          
-          const { data } = supabase.storage.from("blog-images").getPublicUrl(bucketPath);
-          if (data && data.publicUrl) {
-            img.setAttribute("src", data.publicUrl);
-          }
+          const processedUrl = getImageUrl(originalSrc);
+          img.setAttribute("src", processedUrl);
         } catch (error) {
           console.error("Error processing image URL:", error, originalSrc);
           img.setAttribute("src", "/placeholder.svg");

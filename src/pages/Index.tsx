@@ -1,13 +1,17 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MatrixBackground } from "@/components/MatrixBackground";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { ServicesSection } from "@/components/ServicesSection";
+import { SkillsShowcase } from "@/components/SkillsShowcase";
 import { ProjectsSection } from "@/components/ProjectsSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { BlogSection } from "@/components/BlogSection";
 import { ContactForm } from "@/components/ContactForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { SecurityFooter } from "@/components/SecurityFooter";
 import { HackerIntro } from "@/components/HackerIntro";
 
 const Portfolio = () => {
@@ -18,7 +22,7 @@ const Portfolio = () => {
   const fullText = "Security Researcher | Penetration Tester | Ethical Hacker";
 
   const handleScroll = useCallback(() => {
-    const sections = ["about", "services", "projects", "blog", "contact"];
+    const sections = ["about", "services", "skills", "projects", "testimonials", "blog", "contact"];
     const currentSection = sections.find(section => {
       const element = document.getElementById(section);
       if (element) {
@@ -79,7 +83,9 @@ const Portfolio = () => {
             <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
             <HeroSection text={text} showCursor={showCursor} />
             <ServicesSection />
+            <SkillsShowcase />
             <ProjectsSection />
+            <TestimonialsSection />
             <BlogSection />
             <div className="py-12 px-6">
               <div className="max-w-6xl mx-auto">
@@ -90,6 +96,7 @@ const Portfolio = () => {
               </div>
             </div>
             <ContactForm />
+            <SecurityFooter />
           </motion.div>
         )}
       </AnimatePresence>

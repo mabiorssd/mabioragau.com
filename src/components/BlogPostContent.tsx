@@ -18,12 +18,28 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
   const { getImageUrl, processContent } = useBlogPostUtils();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>("/placeholder.svg");
+  const [processedContent, setProcessedContent] = useState<string>("");
   
   // Reset image state when post changes
   useEffect(() => {
     setImageLoaded(false);
     setImageError(false);
-  }, [post?.id]);
+    
+    // Process image URL
+    if (post?.image_url) {
+      getImageUrl(post.image_url).then(url => {
+        setImageUrl(url);
+      });
+    }
+    
+    // Process content
+    if (post?.content) {
+      processContent(post.content).then(content => {
+        setProcessedContent(content);
+      });
+    }
+  }, [post?.id, post?.image_url, post?.content, getImageUrl, processContent]);
 
   return (
     <motion.main 
@@ -67,7 +83,7 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
                 </div>
               )}
               <img
-                src={getImageUrl(post.image_url)}
+                src={imageUrl}
                 alt={post.image_alt || post.title}
                 className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
                   imageLoaded && !imageError ? "opacity-100" : "opacity-0"
@@ -77,8 +93,8 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
                   console.log("Image error:", post.image_url);
                   setImageError(true);
                   e.currentTarget.src = "/placeholder.svg";
-                  e.currentTarget.onerror = null; // Fixed: using lowercase "onerror" for DOM property
-                  setImageLoaded(true); // Show the placeholder
+                  e.currentTarget.onerror = null;
+                  setImageLoaded(true);
                 }}
               />
               {imageError && (
@@ -143,7 +159,7 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
               [&_code]:text-green-300 [&_code]:bg-black/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded
               [&_h2]:text-2xl [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:font-mono [&_h2]:border-b [&_h2]:border-green-500/30 [&_h2]:pb-2
               [&_h3]:text-xl [&_h3]:mt-6 [&_h3]:mb-3 [&_h3]:font-mono"
-            dangerouslySetInnerHTML={{ __html: processContent(post.content) }}
+            dangerouslySetInnerHTML={{ __html: processedContent }}
           />
           
           <div className="mt-8 pt-6 border-t border-green-500/20 text-center">

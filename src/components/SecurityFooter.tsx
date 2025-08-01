@@ -112,7 +112,7 @@ export const SecurityFooter = () => {
           </div>
           
           <div className="text-center mt-4 text-green-500/60 text-xs font-mono">
-            > All security testing performed with explicit authorization
+            {'>'} All security testing performed with explicit authorization
           </div>
         </motion.div>
       </div>

@@ -82,20 +82,38 @@ const Portfolio = () => {
             <MatrixBackground />
             <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
             <HeroSection text={text} showCursor={showCursor} />
-            <ServicesSection />
-            <SkillsShowcase />
-            <ProjectsSection />
-            <TestimonialsSection />
-            <BlogSection />
-            <div className="py-12 px-6">
-              <div className="max-w-6xl mx-auto">
-                <h2 className="text-2xl md:text-3xl font-bold text-green-400 mb-8 text-center">
-                  Subscribe to My Newsletter
-                </h2>
-                <NewsletterForm />
-              </div>
-            </div>
-            <ContactForm />
+            {/* Main Content Sections */}
+            <main className="relative z-10">
+              <ServicesSection />
+              <SkillsShowcase />
+              <ProjectsSection />
+              <TestimonialsSection />
+              <BlogSection />
+              
+              {/* Newsletter Section */}
+              <section className="py-24 px-6 relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent"></div>
+                <div className="max-w-4xl mx-auto text-center relative z-10">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+                      Stay Updated
+                    </h2>
+                    <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+                      Get the latest insights on cybersecurity, vulnerability research, and ethical hacking directly to your inbox.
+                    </p>
+                    <NewsletterForm />
+                  </motion.div>
+                </div>
+              </section>
+              
+              <ContactForm />
+            </main>
+            
             <SecurityFooter />
           </motion.div>
         )}

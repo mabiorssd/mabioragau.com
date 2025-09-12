@@ -16,7 +16,7 @@ export const SecurityFooter = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2 text-green-400">
               <Lock className="h-4 w-4" />
-              <span className="font-mono text-sm">© 2024 Mabior Chol - Ethical Hacker & Security Researcher</span>
+              <span className="font-mono text-sm">© 2025 Mabior agau - Ethical Hacker & Security Researcher</span>
             </div>
             
             <div className="flex items-center gap-4 text-green-500/80 text-sm">

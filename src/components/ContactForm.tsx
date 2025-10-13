@@ -2,6 +2,15 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  email: z.string().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  message: z.string().trim().min(1, "Message is required").max(5000, "Message must be less than 5000 characters")
+});
+
+type ContactFormData = z.infer<typeof contactSchema>;
 
 const glitchAnimation = {
   initial: { x: 0 },
@@ -27,14 +36,18 @@ export const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    console.log('Submitting form with data:', formData);
     
     try {
-      const { data, error: supabaseError } = await supabase
+      // Validate input using Zod schema
+      const validatedData: ContactFormData = contactSchema.parse(formData);
+      
+      const { error: supabaseError } = await supabase
         .from('contact_submissions')
-        .insert([formData]);
-
-      console.log('Supabase response:', { data, error: supabaseError });
+        .insert([{
+          name: validatedData.name,
+          email: validatedData.email,
+          message: validatedData.message
+        }]);
 
       if (supabaseError) throw supabaseError;
 
@@ -44,12 +57,19 @@ export const ContactForm = () => {
       });
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
-      console.error('Form submission error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again later.",
-        variant: "destructive"
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to send message. Please try again later.",
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

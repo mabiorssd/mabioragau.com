@@ -10,13 +10,10 @@ const Login = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('is_admin')
-          .eq('id', session.user.id)
-          .single();
+        const { data: hasAdminRole } = await supabase
+          .rpc('has_role', { _user_id: session.user.id, _role: 'admin' });
 
-        if (profile?.is_admin) {
+        if (hasAdminRole) {
           navigate('/admin');
         } else {
           navigate('/');

@@ -15,20 +15,18 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('is_admin')
-            .eq('id', session.user.id)
-            .single();
+          const { data: hasAdminRole, error } = await supabase
+            .rpc('has_role', { _user_id: session.user.id, _role: 'admin' });
 
-          setIsAdmin(profile?.is_admin || false);
+          if (error) throw error;
+          
+          setIsAdmin(hasAdminRole || false);
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
           setIsAdmin(false);
         }
       } catch (error) {
-        console.error('Auth check error:', error);
         toast({
           variant: "destructive",
           title: "Authentication Error",

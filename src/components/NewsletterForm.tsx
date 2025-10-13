@@ -5,6 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { z } from "zod";
+
+const newsletterSchema = z.object({
+  email: z.string().email("Invalid email address").max(255, "Email must be less than 255 characters")
+});
 
 export const NewsletterForm = () => {
   const [email, setEmail] = useState("");
@@ -26,14 +31,17 @@ export const NewsletterForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log('Submitting subscription for:', email);
 
     try {
+      // Validate input using Zod schema
+      const validatedData = newsletterSchema.parse({ email });
+      const validatedEmail = validatedData.email;
+
       // First, check if the email is already subscribed
       const { data: existingSubscription } = await supabase
         .from('newsletter_subscriptions')
         .select('*')
-        .eq('email', email)
+        .eq('email', validatedEmail)
         .single();
 
       if (existingSubscription?.confirmed) {
@@ -49,7 +57,7 @@ export const NewsletterForm = () => {
       const { data: subscription, error } = await supabase
         .from('newsletter_subscriptions')
         .upsert({
-          email,
+          email: validatedEmail,
           confirmed: false,
           confirmation_token: crypto.randomUUID(),
           subscribed: true
@@ -64,7 +72,7 @@ export const NewsletterForm = () => {
       // Send confirmation email
       const response = await supabase.functions.invoke('send-newsletter', {
         body: {
-          to: [email],
+          to: [validatedEmail],
           subject: "Confirm your newsletter subscription",
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -94,12 +102,19 @@ export const NewsletterForm = () => {
       });
       setEmail("");
     } catch (error) {
-      console.error('Newsletter subscription error:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to subscribe. Please try again later.",
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          variant: "destructive",
+          title: "Validation Error",
+          description: error.errors[0].message,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to subscribe. Please try again later.",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { RichTextEditor } from "./RichTextEditor";
 import { Card } from "@/components/ui/card";
 import { ImageSelector } from "./ImageSelector";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, Sparkles } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { z } from "zod";
 
@@ -26,7 +26,41 @@ export const BlogPostEditor = () => {
   const [imageAlt, setImageAlt] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const { toast } = useToast();
+
+  const handleGenerateSummary = async () => {
+    if (!content || !title) {
+      toast({
+        variant: "destructive",
+        title: "Cannot generate summary",
+        description: "Please add a title and content first",
+      });
+      return;
+    }
+
+    setIsGeneratingSummary(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-blog-summary', {
+        body: { content, title }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "✨ AI Summary Generated",
+        description: data.summary,
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to generate summary",
+      });
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  };
 
   const handleImageUpload = async () => {
     if (!imageFile) return null;

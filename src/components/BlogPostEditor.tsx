@@ -265,7 +265,27 @@ export const BlogPostEditor = () => {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Preview</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Preview</h3>
+            <Button
+              onClick={handleGenerateSummary}
+              disabled={isGeneratingSummary || !content || !title}
+              variant="outline"
+              size="sm"
+            >
+              {isGeneratingSummary ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Generate AI Summary
+                </>
+              )}
+            </Button>
+          </div>
           <div 
             className="prose max-w-none p-4 border rounded-md bg-muted/50"
             dangerouslySetInnerHTML={{ __html: content }}

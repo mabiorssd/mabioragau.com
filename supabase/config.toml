@@ -14,3 +14,6 @@ verify_jwt = true
 
 [functions.confirm-subscription]
 verify_jwt = false
+
+[functions.fetch-security-news]
+verify_jwt = false

@@ -9,6 +9,7 @@ import { SkillsShowcase } from "@/components/SkillsShowcase";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { BlogSection } from "@/components/BlogSection";
+import { SecurityNewsSection } from "@/components/SecurityNewsSection";
 import { ContactForm } from "@/components/ContactForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SecurityFooter } from "@/components/SecurityFooter";
@@ -86,6 +87,7 @@ const Portfolio = () => {
             <SkillsShowcase />
             <ProjectsSection />
             <TestimonialsSection />
+            <SecurityNewsSection />
             <BlogSection />
             <div className="py-12 px-6">
               <div className="max-w-6xl mx-auto">

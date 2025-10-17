@@ -9,8 +9,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Sparkles, AlertCircle } from "lucide-react";
+import { Loader2, Sparkles, AlertCircle, Mail } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ContactMessageModalProps {
   isOpen: boolean;
@@ -51,9 +52,43 @@ const getCategoryLabel = (category: string) => {
 export const ContactMessageModal = ({ isOpen, onClose, message }: ContactMessageModalProps) => {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [suggestedResponse, setSuggestedResponse] = useState<string>("");
+  const [isGeneratingResponse, setIsGeneratingResponse] = useState(false);
   const { toast } = useToast();
 
   if (!message) return null;
+
+  const handleGenerateResponse = async () => {
+    setIsGeneratingResponse(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-response', {
+        body: { 
+          message: message.message, 
+          name: message.name,
+          email: message.email,
+          category: analysis?.category,
+          priority: analysis?.priority
+        }
+      });
+
+      if (error) throw error;
+
+      setSuggestedResponse(data.response);
+      toast({
+        title: "✨ Response Generated",
+        description: "AI has drafted a response for you!",
+      });
+    } catch (error) {
+      console.error('Response generation error:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to generate response",
+      });
+    } finally {
+      setIsGeneratingResponse(false);
+    }
+  };
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
@@ -141,6 +176,45 @@ export const ContactMessageModal = ({ isOpen, onClose, message }: ContactMessage
               </Alert>
             )}
           </div>
+
+          {analysis && (
+            <div className="pt-4 border-t">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm font-semibold">AI Response Suggestion</h4>
+                <Button
+                  onClick={handleGenerateResponse}
+                  disabled={isGeneratingResponse}
+                  variant="outline"
+                  size="sm"
+                >
+                  {isGeneratingResponse ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="mr-2 h-4 w-4" />
+                      Generate Response
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {suggestedResponse && (
+                <Alert className="bg-primary/5 border-primary/20">
+                  <Sparkles className="h-4 w-4" />
+                  <AlertDescription>
+                    <Textarea
+                      value={suggestedResponse}
+                      onChange={(e) => setSuggestedResponse(e.target.value)}
+                      className="min-h-[200px] mt-2"
+                    />
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

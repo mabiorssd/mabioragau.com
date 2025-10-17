@@ -17,3 +17,12 @@ verify_jwt = false
 
 [functions.fetch-security-news]
 verify_jwt = false
+
+[functions.generate-newsletter]
+verify_jwt = true
+
+[functions.generate-blog-insights]
+verify_jwt = true
+
+[functions.generate-response]
+verify_jwt = true

@@ -14,6 +14,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SecurityFooter } from "@/components/SecurityFooter";
 import { HackerIntro } from "@/components/HackerIntro";
+import { AIChatbot } from "@/components/AIChatbot";
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
@@ -99,6 +100,7 @@ const Portfolio = () => {
             </div>
             <ContactForm />
             <SecurityFooter />
+            <AIChatbot />
           </motion.div>
         )}
       </AnimatePresence>

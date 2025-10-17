@@ -1,8 +1,7 @@
 
 import { motion } from "framer-motion";
-import { Terminal, Download, Eye, ChevronDown } from "lucide-react";
+import { Terminal, ChevronDown } from "lucide-react";
 import { SocialLinks } from "./SocialLinks";
-import { Button } from "./ui/button";
 
 interface HeroSectionProps {
   text: string;
@@ -91,30 +90,6 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
           </div>
         </motion.div>
 
-        {/* Enhanced Action Buttons */}
-        <motion.div 
-          className="flex flex-col sm:flex-row gap-6 items-center justify-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.6 }}
-        >
-          <Button 
-            variant="cyber" 
-            size="lg" 
-            className="text-base px-10 py-6 min-w-[220px] font-semibold tracking-wide shadow-lg shadow-green-500/20 hover:shadow-green-500/30 transition-all duration-300"
-          >
-            <Eye className="h-5 w-5 mr-3" />
-            View Portfolio
-          </Button>
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="text-base px-10 py-6 min-w-[220px] font-semibold tracking-wide hover:bg-green-500/10 border-green-500/40 hover:border-green-400/60 transition-all duration-300"
-          >
-            <Download className="h-5 w-5 mr-3" />
-            Download CV
-          </Button>
-        </motion.div>
 
         {/* Enhanced Social Links with better alignment */}
         <motion.div

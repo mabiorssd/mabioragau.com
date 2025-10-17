@@ -32,6 +32,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
     { label: "about", displayName: "About", icon: "🏠" },
     { label: "services", displayName: "Services", icon: "🛡️" },
     { label: "projects", displayName: "Projects", icon: "🔒" },
+    { label: "news", displayName: "News", icon: "📰" },
     { label: "blog", displayName: "Blog", icon: "📝" },
     { label: "contact", displayName: "Contact", icon: "📡" }
   ].map((item) => ({

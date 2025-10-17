@@ -23,7 +23,7 @@ const Portfolio = () => {
   const fullText = "Security Researcher | Penetration Tester | Ethical Hacker";
 
   const handleScroll = useCallback(() => {
-    const sections = ["about", "services", "skills", "projects", "testimonials", "blog", "contact"];
+    const sections = ["about", "services", "skills", "projects", "testimonials", "news", "blog", "contact"];
     const currentSection = sections.find(section => {
       const element = document.getElementById(section);
       if (element) {

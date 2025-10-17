@@ -17,7 +17,10 @@ interface NewsItem {
 export const SecurityNewsSection = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const { toast } = useToast();
+  
+  const INITIAL_DISPLAY_COUNT = 6;
 
   useEffect(() => {
     fetchNews();
@@ -93,8 +96,9 @@ export const SecurityNewsSection = () => {
             <Loader2 className="w-8 h-8 text-green-400 animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {news.map((item, index) => (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {news.slice(0, showAll ? news.length : INITIAL_DISPLAY_COUNT).map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -135,8 +139,25 @@ export const SecurityNewsSection = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+            
+            {news.length > INITIAL_DISPLAY_COUNT && (
+              <motion.div 
+                className="flex justify-center mt-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="px-6 py-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 hover:bg-green-500/20 hover:text-green-300 transition-all duration-300 font-mono"
+                >
+                  {showAll ? '← Show Less' : `View All ${news.length} Articles →`}
+                </button>
+              </motion.div>
+            )}
+          </>
         )}
       </div>
     </section>

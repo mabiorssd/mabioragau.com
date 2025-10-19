@@ -4,6 +4,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Users, TrendingUp, Clock, Globe, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
+type VisitorAnalytic = {
+  id: string;
+  page_url: string;
+  referrer: string | null;
+  user_agent: string;
+  ip_address: string;
+  visited_at: string;
+  created_at: string;
+};
+
+type VisitorInsight = {
+  id: string;
+  analysis: string;
+  sample_size: number;
+  analyzed_at: string;
+  created_at: string;
+};
+
 export const VisitorAnalytics = () => {
   const { data: analytics, isLoading } = useQuery({
     queryKey: ["visitor-analytics"],
@@ -15,7 +33,7 @@ export const VisitorAnalytics = () => {
         .limit(100);
       
       if (error) throw error;
-      return data;
+      return data as VisitorAnalytic[];
     },
   });
 
@@ -30,7 +48,7 @@ export const VisitorAnalytics = () => {
         .single();
       
       if (error) throw error;
-      return data;
+      return data as VisitorInsight;
     },
   });
 
@@ -125,13 +143,13 @@ export const VisitorAnalytics = () => {
       {aiInsights && (
         <Card className="bg-gradient-to-br from-green-900/20 to-black/50 border-green-500/40">
           <CardHeader>
-            <CardTitle className="text-green-400 flex items-center gap-2">
-              <Sparkles className="h-5 w-5 animate-pulse" />
-              AI-Powered Insights
-            </CardTitle>
-            <CardDescription className="text-green-300/70">
-              Analyzed {insights?.sample_size || 0} recent visits
-            </CardDescription>
+              <CardTitle className="text-green-400 flex items-center gap-2">
+                <Sparkles className="h-5 w-5 animate-pulse" />
+                AI-Powered Insights
+              </CardTitle>
+              <CardDescription className="text-green-300/70">
+                Analyzed {insights?.sample_size || 0} recent visits
+              </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {aiInsights.topPages && (

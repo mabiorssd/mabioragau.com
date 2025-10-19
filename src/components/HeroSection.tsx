@@ -19,6 +19,18 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-400/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
       
       <div className="max-w-6xl mx-auto text-center relative z-10">
+        {/* AI-Powered Badge */}
+        <motion.div
+          className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-gradient-to-r from-green-500/20 to-green-400/10 border border-green-400/30 rounded-full backdrop-blur-sm shadow-lg shadow-green-500/20"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="text-green-400 text-xs font-mono font-bold">AI-POWERED SECURITY</span>
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+        </motion.div>
+
         {/* Terminal Header with enhanced styling */}
         <motion.div 
           className="inline-flex items-center gap-3 mb-8 px-6 py-3 bg-black/80 border border-green-500/40 rounded-xl backdrop-blur-sm shadow-lg shadow-green-500/10"

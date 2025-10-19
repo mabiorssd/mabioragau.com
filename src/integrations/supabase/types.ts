@@ -462,6 +462,60 @@ export type Database = {
           },
         ]
       }
+      visitor_analytics: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: string | null
+          page_url: string
+          referrer: string | null
+          user_agent: string | null
+          visited_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          page_url: string
+          referrer?: string | null
+          user_agent?: string | null
+          visited_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          page_url?: string
+          referrer?: string | null
+          user_agent?: string | null
+          visited_at?: string
+        }
+        Relationships: []
+      }
+      visitor_insights: {
+        Row: {
+          analysis: Json
+          analyzed_at: string
+          created_at: string
+          id: string
+          sample_size: number
+        }
+        Insert: {
+          analysis: Json
+          analyzed_at?: string
+          created_at?: string
+          id?: string
+          sample_size: number
+        }
+        Update: {
+          analysis?: Json
+          analyzed_at?: string
+          created_at?: string
+          id?: string
+          sample_size?: number
+        }
+        Relationships: []
+      }
       vouchers: {
         Row: {
           created_at: string

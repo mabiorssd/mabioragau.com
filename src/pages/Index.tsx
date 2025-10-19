@@ -15,6 +15,7 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { SecurityFooter } from "@/components/SecurityFooter";
 import { HackerIntro } from "@/components/HackerIntro";
 import { AIChatbot } from "@/components/AIChatbot";
+import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
@@ -22,6 +23,9 @@ const Portfolio = () => {
   const [showCursor, setShowCursor] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const fullText = "Security Researcher | Penetration Tester | Ethical Hacker";
+
+  // Track visitors with AI analytics
+  useVisitorTracking();
 
   const handleScroll = useCallback(() => {
     const sections = ["about", "services", "skills", "projects", "testimonials", "news", "blog", "contact"];

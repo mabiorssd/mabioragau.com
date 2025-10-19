@@ -201,14 +201,26 @@ export const AIChatbot = () => {
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <h3 className="text-green-400 font-bold text-lg tracking-wide">AI Security Assistant</h3>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="text-green-400 hover:text-green-300 hover:bg-green-500/20 transition-all duration-300"
-              >
-                <X className="h-5 w-5" />
-              </Button>
+              <div className="flex items-center gap-2">
+                {messages.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleClearChat}
+                    className="text-green-400/70 hover:text-green-300 hover:bg-green-500/20 text-xs"
+                  >
+                    Clear
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                  className="text-green-400 hover:text-green-300 hover:bg-green-500/20 transition-all duration-300"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
             </div>
 
             <ScrollArea className="flex-1 p-5" ref={scrollRef}>

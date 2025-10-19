@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, Loader2 } from "lucide-react";
+import { MessageSquare, X, Send, Loader2, Shield, Lock, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,16 +10,32 @@ type Message = {
   content: string;
 };
 
+const getGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+};
+
+const suggestedPrompts = [
+  { icon: Shield, text: "Security Assessment", prompt: "Tell me about your penetration testing services" },
+  { icon: Lock, text: "Best Practices", prompt: "What are the top cybersecurity best practices?" },
+  { icon: Search, text: "Threat Analysis", prompt: "How can I protect against modern cyber threats?" },
+  { icon: Sparkles, text: "Get Started", prompt: "I need help with my organization's security" },
+];
+
 export const AIChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: "assistant", 
-      content: "👋 Welcome! I'm Mabior's AI Security Assistant.\n\n💬 I can help you with:\n• Cybersecurity consulting\n• Penetration testing services\n• Security best practices\n• Threat analysis\n• And any security-related questions!\n\nHow can I assist you today?" 
+      content: `${getGreeting()}! 👋 I'm Mabior's AI Security Assistant.\n\n🛡️ I'm here to help you with:\n\n• Penetration Testing & Vulnerability Assessment\n• Security Auditing & Compliance\n• Incident Response & Forensics\n• Security Training & Awareness\n• Web & Network Security\n\n💡 Click a suggestion below or ask me anything about cybersecurity!` 
     }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,6 +47,7 @@ export const AIChatbot = () => {
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
     
+    setIsTyping(true);
     const response = await fetch(CHAT_URL, {
       method: "POST",
       headers: {
@@ -43,6 +60,7 @@ export const AIChatbot = () => {
     });
 
     if (!response.ok || !response.body) {
+      setIsTyping(false);
       throw new Error("Failed to start stream");
     }
 
@@ -52,6 +70,7 @@ export const AIChatbot = () => {
     let textBuffer = "";
 
     setMessages(prev => [...prev, { role: "assistant", content: "" }]);
+    setIsTyping(false);
 
     while (true) {
       const { done, value } = await reader.read();
@@ -89,16 +108,17 @@ export const AIChatbot = () => {
     }
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = async (messageText?: string) => {
+    const messageToSend = messageText || input.trim();
+    if (!messageToSend || isLoading) return;
 
-    const userMessage = input.trim();
     setInput("");
-    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    setShowSuggestions(false);
+    setMessages(prev => [...prev, { role: "user", content: messageToSend }]);
     setIsLoading(true);
 
     try {
-      await streamChat(userMessage);
+      await streamChat(messageToSend);
     } catch (error) {
       setMessages(prev => [...prev, { 
         role: "assistant", 
@@ -107,6 +127,10 @@ export const AIChatbot = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSuggestionClick = (prompt: string) => {
+    handleSend(prompt);
   };
 
   return (
@@ -159,7 +183,64 @@ export const AIChatbot = () => {
                     </div>
                   </motion.div>
                 ))}
-                {isLoading && (
+                
+                {/* Suggested Prompts */}
+                {showSuggestions && messages.length === 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="grid grid-cols-2 gap-3 mt-6"
+                  >
+                    {suggestedPrompts.map((suggestion, idx) => (
+                      <motion.button
+                        key={idx}
+                        onClick={() => handleSuggestionClick(suggestion.prompt)}
+                        className="p-4 bg-gradient-to-br from-green-500/10 to-green-600/5 hover:from-green-500/20 hover:to-green-600/10 border border-green-500/30 hover:border-green-400/50 rounded-xl transition-all duration-300 group"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <suggestion.icon className="h-5 w-5 text-green-400 group-hover:text-green-300 transition-colors" />
+                          <span className="text-sm text-green-400 group-hover:text-green-300 font-medium transition-colors">
+                            {suggestion.text}
+                          </span>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                )}
+                
+                {isTyping && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex justify-start"
+                  >
+                    <div className="bg-gradient-to-br from-green-900/30 to-black/50 p-4 rounded-2xl border border-green-500/20 flex items-center gap-3">
+                      <div className="flex gap-1">
+                        <motion.div 
+                          className="w-2 h-2 bg-green-400 rounded-full"
+                          animate={{ y: [0, -8, 0] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                        />
+                        <motion.div 
+                          className="w-2 h-2 bg-green-400 rounded-full"
+                          animate={{ y: [0, -8, 0] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                        />
+                        <motion.div 
+                          className="w-2 h-2 bg-green-400 rounded-full"
+                          animate={{ y: [0, -8, 0] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                        />
+                      </div>
+                      <span className="text-green-400 text-sm">AI is thinking...</span>
+                    </div>
+                  </motion.div>
+                )}
+                
+                {isLoading && !isTyping && (
                   <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -167,7 +248,7 @@ export const AIChatbot = () => {
                   >
                     <div className="bg-gradient-to-br from-green-900/30 to-black/50 p-4 rounded-2xl border border-green-500/20 flex items-center gap-3">
                       <Loader2 className="h-4 w-4 animate-spin text-green-400" />
-                      <span className="text-green-400 text-sm">Thinking...</span>
+                      <span className="text-green-400 text-sm">Processing...</span>
                     </div>
                   </motion.div>
                 )}
@@ -185,7 +266,7 @@ export const AIChatbot = () => {
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Type your security question..."
+                  placeholder="Ask me anything about cybersecurity..."
                   className="bg-black/70 border-green-500/40 text-green-300 placeholder:text-green-600 focus:border-green-400 focus:ring-2 focus:ring-green-500/30 rounded-xl h-12 transition-all"
                   disabled={isLoading}
                 />
@@ -198,7 +279,13 @@ export const AIChatbot = () => {
                   <Send className="h-5 w-5" />
                 </Button>
               </form>
-              <p className="text-green-600 text-xs mt-2 text-center">Powered by AI • Ask anything about cybersecurity</p>
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <Sparkles className="h-3 w-3 text-green-500 animate-pulse" />
+                <p className="text-green-600 text-xs text-center">
+                  Powered by Advanced AI • 24/7 Security Insights
+                </p>
+                <Sparkles className="h-3 w-3 text-green-500 animate-pulse" />
+              </div>
             </div>
           </motion.div>
         )}

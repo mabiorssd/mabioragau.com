@@ -36,7 +36,10 @@ export const AIChatbot = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const MAX_MESSAGES = 50; // Prevent memory issues
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -47,70 +50,105 @@ export const AIChatbot = () => {
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
     
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
+    
     setIsTyping(true);
-    const response = await fetch(CHAT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
-      body: JSON.stringify({ 
-        messages: [...messages, { role: "user", content: userMessage }] 
-      }),
-    });
-
-    if (!response.ok || !response.body) {
-      setIsTyping(false);
-      throw new Error("Failed to start stream");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let assistantMessage = "";
-    let textBuffer = "";
-
-    setMessages(prev => [...prev, { role: "assistant", content: "" }]);
-    setIsTyping(false);
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+    setConnectionError(false);
+    
+    try {
+      // Limit conversation history to prevent memory issues
+      const recentMessages = messages.slice(-20);
       
-      textBuffer += decoder.decode(value, { stream: true });
+      const response = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ 
+          messages: [...recentMessages, { role: "user", content: userMessage }] 
+        }),
+        signal: abortControllerRef.current.signal,
+      });
 
-      let newlineIndex: number;
-      while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-        let line = textBuffer.slice(0, newlineIndex);
-        textBuffer = textBuffer.slice(newlineIndex + 1);
+      if (!response.ok) {
+        if (response.status === 429 || response.status === 402) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Service limit reached");
+        }
+        throw new Error("Failed to connect to AI");
+      }
 
-        if (line.endsWith("\r")) line = line.slice(0, -1);
-        if (line.startsWith(":") || line.trim() === "") continue;
-        if (!line.startsWith("data: ")) continue;
+      if (!response.body) {
+        throw new Error("No response body");
+      }
 
-        const jsonStr = line.slice(6).trim();
-        if (jsonStr === "[DONE]") break;
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = "";
+      let textBuffer = "";
 
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content;
-          if (content) {
-            assistantMessage += content;
-            setMessages(prev => {
-              const newMessages = [...prev];
-              newMessages[newMessages.length - 1] = { role: "assistant", content: assistantMessage };
-              return newMessages;
-            });
+      setMessages(prev => [...prev, { role: "assistant", content: "" }]);
+      setIsTyping(false);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              assistantMessage += content;
+              setMessages(prev => {
+                const newMessages = [...prev];
+                newMessages[newMessages.length - 1] = { role: "assistant", content: assistantMessage };
+                return newMessages;
+              });
+            }
+          } catch (e) {
+            console.warn("Failed to parse SSE chunk:", e);
+            continue;
           }
-        } catch {
-          continue;
         }
       }
+    } catch (error: any) {
+      setIsTyping(false);
+      if (error.name === 'AbortError') {
+        console.log('Request aborted');
+        return;
+      }
+      setConnectionError(true);
+      throw error;
     }
   };
 
   const handleSend = async (messageText?: string) => {
     const messageToSend = messageText || input.trim();
     if (!messageToSend || isLoading) return;
+
+    // Check message limit
+    if (messages.length >= MAX_MESSAGES) {
+      setMessages(prev => [...prev.slice(-40), { 
+        role: "assistant", 
+        content: "⚠️ Conversation limit reached. Starting fresh for better performance!" 
+      }]);
+    }
 
     setInput("");
     setShowSuggestions(false);
@@ -119,14 +157,25 @@ export const AIChatbot = () => {
 
     try {
       await streamChat(messageToSend);
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
         role: "assistant", 
-        content: "Sorry, I encountered an error. Please try again." 
+        content: connectionError 
+          ? "🔌 Connection lost. Please check your internet and try again."
+          : "⚠️ " + (error.message || "Sorry, I encountered an error. Please try again.")
       }]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleClearChat = () => {
+    setMessages([{
+      role: "assistant", 
+      content: `${getGreeting()}! 👋 I'm Mabior's AI Security Assistant.\n\n🛡️ I'm here to help you with:\n\n• Penetration Testing & Vulnerability Assessment\n• Security Auditing & Compliance\n• Incident Response & Forensics\n• Security Training & Awareness\n• Web & Network Security\n\n💡 Click a suggestion below or ask me anything about cybersecurity!` 
+    }]);
+    setShowSuggestions(true);
   };
 
   const handleSuggestionClick = (prompt: string) => {

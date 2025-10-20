@@ -47,6 +47,13 @@ export const AIChatbot = () => {
     }
   }, [messages]);
 
+  // Abort any in-flight request when component unmounts
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
+
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
     
@@ -108,11 +115,15 @@ export const AIChatbot = () => {
           if (!line.startsWith("data: ")) continue;
 
           const jsonStr = line.slice(6).trim();
-          if (jsonStr === "[DONE]") break;
+          if (jsonStr === "[DONE]") {
+            // End of stream signaled by server
+            textBuffer = ""; // clear buffer
+            break;
+          }
 
           try {
             const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content;
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) {
               assistantMessage += content;
               setMessages(prev => {
@@ -122,9 +133,34 @@ export const AIChatbot = () => {
               });
             }
           } catch (e) {
-            console.warn("Failed to parse SSE chunk:", e);
-            continue;
+            // Likely partial JSON split across chunks: put it back and wait for more data
+            textBuffer = line + "\n" + textBuffer;
+            break;
           }
+        }
+      }
+
+      // Final flush in case remaining buffered lines arrived without trailing newline
+      if (textBuffer.trim()) {
+        for (let raw of textBuffer.split("\n")) {
+          if (!raw) continue;
+          if (raw.endsWith("\r")) raw = raw.slice(0, -1);
+          if (raw.startsWith(":") || raw.trim() === "") continue;
+          if (!raw.startsWith("data: ")) continue;
+          const jsonStr = raw.slice(6).trim();
+          if (jsonStr === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantMessage += content;
+              setMessages(prev => {
+                const newMessages = [...prev];
+                newMessages[newMessages.length - 1] = { role: "assistant", content: assistantMessage };
+                return newMessages;
+              });
+            }
+          } catch { /* ignore partial leftovers */ }
         }
       }
     } catch (error: any) {
@@ -215,7 +251,7 @@ export const AIChatbot = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => { setIsOpen(false); abortControllerRef.current?.abort(); }}
                   className="text-green-400 hover:text-green-300 hover:bg-green-500/20 transition-all duration-300"
                 >
                   <X className="h-5 w-5" />

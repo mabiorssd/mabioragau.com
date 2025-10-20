@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BlogPostEditor } from "./BlogPostEditor";
@@ -12,6 +12,7 @@ import { BlogPostStats } from "./BlogPostStats";
 import { ContactSubmissions } from "./admin/ContactSubmissions";
 import { NewsletterManager } from "./admin/NewsletterManager";
 import { VisitorAnalytics } from "./admin/VisitorAnalytics";
+import { AITools } from "./admin/AITools";
 
 export const AdminDashboard = () => {
   const { toast } = useToast();
@@ -33,7 +34,8 @@ export const AdminDashboard = () => {
 
       <Tabs defaultValue="write" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="write">Write New Post</TabsTrigger>
+          <TabsTrigger value="write">Write Post</TabsTrigger>
+          <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
           <TabsTrigger value="manage">Manage Posts</TabsTrigger>
           <TabsTrigger value="stats">Statistics</TabsTrigger>
           <TabsTrigger value="analytics">AI Analytics</TabsTrigger>
@@ -45,6 +47,10 @@ export const AdminDashboard = () => {
 
         <TabsContent value="write">
           <BlogPostEditor />
+        </TabsContent>
+
+        <TabsContent value="ai-tools">
+          <AITools />
         </TabsContent>
 
         <TabsContent value="manage">

@@ -5,24 +5,24 @@ import { ModernCard } from "./ModernCard";
 
 const testimonials = [
   {
-    name: "Aisha Okonkwo",
+    name: "Peter Gatdet Yak",
+    role: "IT Director",
+    company: "Ministry of ICT, South Sudan",
+    content: "Mabior's security assessment of our government systems was exceptional. He identified critical vulnerabilities that could have compromised sensitive data. His professionalism and deep knowledge of cybersecurity saved us from potential threats.",
+    rating: 5
+  },
+  {
+    name: "Rebecca Nyandeng Garang",
     role: "Chief Technology Officer",
-    company: "Equity Bank Kenya",
-    content: "Mabior's security assessment helped us identify and fix critical vulnerabilities in our mobile banking platform. His expertise strengthened our defenses significantly.",
+    company: "Juba Commercial Bank",
+    content: "We hired Mabior to conduct penetration testing on our banking infrastructure. His thorough analysis and detailed reports helped us strengthen our security posture significantly. Highly professional and trustworthy.",
     rating: 5
   },
   {
-    name: "Kofi Mensah",
-    role: "IT Security Manager",
-    company: "Ghana Commercial Bank",
-    content: "Professional and thorough security audit. Mabior provided clear recommendations that we could implement immediately. Highly recommended for financial institutions.",
-    rating: 5
-  },
-  {
-    name: "Amara Ndlovu",
-    role: "Operations Director",
-    company: "South African Airways",
-    content: "Excellent penetration testing service. Mabior's detailed reports and follow-up support were exceptional. Our systems are now much more secure.",
+    name: "Dr. James Loro Lokuji",
+    role: "Director of Cybersecurity",
+    company: "University of Juba",
+    content: "Mabior conducted a comprehensive security audit of our campus network and student data systems. His expertise in identifying and mitigating security risks is unmatched. The university's digital infrastructure is now much more secure thanks to his work.",
     rating: 5
   }
 ];
@@ -39,7 +39,7 @@ export const TestimonialsSection = () => {
           </h2>
           
           <p className="text-green-300/80 text-lg max-w-2xl mx-auto">
-            Trusted by organizations across Africa to secure their critical systems
+            Trusted by organizations across South Sudan to secure their critical systems
           </p>
         </div>
 

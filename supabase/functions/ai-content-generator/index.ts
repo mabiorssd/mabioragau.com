@@ -35,6 +35,18 @@ serve(async (req) => {
       - Clear and concise
       - Include relevant technical information if needed
       - Offer next steps or call to action`;
+    } else if (type === 'seo') {
+      prompt = `Analyze the following content for SEO optimization. Title: "${topic}". Content preview: "${context}".
+      
+      Provide specific recommendations for:
+      - Keyword optimization
+      - Meta description suggestions
+      - Content structure improvements
+      - Readability enhancements
+      - Internal linking opportunities
+      - Title tag optimization
+      
+      Format your response as actionable bullet points.`;
     }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {

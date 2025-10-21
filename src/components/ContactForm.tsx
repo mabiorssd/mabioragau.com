@@ -51,6 +51,15 @@ export const ContactForm = () => {
 
       if (supabaseError) throw supabaseError;
 
+      // Trigger AI analysis in the background (fire and forget)
+      supabase.functions.invoke('analyze-contact', {
+        body: {
+          name: validatedData.name,
+          email: validatedData.email,
+          message: validatedData.message
+        }
+      }).catch(error => console.error('AI analysis failed:', error));
+
       toast({
         title: "Message sent",
         description: "Thank you for your message. I'll get back to you soon!",

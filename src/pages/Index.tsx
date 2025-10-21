@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MatrixBackground } from "@/components/MatrixBackground";
+import { OptimizedBackground } from "@/components/OptimizedBackground";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { ServicesSection } from "@/components/ServicesSection";
@@ -85,7 +85,7 @@ const Portfolio = () => {
             transition={{ duration: 0.5 }}
             className="min-h-screen bg-black text-green-500 font-mono relative overflow-hidden"
           >
-            <MatrixBackground />
+            <OptimizedBackground />
             <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
             <HeroSection text={text} showCursor={showCursor} />
             <ServicesSection />

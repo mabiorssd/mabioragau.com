@@ -8,6 +8,9 @@ import { Loader2, Sparkles, FileText, Image, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+import { BlogInsights } from "./BlogInsights";
+import { SeoAnalyzer } from "./SeoAnalyzer";
+
 export const AITools = () => {
   const { toast } = useToast();
   const [contentTopic, setContentTopic] = useState("");
@@ -134,7 +137,7 @@ export const AITools = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-green-500" />
-            AI-Powered Tools
+            AI Content Tools
           </CardTitle>
           <CardDescription>
             Use AI to generate content, respond to emails, and create images
@@ -288,6 +291,12 @@ export const AITools = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Blog Insights */}
+      <BlogInsights />
+
+      {/* SEO Analyzer */}
+      <SeoAnalyzer />
     </div>
   );
 };

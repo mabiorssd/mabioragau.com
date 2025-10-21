@@ -7,7 +7,7 @@ import { Badge } from "./ui/badge";
 const projects = [
   {
     title: "Advanced Vulnerability Scanner",
-    description: "AI-powered vulnerability assessment platform utilizing machine learning algorithms for intelligent threat detection and zero-day discovery capabilities.",
+    description: "Advanced vulnerability assessment platform utilizing machine learning algorithms for intelligent threat detection and zero-day discovery capabilities.",
     tech: ["Python", "TensorFlow", "Nmap API", "Custom Exploits"],
     status: "Classified",
     icon: <Shield size={24} />,

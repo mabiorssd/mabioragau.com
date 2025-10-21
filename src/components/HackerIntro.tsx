@@ -24,23 +24,18 @@ export const HackerIntro = ({ onComplete }: { onComplete: () => void }) => {
   const [showResponse, setShowResponse] = useState(false);
   const command = "whoami";
   const response = [
-    "[system]$ Welcome to the Terminal...",
-    "[system]$ Initializing secure connection...",
-    "[system]$ Running security protocols...",
-    "[system]$ Authenticating user credentials...",
+    "[system]$ Loading secure environment...",
     "[system]$ Access granted: Mabior Agau",
-    "[system]$ Security clearance: Level 5",
-    "[system]$ Status: Active",
-    "[system]$ Loading secure environment..."
+    "[system]$ Status: Active"
   ];
 
   useEffect(() => {
-    const timer1 = setTimeout(() => setShowResponse(true), 1000);
+    const timer1 = setTimeout(() => setShowResponse(true), 500);
     const timer2 = setTimeout(() => {
       setShowCommand(false);
       setShowResponse(false);
       onComplete();
-    }, 5000);
+    }, 2500);
 
     return () => {
       clearTimeout(timer1);

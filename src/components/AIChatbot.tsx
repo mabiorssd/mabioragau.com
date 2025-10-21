@@ -18,10 +18,10 @@ const getGreeting = () => {
 };
 
 const suggestedPrompts = [
-  { icon: Shield, text: "Security Assessment", prompt: "Tell me about your penetration testing services" },
-  { icon: Lock, text: "Best Practices", prompt: "What are the top cybersecurity best practices?" },
-  { icon: Search, text: "Threat Analysis", prompt: "How can I protect against modern cyber threats?" },
-  { icon: Sparkles, text: "Get Started", prompt: "I need help with my organization's security" },
+  { icon: Shield, text: "Security Services", prompt: "What cybersecurity services do you offer?" },
+  { icon: Lock, text: "Web Security", prompt: "I need help securing my website" },
+  { icon: Search, text: "Security Audit", prompt: "Can you audit our security?" },
+  { icon: Sparkles, text: "Get Quote", prompt: "I'd like to schedule a consultation" },
 ];
 
 export const AIChatbot = () => {
@@ -30,7 +30,7 @@ export const AIChatbot = () => {
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: "assistant", 
-      content: `${getGreeting()}! 👋 I'm Mabior's AI Security Assistant.\n\n🛡️ I'm here to help you with:\n\n• Penetration Testing & Vulnerability Assessment\n• Security Auditing & Compliance\n• Incident Response & Forensics\n• Security Training & Awareness\n• Web & Network Security\n\n💡 Click a suggestion below or ask me anything about cybersecurity!` 
+      content: `${getGreeting()}! 👋 I'm here to help you understand how Mabior can secure your business.\n\n🛡️ Services offered:\n\n• Penetration Testing & Security Assessments\n• Web Application Security\n• Network Security Auditing\n• Security Training & Consulting\n• Incident Response Support\n\n💬 How can I help you today? Click a suggestion below or tell me about your security needs!` 
     }
   ]);
   const [input, setInput] = useState("");
@@ -55,7 +55,7 @@ export const AIChatbot = () => {
   }, []);
 
   const streamChat = async (userMessage: string) => {
-    const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+    const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-contact-chat`;
     
     // Create new abort controller for this request
     abortControllerRef.current = new AbortController();
@@ -209,7 +209,7 @@ export const AIChatbot = () => {
   const handleClearChat = () => {
     setMessages([{
       role: "assistant", 
-      content: `${getGreeting()}! 👋 I'm Mabior's AI Security Assistant.\n\n🛡️ I'm here to help you with:\n\n• Penetration Testing & Vulnerability Assessment\n• Security Auditing & Compliance\n• Incident Response & Forensics\n• Security Training & Awareness\n• Web & Network Security\n\n💡 Click a suggestion below or ask me anything about cybersecurity!` 
+      content: `${getGreeting()}! 👋 I'm here to help you understand how Mabior can secure your business.\n\n🛡️ Services offered:\n\n• Penetration Testing & Security Assessments\n• Web Application Security\n• Network Security Auditing\n• Security Training & Consulting\n• Incident Response Support\n\n💬 How can I help you today? Click a suggestion below or tell me about your security needs!` 
     }]);
     setShowSuggestions(true);
   };
@@ -379,7 +379,7 @@ export const AIChatbot = () => {
               <div className="flex items-center justify-center gap-2 mt-3">
                 <Sparkles className="h-3 w-3 text-green-500 animate-pulse" />
                 <p className="text-green-600 text-xs text-center">
-                  Powered by Advanced AI • 24/7 Security Insights
+                  AI-Assisted Consultation • Instant Responses
                 </p>
                 <Sparkles className="h-3 w-3 text-green-500 animate-pulse" />
               </div>

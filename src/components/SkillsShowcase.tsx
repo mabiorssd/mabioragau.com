@@ -7,50 +7,50 @@ const skills = [
   {
     icon: Shield,
     title: "Penetration Testing",
-    description: "Comprehensive security assessments to identify vulnerabilities",
-    level: 95
+    description: "Web and network security testing to find vulnerabilities",
+    level: 88
   },
   {
     icon: Bug,
-    title: "Vulnerability Research",
-    description: "Zero-day discovery and exploit development",
-    level: 90
+    title: "Vulnerability Assessment",
+    description: "Identifying and documenting security weaknesses",
+    level: 85
   },
   {
     icon: Lock,
-    title: "Cryptography",
-    description: "Implementation and analysis of cryptographic systems",
-    level: 85
+    title: "Web Application Security",
+    description: "Testing for OWASP Top 10 and common web vulnerabilities",
+    level: 90
   },
   {
     icon: Network,
     title: "Network Security",
-    description: "Securing infrastructure and network communications",
-    level: 92
+    description: "Analyzing network configurations and access controls",
+    level: 82
   },
   {
     icon: Eye,
-    title: "Digital Forensics",
-    description: "Investigation and analysis of digital evidence",
-    level: 88
+    title: "Security Auditing",
+    description: "Reviewing security policies and system configurations",
+    level: 80
   },
   {
     icon: Terminal,
-    title: "Red Team Operations",
-    description: "Advanced persistent threat simulation",
-    level: 87
+    title: "Linux & Windows Security",
+    description: "System hardening and security configuration",
+    level: 85
   },
   {
     icon: Search,
-    title: "Threat Hunting",
-    description: "Proactive identification of advanced threats",
-    level: 90
+    title: "OSINT & Reconnaissance",
+    description: "Information gathering and threat intelligence",
+    level: 87
   },
   {
     icon: Zap,
     title: "Incident Response",
-    description: "Rapid containment and remediation of security incidents",
-    level: 93
+    description: "Helping organizations respond to security incidents",
+    level: 78
   }
 ];
 
@@ -78,8 +78,8 @@ export const SkillsShowcase = () => {
           </h2>
           
           <p className="text-green-300/90 text-xl leading-relaxed max-w-4xl mx-auto">
-            Specialized in offensive security, threat analysis, and building robust defense mechanisms 
-            against sophisticated cyber attacks.
+            Practical skills in penetration testing, security assessments, and helping organizations 
+            improve their security posture through proven methodologies.
           </p>
         </motion.div>
 

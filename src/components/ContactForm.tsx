@@ -41,6 +41,7 @@ export const ContactForm = () => {
       // Validate input using Zod schema
       const validatedData: ContactFormData = contactSchema.parse(formData);
       
+      // Save to database
       const { error: supabaseError } = await supabase
         .from('contact_submissions')
         .insert([{
@@ -51,18 +52,18 @@ export const ContactForm = () => {
 
       if (supabaseError) throw supabaseError;
 
-      // Trigger AI analysis in the background (fire and forget)
-      supabase.functions.invoke('analyze-contact', {
+      // Send email notification to admin
+      await supabase.functions.invoke('send-contact-notification', {
         body: {
           name: validatedData.name,
           email: validatedData.email,
           message: validatedData.message
         }
-      }).catch(error => console.error('AI analysis failed:', error));
+      });
 
       toast({
-        title: "Message sent",
-        description: "Thank you for your message. I'll get back to you soon!",
+        title: "Message sent successfully!",
+        description: "You'll receive a confirmation email shortly. I'll respond within 24 hours.",
       });
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {

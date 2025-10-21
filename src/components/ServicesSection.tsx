@@ -6,51 +6,51 @@ import { ModernCard } from "./ModernCard";
 const services = [
   { 
     icon: <Shield size={28} />, 
-    title: "Advanced Penetration Testing", 
-    description: "Comprehensive security assessments using cutting-edge exploitation techniques and custom-built tools to identify vulnerabilities before attackers do.",
-    tools: ["Metasploit", "Burp Suite", "Nmap", "Custom Scripts"],
+    title: "Penetration Testing", 
+    description: "Professional security assessments to identify vulnerabilities in your web applications, networks, and systems before malicious actors can exploit them.",
+    tools: ["Burp Suite", "Nmap", "OWASP ZAP", "Metasploit"],
     color: "from-green-400 to-emerald-500",
-    highlight: "Advanced"
+    highlight: "Testing"
   },
   { 
     icon: <Bug size={28} />, 
-    title: "Zero-Day Research", 
-    description: "Discovery and responsible disclosure of previously unknown security vulnerabilities through advanced research methodologies and reverse engineering.",
-    tools: ["Fuzzing Tools", "Reverse Engineering", "Exploit Development"],
+    title: "Vulnerability Assessment", 
+    description: "Comprehensive scanning and analysis of your infrastructure to discover security weaknesses and provide actionable remediation recommendations.",
+    tools: ["Nessus", "OpenVAS", "Security Scanners"],
     color: "from-emerald-400 to-teal-500",
-    highlight: "Research"
+    highlight: "Assessment"
   },
   { 
     icon: <Lock size={28} />, 
-    title: "Red Team Operations", 
-    description: "Sophisticated adversarial simulations to test organizational security posture and incident response capabilities against real-world attacks.",
-    tools: ["C2 Frameworks", "Social Engineering", "Custom Malware"],
+    title: "Web Application Security", 
+    description: "Specialized testing of web applications to identify common vulnerabilities like SQL injection, XSS, CSRF, and authentication bypasses.",
+    tools: ["Manual Testing", "OWASP Top 10", "API Security"],
     color: "from-teal-400 to-cyan-500",
-    highlight: "Operations"
+    highlight: "Web Apps"
   },
   { 
     icon: <Server size={28} />, 
-    title: "Infrastructure Security", 
-    description: "Comprehensive network security assessments and hardening strategies against advanced persistent threats and nation-state level attacks.",
-    tools: ["Network Analysis", "IDS/IPS", "Firewall Configuration"],
+    title: "Network Security", 
+    description: "Analysis of network architecture and configurations to identify weaknesses in firewalls, routers, and network segmentation.",
+    tools: ["Wireshark", "Network Scanning", "Traffic Analysis"],
     color: "from-cyan-400 to-blue-500",
-    highlight: "Infrastructure"
+    highlight: "Network"
   },
   { 
     icon: <Code size={28} />, 
-    title: "Secure Code Review", 
-    description: "In-depth analysis of application source code to identify security flaws, implementation vulnerabilities, and design weaknesses.",
-    tools: ["Static Analysis", "Dynamic Testing", "Code Auditing"],
+    title: "Security Training", 
+    description: "Practical cybersecurity training for developers and IT teams covering secure coding practices, threat awareness, and incident response.",
+    tools: ["Workshops", "Best Practices", "Hands-on Labs"],
     color: "from-blue-400 to-indigo-500",
-    highlight: "Code"
+    highlight: "Training"
   },
   { 
     icon: <Search size={28} />, 
-    title: "Threat Intelligence", 
-    description: "Advanced threat hunting and intelligence gathering to identify emerging attack vectors, threat actors, and indicators of compromise.",
-    tools: ["OSINT", "Dark Web Monitoring", "IOC Analysis"],
+    title: "Security Consulting", 
+    description: "Expert guidance on security strategy, compliance requirements, and implementing security controls tailored to your organization's needs.",
+    tools: ["Risk Assessment", "Policy Review", "Compliance"],
     color: "from-indigo-400 to-purple-500",
-    highlight: "Intelligence"
+    highlight: "Consulting"
   }
 ];
 
@@ -81,8 +81,8 @@ export const ServicesSection = () => {
           
           <div className="max-w-4xl mx-auto">
             <p className="text-green-300/90 text-xl leading-relaxed">
-              Comprehensive cybersecurity services designed to protect against advanced threats 
-              and strengthen your organization's security posture through cutting-edge methodologies.
+              Professional cybersecurity services to help protect your business from digital threats 
+              and build a stronger security foundation for your organization.
             </p>
           </div>
         </motion.div>

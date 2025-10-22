@@ -56,12 +56,12 @@ const skills = [
 
 export const SkillsShowcase = () => {
   return (
-    <section id="skills" className="py-24 px-4 sm:px-6 relative">
+    <section id="skills" className="py-16 px-4 sm:px-6 relative">
       <div className="absolute inset-0 bg-cyber-grid opacity-5"></div>
       
       <div className="max-w-7xl mx-auto">
         <motion.div 
-          className="text-center mb-20"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

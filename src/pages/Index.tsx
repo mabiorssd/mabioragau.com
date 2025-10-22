@@ -21,11 +21,24 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
   const [text, setText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
-  const [showContent, setShowContent] = useState(false);
+  const [showIntro, setShowIntro] = useState(() => {
+    // Check if intro was already shown in this session
+    return !sessionStorage.getItem('introShown');
+  });
+  const [showContent, setShowContent] = useState(() => {
+    // If intro was already shown, show content immediately
+    return sessionStorage.getItem('introShown') === 'true';
+  });
   const fullText = "Security Researcher | Penetration Tester | Ethical Hacker";
 
   // Track visitors with AI analytics
   useVisitorTracking();
+
+  const handleIntroComplete = () => {
+    sessionStorage.setItem('introShown', 'true');
+    setShowIntro(false);
+    setShowContent(true);
+  };
 
   const handleScroll = useCallback(() => {
     const sections = ["about", "services", "skills", "projects", "testimonials", "news", "blog", "contact"];
@@ -76,7 +89,7 @@ const Portfolio = () => {
 
   return (
     <>
-      <HackerIntro onComplete={() => setShowContent(true)} />
+      {showIntro && <HackerIntro onComplete={handleIntroComplete} />}
       <AnimatePresence>
         {showContent && (
           <motion.div

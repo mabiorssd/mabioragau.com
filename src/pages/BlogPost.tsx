@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
 import { Helmet } from "react-helmet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BlogPostContent } from "@/components/BlogPostContent";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
@@ -15,6 +15,7 @@ const BlogPost = () => {
   const { isDarkMode, setIsDarkMode } = useDarkMode(true);
   const { getImageUrl, getExcerpt } = useBlogPostUtils();
   const currentUrl = window.location.href;
+  const [ogImageUrl, setOgImageUrl] = useState<string>("");
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ["blog-post", slug],
@@ -37,6 +38,17 @@ const BlogPost = () => {
       });
     }
   }, [error]);
+
+  // Load OG image asynchronously
+  useEffect(() => {
+    const loadOgImage = async () => {
+      if (post?.image_url) {
+        const url = await getImageUrl(post.image_url);
+        setOgImageUrl(url);
+      }
+    };
+    loadOgImage();
+  }, [post?.image_url, getImageUrl]);
 
   useEffect(() => {
     const trackPageView = async () => {
@@ -88,16 +100,10 @@ const BlogPost = () => {
     );
   }
 
-  // Safely extract and convert values for meta tags with extra sanitization
-  const safeTitle = post.title ? String(post.title).replace(/[^\w\s-]/g, '').trim() : "Blog Post";
-  const safeContent = post.content ? String(post.content).replace(/[^\w\s.,!?-]/g, ' ') : "";
-  const safeDescription = safeContent ? getExcerpt(safeContent) : "Read this blog post";
-  const safeImageUrl = post.image_url ? getImageUrl(post.image_url) : "";
-
-  // Extra validation to ensure we're not passing any Symbols or objects
-  const title = typeof safeTitle === 'string' ? safeTitle : "Blog Post";
-  const description = typeof safeDescription === 'string' ? safeDescription : "Read this blog post";
-  const imageUrl = typeof safeImageUrl === 'string' ? safeImageUrl : "";
+  // Prepare meta tags with proper sanitization
+  const title = post.title || "Blog Post - Mabior Agau";
+  const description = post.content ? getExcerpt(post.content) : "Read this cybersecurity blog post";
+  const imageUrl = ogImageUrl || ""; // Use the async loaded image URL
 
   return (
     <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>

@@ -66,7 +66,9 @@ export const BlogPostEditor = () => {
     if (!imageFile) return null;
 
     const fileExt = imageFile.name.split('.').pop();
-    const fileName = `${Math.random()}.${fileExt}`;
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 8);
+    const fileName = `blog-${timestamp}-${randomString}.${fileExt}`;
     const filePath = `${fileName}`;
 
     const { error: uploadError, data } = await supabase.storage

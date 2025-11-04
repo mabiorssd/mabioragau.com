@@ -8,9 +8,15 @@ export const useBlogPostUtils = () => {
   const getImageUrl = async (url: string | null): Promise<string> => {
     if (!url) return "/placeholder.svg";
     
-    // If it's already a full URL, return it directly
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-      return url;
+    // Normalize protocol to HTTPS to avoid mixed-content blocks
+    let normalized = url.trim();
+    if (normalized.startsWith("http://")) {
+      normalized = normalized.replace(/^http:\/\//i, "https://");
+    }
+
+    // If it's already a full HTTPS URL, return it directly
+    if (normalized.startsWith("https://")) {
+      return normalized;
     }
     
     // Handle Supabase storage URLs
@@ -70,6 +76,9 @@ export const useBlogPostUtils = () => {
           console.error("Error processing image URL:", error, originalSrc);
           img.setAttribute("src", "/placeholder.svg");
         }
+      } else if (originalSrc.startsWith("http://")) {
+        // Upgrade insecure http images to https to avoid mixed-content blocking
+        img.setAttribute("src", originalSrc.replace(/^http:\/\//i, "https://"));
       }
       
       // Add error handling to all images

@@ -85,6 +85,8 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
               <img
                 src={imageUrl}
                 alt={post.image_alt || post.title}
+                loading="eager"
+                decoding="async"
                 className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
                   imageLoaded && !imageError ? "opacity-100" : "opacity-0"
                 }`}

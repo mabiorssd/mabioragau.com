@@ -132,6 +132,7 @@ const BlogPost = () => {
         )}
         <meta property="og:site_name" content="Mabior Blog" />
         <meta property="og:locale" content="en_US" />
+        <link rel="canonical" href={currentUrl} />
       </Helmet>
       <Navigation activeSection="blog" setActiveSection={() => {}} />
       <BlogPostContent

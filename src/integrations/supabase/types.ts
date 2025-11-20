@@ -417,7 +417,7 @@ export type Database = {
           data_used: number | null
           end_time: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           mac_address: string | null
           start_time: string
           status: string
@@ -428,7 +428,7 @@ export type Database = {
           data_used?: number | null
           end_time?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           mac_address?: string | null
           start_time?: string
           status?: string
@@ -439,7 +439,7 @@ export type Database = {
           data_used?: number | null
           end_time?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           mac_address?: string | null
           start_time?: string
           status?: string
@@ -579,16 +579,13 @@ export type Database = {
         }
         Returns: boolean
       }
-      increment_view_count: {
-        Args:
-          | Record<PropertyKey, never>
-          | { country_code: string; post_id: string }
-        Returns: undefined
-      }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      increment_view_count:
+        | {
+            Args: { country_code: string; post_id: string }
+            Returns: undefined
+          }
+        | { Args: never; Returns: undefined }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

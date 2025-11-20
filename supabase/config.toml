@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.ai-image-generator]
 verify_jwt = false
+
+[functions.og-blog]
+verify_jwt = false

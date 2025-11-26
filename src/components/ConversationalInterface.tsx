@@ -22,8 +22,10 @@ const navigationOptions: NavigationOption[] = [
   { label: "LIST_CAPABILITIES", section: "services", description: "Display available services" },
   { label: "SHOW_SKILLSET", section: "skills", description: "Enumerate technical stack" },
   { label: "VIEW_OPERATIONS", section: "projects", description: "Access operation archives" },
+  { label: "TESTIMONIAL_FEED", section: "testimonials", description: "Client validation records" },
   { label: "INTEL_FEED", section: "news", description: "Security intelligence stream" },
   { label: "BLOG_ACCESS", section: "blog", description: "Knowledge base entries" },
+  { label: "NEWSLETTER_SUBSCRIBE", section: "newsletter", description: "Subscribe to updates" },
   { label: "ESTABLISH_COMMS", section: "contact", description: "Open secure channel" },
 ];
 
@@ -44,11 +46,17 @@ const hackerResponses = {
   projects: `> Breaching operation archives...
 > Mission logs unlocked. Loading classified operations...`,
   
+  testimonials: `> Retrieving client validation records...
+> Cross-referencing operational success metrics...`,
+  
   news: `> Tapping into global security intelligence...
 > Real-time threat feed incoming...`,
   
   blog: `> Accessing knowledge repository...
 > Decoding tactical briefings and field reports...`,
+  
+  newsletter: `> Opening subscription portal...
+> Preparing to sync you with our intel updates...`,
   
   contact: `> Establishing secure communication channel...
 > Encryption protocols active. Ready for transmission...`,
@@ -160,27 +168,42 @@ export const ConversationalInterface = () => {
       className="fixed inset-0 z-40 bg-black flex flex-col"
     >
       {/* Terminal Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-black/90 border-b-2 border-green-500/50">
-        <div className="flex items-center gap-3">
-          <Terminal className="w-6 h-6 text-green-400 animate-pulse" />
-          <div className="font-mono">
-            <div className="text-green-400 text-sm font-bold tracking-wider">
-              TACTICAL_TERMINAL_v2.1.0
-            </div>
-            <div className="text-green-600 text-xs">
-              {new Date().toISOString().split('T')[0]} | CONN_STATUS: SECURE
+      <div className="flex flex-col px-6 py-4 bg-black/95 border-b-2 border-green-500/50">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <Terminal className="w-6 h-6 text-green-400 animate-pulse" />
+            <div className="font-mono">
+              <div className="text-green-400 text-sm font-bold tracking-wider">
+                TACTICAL_TERMINAL_v2.1.0
+              </div>
+              <div className="text-green-600 text-xs">
+                {new Date().toISOString().split('T')[0]} | CONN_STATUS: SECURE
+              </div>
             </div>
           </div>
+          
+          <Button
+            onClick={() => setIsMinimized(true)}
+            variant="ghost"
+            size="sm"
+            className="text-green-400 hover:text-green-300 hover:bg-green-500/10"
+          >
+            <Minimize2 className="w-5 h-5" />
+          </Button>
         </div>
         
-        <Button
-          onClick={() => setIsMinimized(true)}
-          variant="ghost"
-          size="sm"
-          className="text-green-400 hover:text-green-300 hover:bg-green-500/10"
-        >
-          <Minimize2 className="w-5 h-5" />
-        </Button>
+        {/* ASCII Art Header */}
+        <pre className="text-green-500 text-xs leading-tight opacity-60 hidden md:block">
+{`╔═══════════════════════════════════════════════════════════════════╗
+║  __  __    _    ____ ___ ___  ____      _    ____    _    _   _  ║
+║ |  \\/  |  / \\  | __ )_ _/ _ \\|  _ \\    / \\  / ___|  / \\  | | | | ║
+║ | |\\/| | / _ \\ |  _ \\| | | | | |_) |  / _ \\| |  _  / _ \\ | | | | ║
+║ | |  | |/ ___ \\| |_) | | |_| |  _ <  / ___ \\ |_| |/ ___ \\| |_| | ║
+║ |_|  |_/_/   \\_\\____/___\\___/|_| \\_\\/_/   \\_\\____/_/   \\_\\\\___/  ║
+║                                                                   ║
+║         [ CYBERSECURITY OPERATIONS COMMAND CENTER ]              ║
+╚═══════════════════════════════════════════════════════════════════╝`}
+        </pre>
       </div>
 
       {/* Terminal Content */}

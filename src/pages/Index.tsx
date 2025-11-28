@@ -15,7 +15,6 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { SecurityFooter } from "@/components/SecurityFooter";
 import { HackerIntro } from "@/components/HackerIntro";
 import { AIChatbot } from "@/components/AIChatbot";
-import { ConversationalInterface } from "@/components/ConversationalInterface";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 
 const Portfolio = () => {
@@ -93,38 +92,33 @@ const Portfolio = () => {
       {showIntro && <HackerIntro onComplete={handleIntroComplete} />}
       <AnimatePresence>
         {showContent && (
-          <>
-            {/* Conversational Interface - Full screen takeover */}
-            <ConversationalInterface />
-            
-            {/* Main Content - Available when terminal is minimized */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="min-h-screen bg-black text-green-500 font-mono relative overflow-hidden"
-            >
-              <OptimizedBackground />
-              <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
-              <HeroSection text={text} showCursor={showCursor} />
-              <ServicesSection />
-              <SkillsShowcase />
-              <ProjectsSection />
-              <TestimonialsSection />
-              <SecurityNewsSection />
-              <BlogSection />
-              <div className="py-12 px-6">
-                <div className="max-w-6xl mx-auto">
-                  <h2 className="text-2xl md:text-3xl font-bold text-green-400 mb-8 text-center">
-                    Subscribe to My Newsletter
-                  </h2>
-                  <NewsletterForm />
-                </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="min-h-screen bg-black text-green-500 font-mono relative overflow-hidden"
+          >
+            <OptimizedBackground />
+            <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+            <HeroSection text={text} showCursor={showCursor} />
+            <ServicesSection />
+            <SkillsShowcase />
+            <ProjectsSection />
+            <TestimonialsSection />
+            <SecurityNewsSection />
+            <BlogSection />
+            <div className="py-12 px-6">
+              <div className="max-w-6xl mx-auto">
+                <h2 className="text-2xl md:text-3xl font-bold text-green-400 mb-8 text-center">
+                  Subscribe to My Newsletter
+                </h2>
+                <NewsletterForm />
               </div>
-              <ContactForm />
-              <SecurityFooter />
-            </motion.div>
-          </>
+            </div>
+            <ContactForm />
+            <SecurityFooter />
+            <AIChatbot />
+          </motion.div>
         )}
       </AnimatePresence>
     </>

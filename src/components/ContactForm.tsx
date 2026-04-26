@@ -27,7 +27,7 @@ export const ContactForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const data: ContactFormData = contactSchema.parse(formData);
+      const data = contactSchema.parse(formData) as ContactFormData;
       const { error } = await supabase.from("contact_submissions").insert([data]);
       if (error) throw error;
       await supabase.functions.invoke("send-contact-notification", { body: data });

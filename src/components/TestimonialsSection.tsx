@@ -1,81 +1,77 @@
-
 import { motion } from "framer-motion";
-import { Quote, Star, Shield } from "lucide-react";
-import { ModernCard } from "./ModernCard";
+import { Quote, Star } from "lucide-react";
+import { GlassCard } from "./soc/GlassCard";
 
 const testimonials = [
   {
     name: "Peter Gatdet Yak",
     role: "IT Director",
     company: "Ministry of ICT, South Sudan",
-    content: "Mabior's security assessment of our government systems was exceptional. He identified critical vulnerabilities that could have compromised sensitive data. His professionalism and deep knowledge of cybersecurity saved us from potential threats.",
-    rating: 5
+    content: "Mabior's assessment of our government systems uncovered critical exposures we hadn't detected internally. His professionalism and depth of knowledge are exceptional.",
+    rating: 5,
   },
   {
     name: "Rebecca Nyandeng Garang",
     role: "Chief Technology Officer",
     company: "Juba Commercial Bank",
-    content: "We hired Mabior to conduct penetration testing on our banking infrastructure. His thorough analysis and detailed reports helped us strengthen our security posture significantly. Highly professional and trustworthy.",
-    rating: 5
+    content: "Engaging Mabior for our banking penetration test was the right call. The findings were sharp, the reporting was clear, and remediation guidance was actionable.",
+    rating: 5,
   },
   {
     name: "Dr. James Loro Lokuji",
     role: "Director of Cybersecurity",
     company: "University of Juba",
-    content: "Mabior conducted a comprehensive security audit of our campus network and student data systems. His expertise in identifying and mitigating security risks is unmatched. The university's digital infrastructure is now much more secure thanks to his work.",
-    rating: 5
-  }
+    content: "A comprehensive audit of our campus network and student data systems. Our digital infrastructure is materially more secure thanks to his work.",
+    rating: 5,
+  },
 ];
 
 export const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="py-24 px-4 sm:px-6 relative">
-      <div className="absolute inset-0 bg-cyber-grid opacity-5"></div>
-      
+    <section id="testimonials" className="py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-green-400 mb-4">
-            Client Testimonials
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
+        >
+          <span className="eyebrow">// client_signals</span>
+          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Trusted by organizations across <span className="bg-gradient-primary bg-clip-text text-transparent">East Africa</span>
           </h2>
-          
-          <p className="text-green-300/80 text-lg max-w-2xl mx-auto">
-            Trusted by organizations across South Sudan to secure their critical systems
-          </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial) => (
-            <div key={testimonial.name}>
-              <ModernCard variant="premium" className="h-full">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <Quote className="h-8 w-8 text-green-400/60" />
-                    <div className="flex gap-1">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 text-green-400 fill-current" />
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <blockquote className="text-green-300/90 leading-relaxed italic">
-                    "{testimonial.content}"
-                  </blockquote>
-                  
-                  <div className="border-t border-green-500/20 pt-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/30">
-                        <Shield className="h-5 w-5 text-green-400" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-green-400">{testimonial.name}</div>
-                        <div className="text-green-500/80 text-sm">{testimonial.role}</div>
-                        <div className="text-green-500/60 text-xs">{testimonial.company}</div>
-                      </div>
-                    </div>
+        <div className="grid grid-cols-12 gap-4">
+          {testimonials.map((t, i) => (
+            <motion.div
+              key={t.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.05 }}
+              className="col-span-12 md:col-span-6 lg:col-span-4"
+            >
+              <GlassCard className="h-full flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                  <Quote className="w-6 h-6 text-primary/60" />
+                  <div className="flex gap-0.5">
+                    {Array.from({ length: t.rating }).map((_, idx) => (
+                      <Star key={idx} className="w-3.5 h-3.5 fill-primary text-primary" />
+                    ))}
                   </div>
                 </div>
-              </ModernCard>
-            </div>
+                <blockquote className="text-sm text-foreground/90 leading-relaxed flex-1">
+                  "{t.content}"
+                </blockquote>
+                <div className="mt-5 pt-4 border-t border-border">
+                  <div className="font-semibold text-foreground text-sm">{t.name}</div>
+                  <div className="text-xs text-muted-foreground">{t.role}</div>
+                  <div className="text-[11px] text-primary font-mono mt-0.5">{t.company}</div>
+                </div>
+              </GlassCard>
+            </motion.div>
           ))}
         </div>
       </div>

@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Shield, Clock, Loader2 } from "lucide-react";
+import { ExternalLink, Clock, Loader2, Radio } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { GlassCard } from "./soc/GlassCard";
 
 interface NewsItem {
   title: string;
@@ -19,143 +18,119 @@ export const SecurityNewsSection = () => {
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const { toast } = useToast();
-  
-  const INITIAL_DISPLAY_COUNT = 6;
+  const INITIAL = 6;
 
   useEffect(() => {
-    fetchNews();
-  }, []);
+    (async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase.functions.invoke("fetch-security-news");
+        if (error) throw error;
+        setNews(data?.news || []);
+      } catch (e) {
+        console.error(e);
+        toast({ title: "Error", description: "Failed to load security news", variant: "destructive" });
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [toast]);
 
-  const fetchNews = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.functions.invoke('fetch-security-news');
-      
-      if (error) throw error;
-      
-      setNews(data.news || []);
-    } catch (error) {
-      console.error('Error fetching news:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load security news",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getSourceColor = (source: string) => {
-    const colors: Record<string, string> = {
-      'ThreatPost': 'bg-red-500/20 text-red-400 border-red-500/30',
-      'BleepingComputer': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-      'The Hacker News': 'bg-green-500/20 text-green-400 border-green-500/30',
-      'Krebs on Security': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+  const sourceTone = (source: string) => {
+    const map: Record<string, string> = {
+      ThreatPost: "text-destructive border-destructive/30 bg-destructive/10",
+      BleepingComputer: "text-accent border-accent/30 bg-accent/10",
+      "The Hacker News": "text-primary border-primary/30 bg-primary/10",
+      "Krebs on Security": "text-warning border-warning/30 bg-warning/10",
     };
-    return colors[source] || 'bg-green-500/20 text-green-400 border-green-500/30';
+    return map[source] || "text-primary border-primary/30 bg-primary/10";
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
+  const fmt = (d: string) => {
+    const diff = Date.now() - new Date(d).getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const days = Math.floor(h / 24);
+    if (days < 7) return `${days}d ago`;
+    return new Date(d).toLocaleDateString();
   };
 
   return (
-    <section id="news" className="py-20 px-6 relative">
+    <section id="news" className="py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          transition={{ duration: 0.5 }}
+          className="mb-12 flex items-end justify-between gap-6 flex-wrap"
         >
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Shield className="w-8 h-8 text-green-400" />
-            <h2 className="text-3xl md:text-4xl font-bold text-green-400">
-              Latest Cybersecurity News
+          <div>
+            <span className="eyebrow"><Radio className="w-3 h-3" /> // threat_feed</span>
+            <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
+              Live <span className="bg-gradient-primary bg-clip-text text-transparent">intel feed</span>
             </h2>
+            <p className="mt-3 max-w-2xl text-muted-foreground">
+              Curated stream of breaking vulnerabilities, breaches, and advisories from trusted security desks.
+            </p>
           </div>
-          <p className="text-green-500/80 max-w-2xl mx-auto">
-            Stay updated with the latest security threats, vulnerabilities, and news from trusted sources
-          </p>
         </motion.div>
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-green-400 animate-spin" />
+            <Loader2 className="w-6 h-6 text-primary animate-spin" />
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {news.slice(0, showAll ? news.length : INITIAL_DISPLAY_COUNT).map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                viewport={{ once: true }}
-              >
-                <Card className="h-full hover:shadow-[0_0_30px_rgba(0,255,0,0.3)] transition-all duration-300 group">
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <Badge className={getSourceColor(item.source)}>
+            <div className="grid grid-cols-12 gap-4">
+              {news.slice(0, showAll ? news.length : INITIAL).map((item, i) => (
+                <motion.a
+                  key={i}
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.04 }}
+                  className="col-span-12 md:col-span-6 lg:col-span-4 group"
+                >
+                  <GlassCard className="h-full flex flex-col">
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md border ${sourceTone(item.source)}`}>
                         {item.source}
-                      </Badge>
-                      <div className="flex items-center gap-1 text-xs text-green-500/60">
+                      </span>
+                      <div className="flex items-center gap-1 text-[11px] text-muted-foreground font-mono">
                         <Clock className="w-3 h-3" />
-                        {formatDate(item.pubDate)}
+                        {fmt(item.pubDate)}
                       </div>
                     </div>
-                    <CardTitle className="text-lg group-hover:text-green-300 transition-colors line-clamp-2">
+                    <h3 className="text-base font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
                       {item.title}
-                    </CardTitle>
+                    </h3>
                     {item.description && (
-                      <CardDescription className="line-clamp-3 text-green-500/70">
-                        {item.description}
-                      </CardDescription>
+                      <p className="mt-2 text-sm text-muted-foreground line-clamp-3 flex-1">{item.description}</p>
                     )}
-                  </CardHeader>
-                  <CardContent>
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors text-sm font-medium"
-                    >
-                      Read More
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                    <div className="mt-4 pt-4 border-t border-border flex items-center justify-between text-[11px] font-mono text-primary">
+                      <span>read briefing</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </div>
+                  </GlassCard>
+                </motion.a>
               ))}
             </div>
-            
-            {news.length > INITIAL_DISPLAY_COUNT && (
-              <motion.div 
-                className="flex justify-center mt-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
+
+            {news.length > INITIAL && (
+              <div className="mt-10 flex justify-center">
                 <button
-                  onClick={() => setShowAll(!showAll)}
-                  className="px-6 py-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 hover:bg-green-500/20 hover:text-green-300 transition-all duration-300 font-mono"
+                  onClick={() => setShowAll((s) => !s)}
+                  className="px-5 py-2.5 rounded-xl bg-secondary border border-border text-foreground hover:border-primary/40 transition-colors text-sm font-medium"
                 >
-                  {showAll ? '← Show Less' : `View All ${news.length} Articles →`}
+                  {showAll ? "Show less" : `Show all ${news.length} items`}
                 </button>
-              </motion.div>
+              </div>
             )}
           </>
         )}

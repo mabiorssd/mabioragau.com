@@ -1,7 +1,4 @@
-
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { OptimizedBackground } from "@/components/OptimizedBackground";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { ServicesSection } from "@/components/ServicesSection";
@@ -13,115 +10,86 @@ import { SecurityNewsSection } from "@/components/SecurityNewsSection";
 import { ContactForm } from "@/components/ContactForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SecurityFooter } from "@/components/SecurityFooter";
-import { HackerIntro } from "@/components/HackerIntro";
 import { AIChatbot } from "@/components/AIChatbot";
+import { CyberMeshBackground } from "@/components/soc/CyberMeshBackground";
+import { GlassCard } from "@/components/soc/GlassCard";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
+
+const fullText = "Security Researcher · Penetration Tester · Ethical Hacker";
 
 const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
   const [text, setText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
-  const [showIntro, setShowIntro] = useState(() => {
-    // Check if intro was already shown in this session
-    return !sessionStorage.getItem('introShown');
-  });
-  const [showContent, setShowContent] = useState(() => {
-    // If intro was already shown, show content immediately
-    return sessionStorage.getItem('introShown') === 'true';
-  });
-  const fullText = "Security Researcher | Penetration Tester | Ethical Hacker";
+  const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const cursorRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Track visitors with AI analytics
   useVisitorTracking();
-
-  const handleIntroComplete = () => {
-    sessionStorage.setItem('introShown', 'true');
-    setShowIntro(false);
-    setShowContent(true);
-  };
 
   const handleScroll = useCallback(() => {
     const sections = ["about", "services", "skills", "projects", "testimonials", "news", "blog", "contact"];
-    const currentSection = sections.find(section => {
-      const element = document.getElementById(section);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        return rect.top <= 100 && rect.bottom >= 100;
-      }
-      return false;
+    const current = sections.find((s) => {
+      const el = document.getElementById(s);
+      if (!el) return false;
+      const r = el.getBoundingClientRect();
+      return r.top <= 120 && r.bottom >= 120;
     });
-    if (currentSection) {
-      setActiveSection(currentSection);
-    }
+    if (current) setActiveSection(current);
   }, []);
 
   useEffect(() => {
-    let index = 0;
-    let typingInterval: NodeJS.Timeout;
-    let cursorInterval: NodeJS.Timeout;
+    let i = 0;
+    typingRef.current = setInterval(() => {
+      setText(fullText.slice(0, i));
+      i++;
+      if (i > fullText.length && typingRef.current) clearInterval(typingRef.current);
+    }, 60);
 
-    if (showContent) {
-      const startTyping = () => {
-        typingInterval = setInterval(() => {
-          setText(fullText.slice(0, index));
-          index++;
-          if (index > fullText.length) {
-            clearInterval(typingInterval);
-          }
-        }, 100);
-      };
-
-      startTyping();
-
-      cursorInterval = setInterval(() => {
-        setShowCursor(prev => !prev);
-      }, 500);
-    }
-
-    window.addEventListener("scroll", handleScroll);
+    cursorRef.current = setInterval(() => setShowCursor((c) => !c), 500);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      clearInterval(typingInterval);
-      clearInterval(cursorInterval);
+      if (typingRef.current) clearInterval(typingRef.current);
+      if (cursorRef.current) clearInterval(cursorRef.current);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [fullText, handleScroll, showContent]);
+  }, [handleScroll]);
 
   return (
-    <>
-      {showIntro && <HackerIntro onComplete={handleIntroComplete} />}
-      <AnimatePresence>
-        {showContent && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="min-h-screen bg-black text-green-500 font-mono relative overflow-hidden"
-          >
-            <OptimizedBackground />
-            <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
-            <HeroSection text={text} showCursor={showCursor} />
-            <ServicesSection />
-            <SkillsShowcase />
-            <ProjectsSection />
-            <TestimonialsSection />
-            <SecurityNewsSection />
-            <BlogSection />
-            <div className="py-12 px-6">
-              <div className="max-w-6xl mx-auto">
-                <h2 className="text-2xl md:text-3xl font-bold text-green-400 mb-8 text-center">
-                  Subscribe to My Newsletter
-                </h2>
+    <div className="min-h-screen bg-background text-foreground relative">
+      <CyberMeshBackground />
+      <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+      <main>
+        <HeroSection text={text} showCursor={showCursor} />
+        <ServicesSection />
+        <SkillsShowcase />
+        <ProjectsSection />
+        <TestimonialsSection />
+        <SecurityNewsSection />
+        <BlogSection />
+
+        <section className="py-20 px-4 sm:px-6">
+          <div className="max-w-4xl mx-auto">
+            <GlassCard className="p-8 sm:p-10 text-center">
+              <span className="eyebrow">// signal_subscribe</span>
+              <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight">
+                Get the <span className="bg-gradient-primary bg-clip-text text-transparent">briefing</span>
+              </h2>
+              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+                Occasional newsletter with practical security guidance and field notes. No noise.
+              </p>
+              <div className="mt-6 max-w-md mx-auto">
                 <NewsletterForm />
               </div>
-            </div>
-            <ContactForm />
-            <SecurityFooter />
-            <AIChatbot />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            </GlassCard>
+          </div>
+        </section>
+
+        <ContactForm />
+      </main>
+      <SecurityFooter />
+      <AIChatbot />
+    </div>
   );
 };
 

@@ -1,197 +1,108 @@
-
 import { motion } from "framer-motion";
-import { Terminal, Lock, Eye, Shield, Code, Zap, AlertTriangle } from "lucide-react";
-import { ModernCard } from "./ModernCard";
-import { Badge } from "./ui/badge";
+import { Lock, Eye, Shield, Code, ArrowUpRight } from "lucide-react";
+import { GlassCard } from "./soc/GlassCard";
 
 const projects = [
   {
     title: "Advanced Vulnerability Scanner",
-    description: "Advanced vulnerability assessment platform utilizing machine learning algorithms for intelligent threat detection and zero-day discovery capabilities.",
-    tech: ["Python", "TensorFlow", "Nmap API", "Custom Exploits"],
-    status: "Classified",
-    icon: <Shield size={24} />,
-    type: "Research Project",
-    priority: "Critical"
+    description: "ML-assisted vulnerability assessment platform with zero-day discovery heuristics and prioritized triage.",
+    tech: ["Python", "TensorFlow", "Nmap", "Custom Exploits"],
+    status: "Active",
+    icon: Shield,
   },
   {
     title: "Red Team C2 Framework",
-    description: "Next-generation command and control infrastructure with advanced evasion techniques, encrypted communications, and modular payload delivery.",
-    tech: ["Rust", "Assembly", "Encryption", "Network Protocols"],
+    description: "Modular C2 with encrypted comms, stealthy beacons, and pluggable post-exploitation modules.",
+    tech: ["Rust", "Assembly", "AES-GCM", "TLS"],
     status: "Private",
-    icon: <Lock size={24} />,
-    type: "Operational Tool",
-    priority: "High"
+    icon: Lock,
   },
   {
     title: "Zero-Day Research Platform",
-    description: "Automated vulnerability discovery system combining fuzzing, static analysis, and dynamic testing for enterprise software assessment.",
-    tech: ["Go", "Machine Learning", "Binary Analysis"],
+    description: "Hybrid fuzzing + symbolic execution pipeline for enterprise binary analysis at scale.",
+    tech: ["Go", "AFL++", "angr"],
     status: "Restricted",
-    icon: <Code size={24} />,
-    type: "Research Platform",
-    priority: "Critical"
+    icon: Code,
   },
   {
     title: "APT Detection System",
-    description: "Machine learning-powered threat detection system for identifying and analyzing Advanced Persistent Threat activities in real-time.",
-    tech: ["Python", "Deep Learning", "YARA Rules"],
+    description: "Behavioral threat detection using deep learning over EDR telemetry and YARA correlation.",
+    tech: ["Python", "PyTorch", "YARA"],
     status: "Confidential",
-    icon: <Eye size={24} />,
-    type: "Defense System",
-    priority: "High"
-  }
+    icon: Eye,
+  },
 ];
 
-const statusColors = {
-  "Classified": "destructive",
-  "Private": "secondary", 
-  "Restricted": "outline",
-  "Confidential": "cyber"
-} as const;
-
-const priorityColors = {
-  "Critical": "text-red-400",
-  "High": "text-orange-400",
-  "Medium": "text-yellow-400",
-  "Low": "text-green-400"
+const statusStyle: Record<string, string> = {
+  Active: "bg-primary/15 text-primary border-primary/30",
+  Private: "bg-accent/15 text-accent border-accent/30",
+  Restricted: "bg-warning/15 text-warning border-warning/30",
+  Confidential: "bg-destructive/15 text-destructive border-destructive/30",
 };
 
 export const ProjectsSection = () => {
   return (
-    <section id="projects" className="py-24 px-4 sm:px-6 relative">
-      {/* Background warning pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-repeat bg-[length:40px_40px] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDEwTDMwIDMwSDEwTDIwIDEwWiIgc3Ryb2tlPSIjRkY2NjY2IiBzdHJva2Utd2lkdGg9IjEiLz4KPC9zdmc+')]"></div>
-      </div>
-      
+    <section id="projects" className="py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Enhanced Section Header */}
-        <motion.div 
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
         >
-          <div className="inline-flex items-center gap-3 mb-8 px-6 py-3 bg-black/90 border border-red-500/40 rounded-full backdrop-blur-sm shadow-lg shadow-red-500/10">
-            <AlertTriangle className="h-5 w-5 text-red-400 animate-pulse" />
-            <span className="text-red-400 text-sm font-mono">ls -la /projects/classified/</span>
-            <div className="w-2 h-2 bg-red-400 rounded-full animate-ping ml-2"></div>
-          </div>
-          
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-green-400 mb-8 drop-shadow-[0_0_20px_rgba(0,255,0,0.3)]">
-            Classified <span className="text-red-400 drop-shadow-[0_0_20px_rgba(255,0,0,0.3)]">Projects</span>
+          <span className="eyebrow">// active_operations</span>
+          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Selected <span className="bg-gradient-primary bg-clip-text text-transparent">operations</span>
           </h2>
-          
-          <div className="max-w-4xl mx-auto bg-red-900/10 border border-red-500/20 rounded-xl p-6 backdrop-blur-sm">
-            <p className="text-green-300/90 text-xl leading-relaxed">
-              Advanced security research and development projects. 
-              <span className="text-red-400 font-semibold"> Access restricted to authorized personnel only.</span>
-            </p>
-          </div>
+          <p className="mt-3 max-w-2xl text-muted-foreground">
+            A redacted look at research, tooling, and platforms developed across offensive
+            security engagements.
+          </p>
         </motion.div>
 
-        {/* Enhanced Projects Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
+        <div className="grid grid-cols-12 gap-4">
+          {projects.map((p, i) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
+              key={p.title}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.15, duration: 0.8 }}
+              transition={{ duration: 0.5, delay: i * 0.05 }}
+              className="col-span-12 md:col-span-6"
             >
-              <ModernCard variant="premium" glow>
-                <div className="space-y-6">
-                  {/* Enhanced Header */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-start gap-4 flex-1">
-                      <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 shadow-lg">
-                        <div className="text-red-400">
-                          {project.icon}
-                        </div>
-                      </div>
-                      <div className="space-y-2 flex-1">
-                        <div className="flex items-center gap-2 text-red-500 text-xs font-mono">
-                          <span>[{project.type.toLowerCase().replace(' ', '_')}]$</span>
-                          <span className="text-red-400">classified</span>
-                          <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></div>
-                        </div>
-                        <h3 className="text-xl font-bold text-green-400 leading-tight">
-                          {project.title}
-                        </h3>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-400 font-mono">Priority:</span>
-                          <span className={`text-xs font-bold ${priorityColors[project.priority as keyof typeof priorityColors]}`}>
-                            {project.priority}
-                          </span>
-                        </div>
-                      </div>
+              <GlassCard className="h-full group">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-xl bg-primary/10 border border-primary/30 grid place-items-center">
+                      <p.icon className="w-5 h-5 text-primary" />
                     </div>
-                    <Badge variant={statusColors[project.status as keyof typeof statusColors]} className="shrink-0 shadow-lg">
-                      {project.status}
-                    </Badge>
-                  </div>
-
-                  {/* Enhanced Description */}
-                  <p className="text-green-300/85 leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  {/* Enhanced Tech Stack */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Zap className="h-4 w-4 text-green-500" />
-                      <span className="text-green-500 text-sm font-mono">Tech Stack:</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech.map((tech, i) => (
-                        <span 
-                          key={i} 
-                          className="text-xs text-green-400 bg-green-500/15 border border-green-500/30 px-3 py-1.5 rounded-full font-mono hover:bg-green-500/25 transition-colors duration-300"
-                        >
-                          {tech}
-                        </span>
-                      ))}
+                    <div>
+                      <h3 className="text-lg font-bold text-foreground leading-tight">{p.title}</h3>
+                      <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest">project // {String(i + 1).padStart(3, "0")}</span>
                     </div>
                   </div>
-
-                  {/* Enhanced Access Level */}
-                  <div className="pt-4 border-t border-red-500/20 bg-red-900/5 rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-red-400 text-sm font-mono">
-                        Access Level: {project.status}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-red-500" />
-                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                        <span className="text-red-500 text-sm font-bold">RESTRICTED</span>
-                      </div>
-                    </div>
-                  </div>
+                  <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md border ${statusStyle[p.status]}`}>
+                    {p.status}
+                  </span>
                 </div>
-              </ModernCard>
+
+                <p className="mt-4 text-sm text-muted-foreground">{p.description}</p>
+
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {p.tech.map((t) => (
+                    <span key={t} className="tech-pill">{t}</span>
+                  ))}
+                </div>
+
+                <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
+                  <span className="text-[11px] font-mono text-muted-foreground">Authorized inquiries only</span>
+                  <ArrowUpRight className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                </div>
+              </GlassCard>
             </motion.div>
           ))}
         </div>
-
-        {/* Security Notice */}
-        <motion.div 
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-red-900/20 border border-red-500/30 rounded-xl backdrop-blur-sm">
-            <Lock className="h-5 w-5 text-red-400" />
-            <span className="text-red-400 text-sm font-mono">
-              Unauthorized access is monitored and prosecuted
-            </span>
-            <div className="w-2 h-2 bg-red-400 rounded-full animate-ping"></div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

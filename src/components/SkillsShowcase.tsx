@@ -1,133 +1,123 @@
-
 import { motion } from "framer-motion";
 import { Shield, Lock, Search, Bug, Eye, Zap, Terminal, Network } from "lucide-react";
-import { ModernCard } from "./ModernCard";
+import { GlassCard } from "./soc/GlassCard";
 
-const skills = [
-  {
-    icon: Shield,
-    title: "Penetration Testing",
-    description: "Web and network security testing to find vulnerabilities",
-    level: 88
-  },
-  {
-    icon: Bug,
-    title: "Vulnerability Assessment",
-    description: "Identifying and documenting security weaknesses",
-    level: 85
-  },
-  {
-    icon: Lock,
-    title: "Web Application Security",
-    description: "Testing for OWASP Top 10 and common web vulnerabilities",
-    level: 90
-  },
-  {
-    icon: Network,
-    title: "Network Security",
-    description: "Analyzing network configurations and access controls",
-    level: 82
-  },
-  {
-    icon: Eye,
-    title: "Security Auditing",
-    description: "Reviewing security policies and system configurations",
-    level: 80
-  },
-  {
-    icon: Terminal,
-    title: "Linux & Windows Security",
-    description: "System hardening and security configuration",
-    level: 85
-  },
-  {
-    icon: Search,
-    title: "OSINT & Reconnaissance",
-    description: "Information gathering and threat intelligence",
-    level: 87
-  },
-  {
-    icon: Zap,
-    title: "Incident Response",
-    description: "Helping organizations respond to security incidents",
-    level: 78
-  }
+const expertise = [
+  { icon: Shield, title: "Penetration Testing", level: 92 },
+  { icon: Lock, title: "Web App Security", level: 90 },
+  { icon: Search, title: "OSINT & Recon", level: 88 },
+  { icon: Network, title: "Network Security", level: 85 },
 ];
+
+const toolCategories = [
+  {
+    name: "Recon",
+    tools: ["Nmap", "Amass", "Subfinder", "theHarvester", "Shodan"],
+  },
+  {
+    name: "Exploitation",
+    tools: ["Metasploit", "Burp Suite", "sqlmap", "Hydra", "Responder"],
+  },
+  {
+    name: "Analysis",
+    tools: ["Wireshark", "Ghidra", "Volatility", "YARA", "tcpdump"],
+  },
+  {
+    name: "Cloud & DevSec",
+    tools: ["AWS IAM", "Prowler", "Trivy", "Terraform", "Docker"],
+  },
+];
+
+const Gauge = ({ value, label, Icon }: { value: number; label: string; Icon: typeof Shield }) => {
+  const r = 38;
+  const c = 2 * Math.PI * r;
+  const offset = c - (value / 100) * c;
+  return (
+    <div className="flex flex-col items-center text-center">
+      <div className="relative w-24 h-24">
+        <svg className="w-24 h-24 -rotate-90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r={r} stroke="hsl(var(--secondary))" strokeWidth="6" fill="none" />
+          <motion.circle
+            cx="50" cy="50" r={r}
+            stroke="hsl(var(--primary))"
+            strokeWidth="6"
+            strokeLinecap="round"
+            fill="none"
+            strokeDasharray={c}
+            initial={{ strokeDashoffset: c }}
+            whileInView={{ strokeDashoffset: offset }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            style={{ filter: "drop-shadow(0 0 6px hsl(var(--primary) / 0.6))" }}
+          />
+        </svg>
+        <div className="absolute inset-0 grid place-items-center flex-col">
+          <Icon className="w-4 h-4 text-primary mb-0.5" />
+          <span className="text-lg font-bold text-foreground leading-none">{value}</span>
+        </div>
+      </div>
+      <div className="mt-2 text-xs font-medium text-foreground">{label}</div>
+    </div>
+  );
+};
 
 export const SkillsShowcase = () => {
   return (
-    <section id="skills" className="py-24 px-4 sm:px-6 relative">
-      <div className="absolute inset-0 bg-cyber-grid opacity-5"></div>
-      
+    <section id="skills" className="py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <motion.div 
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
         >
-          <div className="inline-flex items-center gap-3 mb-8 px-6 py-3 bg-black/80 border border-green-500/40 rounded-full backdrop-blur-sm shadow-lg">
-            <Shield className="h-5 w-5 text-green-400 animate-pulse" />
-            <span className="text-green-400 text-sm font-mono">cat /proc/skills</span>
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-ping ml-2"></div>
-          </div>
-          
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-green-400 mb-8">
-            Core <span className="text-green-300">Expertise</span>
+          <span className="eyebrow">// capabilities.matrix</span>
+          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Capabilities & <span className="bg-gradient-primary bg-clip-text text-transparent">tooling</span>
           </h2>
-          
-          <p className="text-green-300/90 text-xl leading-relaxed max-w-4xl mx-auto">
-            Practical skills in penetration testing, security assessments, and helping organizations 
-            improve their security posture through proven methodologies.
+          <p className="mt-3 max-w-2xl text-muted-foreground">
+            Core proficiencies measured against industry baselines, plus the operational tooling
+            stack used in active engagements.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {skills.map((skill, index) => (
-            <motion.div
-              key={skill.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.6 }}
-            >
-              <ModernCard variant="premium" glow className="h-full text-center">
-                <div className="space-y-6">
-                  <div className="flex justify-center">
-                    <div className="p-4 bg-green-500/10 rounded-full border border-green-500/30">
-                      <skill.icon className="h-8 w-8 text-green-400" />
-                    </div>
+        <div className="grid grid-cols-12 gap-4">
+          {/* Gauges */}
+          <GlassCard className="col-span-12 lg:col-span-5">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">Core Expertise</h3>
+              <span className="text-[10px] font-mono text-primary">live</span>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              {expertise.map((e) => (
+                <Gauge key={e.title} value={e.level} label={e.title} Icon={e.icon} />
+              ))}
+            </div>
+          </GlassCard>
+
+          {/* Categorized tool cloud */}
+          <GlassCard className="col-span-12 lg:col-span-7">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">Tooling Inventory</h3>
+              <Terminal className="w-4 h-4 text-primary" />
+            </div>
+            <div className="space-y-5">
+              {toolCategories.map((cat) => (
+                <div key={cat.name}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="font-mono text-[11px] text-primary uppercase tracking-widest">{cat.name}</span>
+                    <div className="flex-1 h-px bg-border" />
                   </div>
-                  
-                  <div>
-                    <h3 className="text-xl font-bold text-green-400 mb-3">
-                      {skill.title}
-                    </h3>
-                    <p className="text-green-300/80 text-sm leading-relaxed">
-                      {skill.description}
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-green-500 text-sm font-mono">Proficiency</span>
-                      <span className="text-green-400 text-sm font-mono">{skill.level}%</span>
-                    </div>
-                    <div className="w-full bg-black/50 rounded-full h-2 border border-green-500/20">
-                      <motion.div
-                        className="bg-gradient-to-r from-green-500 to-green-400 h-full rounded-full"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.1 + 0.5, duration: 1 }}
-                      />
-                    </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {cat.tools.map((t) => (
+                      <span key={t} className="tech-pill">{t}</span>
+                    ))}
                   </div>
                 </div>
-              </ModernCard>
-            </motion.div>
-          ))}
+              ))}
+            </div>
+          </GlassCard>
         </div>
       </div>
     </section>

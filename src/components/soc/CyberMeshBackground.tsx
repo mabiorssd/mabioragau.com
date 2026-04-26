@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 export const CyberMeshBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
+  const scrollIntensityRef = useRef(0);
   const rafRef = useRef<number>();
 
   useEffect(() => {
@@ -50,6 +51,13 @@ export const CyberMeshBackground = () => {
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseleave", onLeave);
 
+    const onScroll = () => {
+      const max = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+      scrollIntensityRef.current = Math.min(1, window.scrollY / max);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
     let last = 0;
     let t = 0;
     const interval = 1000 / 30; // 30fps
@@ -80,17 +88,19 @@ export const CyberMeshBackground = () => {
           const dy = y - my;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          let alpha = 0.18;
+          let alpha = 0.18 + scrollIntensityRef.current * 0.12;
+          let dotR = 0.9 + scrollIntensityRef.current * 0.3;
           if (dist < radius) {
             const pull = (1 - dist / radius) * 8;
             x -= (dx / dist) * pull;
             y -= (dy / dist) * pull;
             alpha = 0.18 + (1 - dist / radius) * 0.6;
+            dotR = 1.6;
           }
 
           ctx.fillStyle = `hsla(142, 71%, 55%, ${alpha})`;
           ctx.beginPath();
-          ctx.arc(x, y, dist < radius ? 1.6 : 0.9, 0, Math.PI * 2);
+          ctx.arc(x, y, dotR, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -134,6 +144,7 @@ export const CyberMeshBackground = () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", onVisibility);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };

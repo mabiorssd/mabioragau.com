@@ -8,11 +8,15 @@ import { GlassCard } from "./soc/GlassCard";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
-  email: z.string().email("Invalid email address").max(255),
+  email: z.string().trim().email("Invalid email address").max(255),
   message: z.string().trim().min(1, "Message is required").max(5000),
 });
 
-type ContactFormData = z.infer<typeof contactSchema>;
+type ContactFormData = {
+  name: string;
+  email: string;
+  message: string;
+};
 
 export const ContactForm = () => {
   const { toast } = useToast();

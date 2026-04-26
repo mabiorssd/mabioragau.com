@@ -580,11 +580,11 @@ export type Database = {
         Returns: boolean
       }
       increment_view_count:
+        | { Args: never; Returns: undefined }
         | {
             Args: { country_code: string; post_id: string }
             Returns: undefined
           }
-        | { Args: never; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
     }
     Enums: {

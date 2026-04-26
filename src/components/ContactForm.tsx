@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
-import { Send, Mail, User, MessageSquare } from "lucide-react";
+import { Send, Mail, User, MessageSquare, Copy as CopyIcon } from "lucide-react";
 import { GlassCard } from "./soc/GlassCard";
 
 const contactSchema = z.object({
@@ -73,10 +73,25 @@ export const ContactForm = () => {
                 <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/30 grid place-items-center">
                   <Mail className="w-4 h-4 text-primary" />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <div className="text-[11px] uppercase tracking-widest text-muted-foreground font-mono">Email</div>
                   <a href="mailto:info@mabioragau.com" className="text-sm text-foreground font-medium">info@mabioragau.com</a>
                 </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText("info@mabioragau.com");
+                      toast({ title: "Copied!", description: "info@mabioragau.com" });
+                    } catch {
+                      toast({ title: "Copy failed", variant: "destructive" });
+                    }
+                  }}
+                  aria-label="Copy email"
+                  className="w-8 h-8 grid place-items-center rounded-lg text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
+                >
+                  <CopyIcon className="w-3.5 h-3.5" />
+                </button>
               </div>
               <div className="flex items-center gap-3 rounded-xl border border-border bg-secondary/40 p-3">
                 <span className="status-dot ml-2 mr-2" />

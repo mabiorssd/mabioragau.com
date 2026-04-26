@@ -13,6 +13,7 @@ import { SecurityFooter } from "@/components/SecurityFooter";
 import { AIChatbot } from "@/components/AIChatbot";
 import { CyberMeshBackground } from "@/components/soc/CyberMeshBackground";
 import { GlassCard } from "@/components/soc/GlassCard";
+import { CommandPalette } from "@/components/soc/CommandPalette";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 
 const fullText = "Security Researcher · Penetration Tester · Ethical Hacker";
@@ -89,6 +90,7 @@ const Portfolio = () => {
       </main>
       <SecurityFooter />
       <AIChatbot />
+      <CommandPalette />
     </div>
   );
 };

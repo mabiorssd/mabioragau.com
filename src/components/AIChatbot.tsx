@@ -8,21 +8,62 @@ import { AIOrb, AIWaveform } from "./soc/AIOrb";
 type Message = { role: "user" | "assistant"; content: string };
 
 const QUICK_COMMANDS = [
+  { label: "VET", prompt: "__hotkey__:VET" },
+  { label: "NCA", prompt: "__hotkey__:NCA" },
+  { label: "SKILLS", prompt: "__hotkey__:SKILLS" },
+  { label: "CONTACT", prompt: "__hotkey__:CONTACT" },
   { label: "/Check_Services", prompt: "What cybersecurity services do you offer?" },
   { label: "/View_Projects", prompt: "Tell me about your most impressive projects." },
-  { label: "/Contact_Mabior", prompt: "How can I get in touch with Mabior for an engagement?" },
-  { label: "/Tactical_Proficiency", prompt: "What are your core technical skills?" },
 ];
 
-const greeting = () => {
-  const h = new Date().getHours();
-  return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+const HOTKEY_RESPONSES: Record<string, string> = {
+  VET:
+    "**CREDENTIAL VERIFICATION — Mabior Agau**\n\n" +
+    "▸ Role: Penetration Tester · CSIRT Operator\n" +
+    "▸ Org: National Communication Authority (NCA), South Sudan\n" +
+    "▸ Base: Juba, South Sudan\n" +
+    "▸ Domain focus: telecom infrastructure, web app security, red team simulation\n" +
+    "▸ Years operational: 6+\n" +
+    "▸ Public channels: github.com/mabiorssd · linkedin/in/mabior-agau-436825210\n\n" +
+    "Status: VERIFIED · Channel: SECURE",
+  NCA:
+    "**ROLE BRIEF — National Communication Authority**\n\n" +
+    "Mabior serves as Penetration Tester within the NCA's CSIRT capacity, the regulatory body overseeing South Sudan's telecommunications sector.\n\n" +
+    "Mandate (public-disclosable):\n" +
+    "▸ Authorized red team simulations against licensed operators\n" +
+    "▸ Vulnerability assessments on national communication backbones\n" +
+    "▸ Incident response coordination & threat-intel handovers\n" +
+    "▸ Regulatory hardening playbooks\n\n" +
+    "[TOP SECRET: AUTHORIZED ACCESS ONLY] — operational details redacted.",
+  SKILLS:
+    "**TACTICAL PROFICIENCY — domain map**\n\n" +
+    "▸ Web App Security · 95\n" +
+    "▸ Network · 92\n" +
+    "▸ Social Engineering · 88\n" +
+    "▸ Cloud · 84\n" +
+    "▸ Cryptography · 78\n" +
+    "▸ Binary / Reversing · 70\n\n" +
+    "Suites: Recon, Exploitation, Forensics, Cloud & DevSec.\n" +
+    "See the Arsenal radar for the full readout.",
+  CONTACT:
+    "**SECURE CHANNEL — Engagement Request**\n\n" +
+    "▸ Email: info@mabioragau.com\n" +
+    "▸ Form: scroll to /contact\n" +
+    "▸ Response SLA: under 24h\n" +
+    "▸ Encrypted comms available on request (PGP)\n\n" +
+    "Booking Q2 engagements. State scope, target environment, and authorization context.",
 };
 
 const initialMessage = (): Message => ({
   role: "assistant",
   content:
-    `${greeting()}, operator. I'm the Cyber Co-Pilot — Mabior's AI assistant.\n\nI can brief you on services, deployment history, tactical proficiency, or open a secure channel for engagements. Use a /quick_command below or type a question.`,
+    "System initialized. Authorized visitor detected.\n\nAccessing Mabior's operational logs…\n\n" +
+    "I'm the Cyber Co-Pilot. Type a hotkey for instant intel:\n" +
+    "▸ **VET** — credentials\n" +
+    "▸ **NCA** — role details\n" +
+    "▸ **SKILLS** — proficiency map\n" +
+    "▸ **CONTACT** — secure channel\n\n" +
+    "Or ask anything in natural language.",
 });
 
 export const AIChatbot = () => {
@@ -113,6 +154,27 @@ export const AIChatbot = () => {
     const msg = (text ?? input).trim();
     if (!msg || isLoading) return;
     setInput("");
+
+    // Hotkey shortcut path — instant canned reply, no network call
+    if (msg.startsWith("__hotkey__:")) {
+      const key = msg.slice("__hotkey__:".length);
+      setMessages((p) => [
+        ...p,
+        { role: "user", content: key },
+        { role: "assistant", content: HOTKEY_RESPONSES[key] ?? "Unknown hotkey." },
+      ]);
+      return;
+    }
+    const upperKey = msg.toUpperCase().trim();
+    if (HOTKEY_RESPONSES[upperKey]) {
+      setMessages((p) => [
+        ...p,
+        { role: "user", content: msg },
+        { role: "assistant", content: HOTKEY_RESPONSES[upperKey] },
+      ]);
+      return;
+    }
+
     setMessages((p) => [...p, { role: "user", content: msg }]);
     setIsLoading(true);
     try {

@@ -61,37 +61,43 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
         </Link>
 
         {!isMobile ? (
-          <nav className="flex items-center gap-1 glass-panel rounded-full px-2 py-1.5">
-            {items.map((it) => {
-              const active = activeSection === it.id;
-              return (
-                <button
-                  key={it.id}
-                  onClick={() => handleClick(it.id)}
-                  className={`relative px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    active ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {active && (
-                    <motion.span
-                      layoutId="nav-pill"
-                      className="absolute inset-0 rounded-full bg-primary"
-                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                    />
-                  )}
-                  <span className="relative z-10">{it.label}</span>
-                </button>
-              );
-            })}
-          </nav>
+          <div className="flex items-center gap-2">
+            <nav className="flex items-center gap-1 glass-panel rounded-full px-2 py-1.5">
+              {items.map((it) => {
+                const active = activeSection === it.id;
+                return (
+                  <button
+                    key={it.id}
+                    onClick={() => handleClick(it.id)}
+                    className={`relative px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                      active ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {active && (
+                      <motion.span
+                        layoutId="nav-pill"
+                        className="absolute inset-0 rounded-full bg-primary"
+                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative z-10">{it.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+            <ThemeToggle />
+          </div>
         ) : (
-          <button
-            onClick={() => setOpen((o) => !o)}
-            className="glass-panel w-10 h-10 rounded-xl grid place-items-center text-foreground"
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setOpen((o) => !o)}
+              className="glass-panel w-10 h-10 rounded-xl grid place-items-center text-foreground"
+              aria-label="Toggle menu"
+            >
+              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         )}
       </div>
 

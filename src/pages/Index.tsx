@@ -31,7 +31,7 @@ const Portfolio = () => {
   useVisitorTracking();
 
   const handleScroll = useCallback(() => {
-    const sections = ["about", "services", "skills", "projects", "testimonials", "news", "blog", "contact"];
+    const sections = ["about", "services", "skills", "experience", "projects", "testimonials", "news", "blog", "contact"];
     const current = sections.find((s) => {
       const el = document.getElementById(s);
       if (!el) return false;
@@ -60,13 +60,14 @@ const Portfolio = () => {
   }, [handleScroll]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
-      <CyberMeshBackground />
+    <div className="min-h-screen text-foreground relative pt-7">
+      <SouthSudanMap activeSection={activeSection} />
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
       <main>
         <HeroSection text={text} showCursor={showCursor} />
         <ServicesSection />
-        <SkillsShowcase />
+        <ArsenalRadar />
+        <CommandHistoryTimeline />
         <ProjectsSection />
         <TestimonialsSection />
         <SecurityNewsSection />

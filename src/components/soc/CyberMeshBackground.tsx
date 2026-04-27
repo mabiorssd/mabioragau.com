@@ -98,7 +98,11 @@ export const CyberMeshBackground = () => {
             dotR = 1.6;
           }
 
-          ctx.fillStyle = `hsla(142, 71%, 55%, ${alpha})`;
+          const isLight = !document.documentElement.classList.contains("dark");
+          const dotColor = isLight
+            ? `hsla(152, 76%, 32%, ${alpha * 0.55})`
+            : `hsla(142, 71%, 55%, ${alpha})`;
+          ctx.fillStyle = dotColor;
           ctx.beginPath();
           ctx.arc(x, y, dotR, 0, Math.PI * 2);
           ctx.fill();

@@ -3,6 +3,7 @@ import { Menu, X, Shield } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface NavigationProps {
   activeSection: string;

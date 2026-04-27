@@ -114,13 +114,9 @@ const BlogPost = () => {
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={currentUrl} />
-        {imageUrl && (
-          <>
-            <meta property="og:image" content={imageUrl} />
-            <meta property="og:image:width" content="1200" />
-            <meta property="og:image:height" content="630" />
-          </>
-        )}
+        {imageUrl && <meta property="og:image" content={imageUrl} />}
+        {imageUrl && <meta property="og:image:width" content="1200" />}
+        {imageUrl && <meta property="og:image:height" content="630" />}
         <meta
           name="twitter:card"
           content={imageUrl ? "summary_large_image" : "summary"}

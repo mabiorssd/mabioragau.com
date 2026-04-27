@@ -98,7 +98,11 @@ export const CyberMeshBackground = () => {
             dotR = 1.6;
           }
 
-          ctx.fillStyle = `hsla(142, 71%, 55%, ${alpha})`;
+          const isLight = !document.documentElement.classList.contains("dark");
+          const dotColor = isLight
+            ? `hsla(152, 76%, 32%, ${alpha * 0.55})`
+            : `hsla(142, 71%, 55%, ${alpha})`;
+          ctx.fillStyle = dotColor;
           ctx.beginPath();
           ctx.arc(x, y, dotR, 0, Math.PI * 2);
           ctx.fill();
@@ -117,7 +121,11 @@ export const CyberMeshBackground = () => {
             const dy = y - my;
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < radius) {
-              ctx.strokeStyle = `hsla(142, 71%, 55%, ${(1 - dist / radius) * 0.25})`;
+              const isLight = !document.documentElement.classList.contains("dark");
+              const lineColor = isLight
+                ? `hsla(152, 76%, 32%, ${(1 - dist / radius) * 0.18})`
+                : `hsla(142, 71%, 55%, ${(1 - dist / radius) * 0.25})`;
+              ctx.strokeStyle = lineColor;
               ctx.lineWidth = 0.6;
               ctx.beginPath();
               ctx.moveTo(mx, my);

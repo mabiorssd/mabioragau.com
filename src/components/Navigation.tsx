@@ -13,8 +13,9 @@ interface NavigationProps {
 const items = [
   { id: "about", label: "Overview" },
   { id: "services", label: "Services" },
-  { id: "skills", label: "Tactical Proficiency" },
-  { id: "projects", label: "Deployment History" },
+  { id: "skills", label: "Arsenal" },
+  { id: "experience", label: "History" },
+  { id: "projects", label: "Operations" },
   { id: "news", label: "Threat Intel" },
   { id: "blog", label: "Briefings" },
   { id: "contact", label: "Contact" },

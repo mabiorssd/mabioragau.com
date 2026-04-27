@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { ServicesSection } from "@/components/ServicesSection";
-import { SkillsShowcase } from "@/components/SkillsShowcase";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { BlogSection } from "@/components/BlogSection";
@@ -11,9 +10,11 @@ import { ContactForm } from "@/components/ContactForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SecurityFooter } from "@/components/SecurityFooter";
 import { AIChatbot } from "@/components/AIChatbot";
-import { CyberMeshBackground } from "@/components/soc/CyberMeshBackground";
 import { GlassCard } from "@/components/soc/GlassCard";
 import { CommandPalette } from "@/components/soc/CommandPalette";
+import { CommandHistoryTimeline } from "@/components/soc/CommandHistoryTimeline";
+import { ArsenalRadar } from "@/components/soc/ArsenalRadar";
+import { SouthSudanMap } from "@/components/soc/SouthSudanMap";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 
 const fullText = "Security Researcher · Penetration Tester · Ethical Hacker";
@@ -28,7 +29,7 @@ const Portfolio = () => {
   useVisitorTracking();
 
   const handleScroll = useCallback(() => {
-    const sections = ["about", "services", "skills", "projects", "testimonials", "news", "blog", "contact"];
+    const sections = ["about", "services", "skills", "experience", "projects", "testimonials", "news", "blog", "contact"];
     const current = sections.find((s) => {
       const el = document.getElementById(s);
       if (!el) return false;
@@ -57,13 +58,14 @@ const Portfolio = () => {
   }, [handleScroll]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
-      <CyberMeshBackground />
+    <div className="min-h-screen text-foreground relative pt-7">
+      <SouthSudanMap activeSection={activeSection} />
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
       <main>
         <HeroSection text={text} showCursor={showCursor} />
         <ServicesSection />
-        <SkillsShowcase />
+        <ArsenalRadar />
+        <CommandHistoryTimeline />
         <ProjectsSection />
         <TestimonialsSection />
         <SecurityNewsSection />

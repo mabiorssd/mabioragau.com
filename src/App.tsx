@@ -3,9 +3,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { OptimizedBackground } from "./components/OptimizedBackground";
 import { AIChatbot } from "./components/AIChatbot";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { SouthSudanMap } from "./components/soc/SouthSudanMap";
+import { HackerLogTicker } from "./components/soc/HackerLogTicker";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
@@ -28,7 +29,9 @@ const App = () => (
     <ThemeProvider>
       <TooltipProvider>
         <div className="min-h-screen w-full bg-background">
-          <OptimizedBackground />
+          <SouthSudanMap />
+          <HackerLogTicker />
+          <div className="scanline-overlay" />
           <Toaster />
           <Sonner />
           <BrowserRouter>

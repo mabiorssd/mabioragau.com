@@ -124,9 +124,17 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
+    background-attachment: fixed;
+  }
+
+  .dark body {
     background:
       radial-gradient(ellipse at top, hsl(217 33% 10%) 0%, hsl(var(--background)) 60%);
-    background-attachment: fixed;
+  }
+
+  :root:not(.dark) body {
+    background:
+      radial-gradient(ellipse at top, hsl(210 40% 96%) 0%, hsl(var(--background)) 60%);
   }
 
   #root {

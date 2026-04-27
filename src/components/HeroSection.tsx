@@ -25,14 +25,21 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
               SECURE CHANNEL
             </div>
 
-            <span className="eyebrow mb-6">// security_operator.profile</span>
+            <div className="flex flex-wrap items-center gap-2 mb-6">
+              <span className="eyebrow">// security_operator.profile</span>
+              <span className="top-secret-badge">[ NCA · TIER-3 CLEARANCE ]</span>
+            </div>
 
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight font-display">
               <span className="text-foreground">MABIOR</span>{" "}
               <span className="bg-gradient-primary bg-clip-text text-transparent">AGAU</span>
             </h1>
 
-            <p className="mt-4 text-base sm:text-lg text-muted-foreground font-mono">
+            <p className="mt-3 text-sm sm:text-base text-foreground/90 font-mono">
+              Penetration Tester · National Communication Authority (NCA) · South Sudan
+            </p>
+
+            <p className="mt-2 text-sm sm:text-base text-muted-foreground font-mono">
               {text}
               {showCursor && <span className="text-primary">▌</span>}
             </p>

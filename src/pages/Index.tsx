@@ -14,6 +14,9 @@ import { AIChatbot } from "@/components/AIChatbot";
 import { CyberMeshBackground } from "@/components/soc/CyberMeshBackground";
 import { GlassCard } from "@/components/soc/GlassCard";
 import { CommandPalette } from "@/components/soc/CommandPalette";
+import { CommandHistoryTimeline } from "@/components/soc/CommandHistoryTimeline";
+import { ArsenalRadar } from "@/components/soc/ArsenalRadar";
+import { SouthSudanMap } from "@/components/soc/SouthSudanMap";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 
 const fullText = "Security Researcher · Penetration Tester · Ethical Hacker";

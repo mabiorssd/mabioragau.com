@@ -121,7 +121,11 @@ export const CyberMeshBackground = () => {
             const dy = y - my;
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < radius) {
-              ctx.strokeStyle = `hsla(142, 71%, 55%, ${(1 - dist / radius) * 0.25})`;
+              const isLight = !document.documentElement.classList.contains("dark");
+              const lineColor = isLight
+                ? `hsla(152, 76%, 32%, ${(1 - dist / radius) * 0.18})`
+                : `hsla(142, 71%, 55%, ${(1 - dist / radius) * 0.25})`;
+              ctx.strokeStyle = lineColor;
               ctx.lineWidth = 0.6;
               ctx.beginPath();
               ctx.moveTo(mx, my);

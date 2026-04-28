@@ -216,22 +216,23 @@
     letter-spacing: 0.1em;
   }
 
-  /* CRT scanlines overlay — fixed, super faint */
+  /* Global CRT scanline overlay — 2% opacity */
   .scanline-overlay {
     position: fixed; inset: 0; pointer-events: none; z-index: 60;
     background: repeating-linear-gradient(
       to bottom,
       transparent 0px,
       transparent 2px,
-      hsl(var(--foreground) / 0.025) 3px,
+      hsl(var(--foreground) / 0.02) 3px,
       transparent 4px
     );
-    mix-blend-mode: overlay;
+    mix-blend-mode: multiply;
   }
+  .dark .scanline-overlay { mix-blend-mode: overlay; }
   .scanline-overlay::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 0%, hsl(var(--primary) / 0.04) 50%, transparent 100%);
-    animation: scanline-sweep 8s linear infinite;
+    content: ''; position: absolute; inset: 0; opacity: 0.5;
+    background: linear-gradient(to bottom, transparent 0%, hsl(var(--primary) / 0.03) 50%, transparent 100%);
+    animation: scanline-sweep 10s linear infinite;
   }
   @keyframes scanline-sweep {
     0% { transform: translateY(-100%); }
@@ -291,11 +292,23 @@
     100% { transform: translateX(-50%); }
   }
 
-  /* Bento grid */
+  /* Bento grid — 12 col, single column on mobile */
   .bento-grid {
     display: grid; gap: 1rem;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
+  @media (min-width: 768px) {
+    .bento-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  }
+
+  /* Fluid typography helpers (clamp) */
+  .fluid-h1 { font-size: clamp(2rem, 5vw, 4rem); line-height: 1.05; }
+  .fluid-h2 { font-size: clamp(1.75rem, 4vw, 3rem); line-height: 1.1; }
+  .fluid-h3 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); line-height: 1.2; }
+  .fluid-body { font-size: clamp(0.95rem, 1vw + 0.5rem, 1.0625rem); }
+
+  /* Touch target safety on mobile — applied opt-in via .tap-target */
+  .tap-target { min-height: 44px; min-width: 44px; }
 }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }

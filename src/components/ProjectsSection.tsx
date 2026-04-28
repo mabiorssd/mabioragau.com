@@ -74,6 +74,18 @@ const statusStyle: Record<Project["status"], string> = {
 export const ProjectsSection = () => {
   const [active, setActive] = useState<Project | null>(null);
 
+  useEffect(() => {
+    if (active) {
+      setCopilotContext({
+        kind: "project",
+        title: active.title,
+        body: `${active.description}\n\nProblem: ${active.problem}\n\nSolution: ${active.solution}\n\nOutcome: ${active.outcome}\n\nTech: ${active.tech.join(", ")}`,
+      });
+    } else {
+      setCopilotContext(null);
+    }
+  }, [active]);
+
   return (
     <section id="projects" className="py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">

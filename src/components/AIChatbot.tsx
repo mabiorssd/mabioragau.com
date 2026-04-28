@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Loader2, Sparkles, Terminal } from "lucide-react";
+import { X, Send, Loader2, Sparkles, Terminal, FileSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AIOrb, AIWaveform } from "./soc/AIOrb";
+import { getCopilotContext, subscribeCopilotContext } from "@/lib/copilotContext";
 
 type Message = { role: "user" | "assistant"; content: string };
 

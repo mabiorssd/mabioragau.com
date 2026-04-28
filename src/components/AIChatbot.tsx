@@ -159,12 +159,31 @@ export const AIChatbot = () => {
     }
   };
 
+  const summarizeContext = () => {
+    const ctx = getCopilotContext();
+    if (!ctx) return;
+    const synthetic =
+      `Summarize the following ${ctx.kind} for a busy reader in 4-6 bullet points, ` +
+      `then close with a one-line "key takeaway".\n\n` +
+      `TITLE: ${ctx.title}\n\nCONTENT:\n${ctx.body}`;
+    setMessages((p) => [
+      ...p,
+      { role: "user", content: `Summarize "${ctx.title}"` },
+    ]);
+    setIsLoading(true);
+    streamChat(synthetic)
+      .catch((e: any) => {
+        if (e.name === "AbortError") return;
+        setMessages((p) => [...p, { role: "assistant", content: `⚠️ ${e.message ?? "Error."}` }]);
+      })
+      .finally(() => { setIsLoading(false); setIsTyping(false); });
+  };
+
   const send = async (text?: string) => {
     const msg = (text ?? input).trim();
     if (!msg || isLoading) return;
     setInput("");
 
-    // Hotkey shortcut path — instant canned reply, no network call
     if (msg.startsWith("__hotkey__:")) {
       const key = msg.slice("__hotkey__:".length);
       setMessages((p) => [
@@ -236,11 +255,11 @@ export const AIChatbot = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 240 }}
-            className="fixed top-0 right-0 bottom-0 w-full sm:w-[440px] z-50 flex flex-col glass-panel border-l border-primary/20 rounded-none"
+            className="fixed inset-0 sm:top-0 sm:right-0 sm:bottom-0 sm:left-auto sm:w-[440px] z-50 flex flex-col glass-panel sm:border-l sm:border-primary/20 rounded-none"
             style={{ boxShadow: "-20px 0 60px hsl(var(--background) / 0.6)" }}
           >
             {/* Header */}
-            <div className="px-5 py-4 border-b border-border flex items-center gap-3">
+            <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-border flex items-center gap-3 pt-[max(env(safe-area-inset-top),0.75rem)]">
               <AIOrb size={36} />
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-primary flex items-center gap-2">

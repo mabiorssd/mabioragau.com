@@ -14,7 +14,7 @@ import { GlassCard } from "@/components/soc/GlassCard";
 import { CommandPalette } from "@/components/soc/CommandPalette";
 import { CommandHistoryTimeline } from "@/components/soc/CommandHistoryTimeline";
 import { ArsenalRadar } from "@/components/soc/ArsenalRadar";
-import { SouthSudanMap } from "@/components/soc/SouthSudanMap";
+import { MobileDock } from "@/components/soc/MobileDock";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 
 const fullText = "Security Researcher · Penetration Tester · Ethical Hacker";
@@ -58,9 +58,9 @@ const Portfolio = () => {
   }, [handleScroll]);
 
   return (
-    <div className="min-h-screen text-foreground relative pt-7">
-      <SouthSudanMap activeSection={activeSection} />
+    <div className="min-h-screen text-foreground relative pt-7 pb-20 md:pb-0">
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+      <main>
       <main>
         <HeroSection text={text} showCursor={showCursor} />
         <ServicesSection />

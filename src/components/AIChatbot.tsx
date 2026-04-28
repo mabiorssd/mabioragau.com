@@ -72,15 +72,23 @@ export const AIChatbot = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [ctxTitle, setCtxTitle] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  // Listen for the command palette trigger
   useEffect(() => {
     const open = () => setIsOpen(true);
     window.addEventListener("copilot:open", open);
     return () => window.removeEventListener("copilot:open", open);
   }, []);
+
+  useEffect(() => subscribeCopilotContext((c) => setCtxTitle(c?.title ?? null)), []);
+
+  useEffect(() => {
+    if (isOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

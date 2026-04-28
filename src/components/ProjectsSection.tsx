@@ -97,8 +97,8 @@ export const ProjectsSection = () => {
           className="mb-12"
         >
           <span className="eyebrow">// deployment_history</span>
-          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Deployment <span className="bg-gradient-primary bg-clip-text text-transparent">history</span>
+          <h2 className="mt-4 font-display font-extrabold tracking-tight text-[clamp(1.875rem,4vw,3rem)]">
+            <ScrambleText text="Deployment" /> <span className="bg-gradient-primary bg-clip-text text-transparent">history</span>
           </h2>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             A redacted look at research, tooling, and platforms developed across offensive security engagements.

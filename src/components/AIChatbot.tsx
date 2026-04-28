@@ -83,7 +83,7 @@ export const AIChatbot = () => {
     return () => window.removeEventListener("copilot:open", open);
   }, []);
 
-  useEffect(() => subscribeCopilotContext((c) => setCtxTitle(c?.title ?? null)), []);
+  useEffect(() => { const u = subscribeCopilotContext((c) => setCtxTitle(c?.title ?? null)); return () => { u(); }; }, []);
 
   useEffect(() => {
     if (isOpen) document.body.style.overflow = "hidden";

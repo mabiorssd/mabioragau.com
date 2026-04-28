@@ -316,8 +316,21 @@ export const AIChatbot = () => {
               </div>
             </ScrollArea>
 
+            {ctxTitle && (
+              <div className="px-4 sm:px-5 pt-3 border-t border-border">
+                <button
+                  onClick={summarizeContext}
+                  disabled={isLoading}
+                  className="w-full flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-xl bg-primary/10 border border-primary/30 text-primary hover:bg-primary/15 hover:border-primary/50 transition-colors text-xs font-mono disabled:opacity-50"
+                >
+                  <FileSearch className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate text-left flex-1">Summarize: {ctxTitle}</span>
+                </button>
+              </div>
+            )}
+
             {/* Quick commands */}
-            <div className="px-5 pt-3 pb-2 border-t border-border">
+            <div className="px-4 sm:px-5 pt-3 pb-2 border-t border-border">
               <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2">
                 Quick Commands
               </div>
@@ -327,7 +340,7 @@ export const AIChatbot = () => {
                     key={q.label}
                     onClick={() => send(q.prompt)}
                     disabled={isLoading}
-                    className="tech-pill hover:bg-primary/15 hover:border-primary/50 transition-colors disabled:opacity-50"
+                    className="tech-pill hover:bg-primary/15 hover:border-primary/50 transition-colors disabled:opacity-50 min-h-[36px]"
                   >
                     {q.label}
                   </button>

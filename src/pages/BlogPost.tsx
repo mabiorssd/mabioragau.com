@@ -9,6 +9,7 @@ import { BlogPostContent } from "@/components/BlogPostContent";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
 import { toast } from "sonner";
+import { setCopilotContext } from "@/lib/copilotContext";
 
 const BlogPost = () => {
   const { slug } = useParams();

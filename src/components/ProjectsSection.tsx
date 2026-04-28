@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Lock, Eye, Shield, Code, ArrowUpRight, Github, ExternalLink, X } from "lucide-react";
 import { GlassCard } from "./soc/GlassCard";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription,
 } from "@/components/ui/sheet";
+import { ScrambleText } from "./soc/ScrambleText";
+import { setCopilotContext } from "@/lib/copilotContext";
 
 type Project = {
   title: string;

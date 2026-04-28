@@ -61,7 +61,6 @@ const Portfolio = () => {
     <div className="min-h-screen text-foreground relative pt-7 pb-20 md:pb-0">
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
       <main>
-      <main>
         <HeroSection text={text} showCursor={showCursor} />
         <ServicesSection />
         <ArsenalRadar />
@@ -75,7 +74,7 @@ const Portfolio = () => {
           <div className="max-w-4xl mx-auto">
             <GlassCard className="p-8 sm:p-10 text-center">
               <span className="eyebrow">// signal_subscribe</span>
-              <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight">
+              <h2 className="mt-4 font-display font-extrabold tracking-tight text-[clamp(1.75rem,3vw,2.5rem)]">
                 Get the <span className="bg-gradient-primary bg-clip-text text-transparent">briefing</span>
               </h2>
               <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
@@ -91,8 +90,8 @@ const Portfolio = () => {
         <ContactForm />
       </main>
       <SecurityFooter />
-      <AIChatbot />
       <CommandPalette />
+      <MobileDock activeSection={activeSection} />
     </div>
   );
 };

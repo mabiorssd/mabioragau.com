@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Lock, Eye, Shield, Code, ArrowUpRight, Github, ExternalLink, X } from "lucide-react";
 import { GlassCard } from "./soc/GlassCard";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription,
 } from "@/components/ui/sheet";
+import { ScrambleText } from "./soc/ScrambleText";
+import { setCopilotContext } from "@/lib/copilotContext";
 
 type Project = {
   title: string;
@@ -72,6 +74,18 @@ const statusStyle: Record<Project["status"], string> = {
 export const ProjectsSection = () => {
   const [active, setActive] = useState<Project | null>(null);
 
+  useEffect(() => {
+    if (active) {
+      setCopilotContext({
+        kind: "project",
+        title: active.title,
+        body: `${active.description}\n\nProblem: ${active.problem}\n\nSolution: ${active.solution}\n\nOutcome: ${active.outcome}\n\nTech: ${active.tech.join(", ")}`,
+      });
+    } else {
+      setCopilotContext(null);
+    }
+  }, [active]);
+
   return (
     <section id="projects" className="py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
@@ -83,8 +97,8 @@ export const ProjectsSection = () => {
           className="mb-12"
         >
           <span className="eyebrow">// deployment_history</span>
-          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Deployment <span className="bg-gradient-primary bg-clip-text text-transparent">history</span>
+          <h2 className="mt-4 font-display font-extrabold tracking-tight text-[clamp(1.875rem,4vw,3rem)]">
+            <ScrambleText text="Deployment" /> <span className="bg-gradient-primary bg-clip-text text-transparent">history</span>
           </h2>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             A redacted look at research, tooling, and platforms developed across offensive security engagements.

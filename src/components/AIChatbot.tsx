@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Loader2, Sparkles, Terminal } from "lucide-react";
+import { X, Send, Loader2, Sparkles, Terminal, FileSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AIOrb, AIWaveform } from "./soc/AIOrb";
+import { getCopilotContext, subscribeCopilotContext } from "@/lib/copilotContext";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -72,15 +73,23 @@ export const AIChatbot = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [ctxTitle, setCtxTitle] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  // Listen for the command palette trigger
   useEffect(() => {
     const open = () => setIsOpen(true);
     window.addEventListener("copilot:open", open);
     return () => window.removeEventListener("copilot:open", open);
   }, []);
+
+  useEffect(() => { const u = subscribeCopilotContext((c) => setCtxTitle(c?.title ?? null)); return () => { u(); }; }, []);
+
+  useEffect(() => {
+    if (isOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -150,12 +159,31 @@ export const AIChatbot = () => {
     }
   };
 
+  const summarizeContext = () => {
+    const ctx = getCopilotContext();
+    if (!ctx) return;
+    const synthetic =
+      `Summarize the following ${ctx.kind} for a busy reader in 4-6 bullet points, ` +
+      `then close with a one-line "key takeaway".\n\n` +
+      `TITLE: ${ctx.title}\n\nCONTENT:\n${ctx.body}`;
+    setMessages((p) => [
+      ...p,
+      { role: "user", content: `Summarize "${ctx.title}"` },
+    ]);
+    setIsLoading(true);
+    streamChat(synthetic)
+      .catch((e: any) => {
+        if (e.name === "AbortError") return;
+        setMessages((p) => [...p, { role: "assistant", content: `⚠️ ${e.message ?? "Error."}` }]);
+      })
+      .finally(() => { setIsLoading(false); setIsTyping(false); });
+  };
+
   const send = async (text?: string) => {
     const msg = (text ?? input).trim();
     if (!msg || isLoading) return;
     setInput("");
 
-    // Hotkey shortcut path — instant canned reply, no network call
     if (msg.startsWith("__hotkey__:")) {
       const key = msg.slice("__hotkey__:".length);
       setMessages((p) => [
@@ -227,11 +255,11 @@ export const AIChatbot = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 240 }}
-            className="fixed top-0 right-0 bottom-0 w-full sm:w-[440px] z-50 flex flex-col glass-panel border-l border-primary/20 rounded-none"
+            className="fixed inset-0 sm:top-0 sm:right-0 sm:bottom-0 sm:left-auto sm:w-[440px] z-50 flex flex-col glass-panel sm:border-l sm:border-primary/20 rounded-none"
             style={{ boxShadow: "-20px 0 60px hsl(var(--background) / 0.6)" }}
           >
             {/* Header */}
-            <div className="px-5 py-4 border-b border-border flex items-center gap-3">
+            <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-border flex items-center gap-3 pt-[max(env(safe-area-inset-top),0.75rem)]">
               <AIOrb size={36} />
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-primary flex items-center gap-2">
@@ -288,8 +316,21 @@ export const AIChatbot = () => {
               </div>
             </ScrollArea>
 
+            {ctxTitle && (
+              <div className="px-4 sm:px-5 pt-3 border-t border-border">
+                <button
+                  onClick={summarizeContext}
+                  disabled={isLoading}
+                  className="w-full flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-xl bg-primary/10 border border-primary/30 text-primary hover:bg-primary/15 hover:border-primary/50 transition-colors text-xs font-mono disabled:opacity-50"
+                >
+                  <FileSearch className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate text-left flex-1">Summarize: {ctxTitle}</span>
+                </button>
+              </div>
+            )}
+
             {/* Quick commands */}
-            <div className="px-5 pt-3 pb-2 border-t border-border">
+            <div className="px-4 sm:px-5 pt-3 pb-2 border-t border-border">
               <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2">
                 Quick Commands
               </div>
@@ -299,7 +340,7 @@ export const AIChatbot = () => {
                     key={q.label}
                     onClick={() => send(q.prompt)}
                     disabled={isLoading}
-                    className="tech-pill hover:bg-primary/15 hover:border-primary/50 transition-colors disabled:opacity-50"
+                    className="tech-pill hover:bg-primary/15 hover:border-primary/50 transition-colors disabled:opacity-50 min-h-[36px]"
                   >
                     {q.label}
                   </button>

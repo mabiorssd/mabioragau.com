@@ -9,6 +9,7 @@ import { BlogPostContent } from "@/components/BlogPostContent";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
 import { toast } from "sonner";
+import { setCopilotContext } from "@/lib/copilotContext";
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -71,6 +72,21 @@ const BlogPost = () => {
     };
     trackPageView();
   }, [post?.id]);
+
+  // Publish current blog post to AI Co-Pilot for context-aware summaries
+  useEffect(() => {
+    if (post) {
+      const plain = (post.content || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      setCopilotContext({
+        kind: "blog",
+        title: post.title,
+        body: plain.slice(0, 4000),
+        url: typeof window !== "undefined" ? window.location.href : undefined,
+      });
+    }
+    return () => setCopilotContext(null);
+  }, [post]);
+
 
   if (isLoading) {
     return (

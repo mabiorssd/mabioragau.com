@@ -9,7 +9,7 @@ import { SecurityNewsSection } from "@/components/SecurityNewsSection";
 import { ContactForm } from "@/components/ContactForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SecurityFooter } from "@/components/SecurityFooter";
-import { AIChatbot } from "@/components/AIChatbot";
+// AIChatbot is mounted globally in App.tsx
 import { GlassCard } from "@/components/soc/GlassCard";
 import { CommandPalette } from "@/components/soc/CommandPalette";
 import { CommandHistoryTimeline } from "@/components/soc/CommandHistoryTimeline";

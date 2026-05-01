@@ -34,26 +34,11 @@ export const NewsletterForm = () => {
 
     try {
       // Validate input using Zod schema
-      const validatedData = newsletterSchema.parse({ email });
+      const validatedData = newsletterSchema.parse({ email: email.trim().toLowerCase() });
       const validatedEmail = validatedData.email;
 
-      // First, check if the email is already subscribed
-      const { data: existingSubscription } = await supabase
-        .from('newsletter_subscriptions')
-        .select('*')
-        .eq('email', validatedEmail)
-        .single();
-
-      if (existingSubscription?.confirmed) {
-        toast({
-          title: "Already subscribed",
-          description: "This email is already subscribed to our newsletter.",
-        });
-        setEmail("");
-        return;
-      }
-
-      // Create or update subscription
+      // Upsert subscription (RLS prevents anonymous SELECT, so we don't pre-check existence —
+      // this also avoids leaking which emails are subscribed).
       const { data: subscription, error } = await supabase
         .from('newsletter_subscriptions')
         .upsert({

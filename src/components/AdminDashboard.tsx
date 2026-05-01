@@ -10,11 +10,12 @@ import { ImageLibrary } from "./ImageLibrary";
 import { BlogPostStats } from "./BlogPostStats";
 import { ContactSubmissions } from "./admin/ContactSubmissions";
 import { NewsletterManager } from "./admin/NewsletterManager";
+import { SubscribersManager } from "./admin/SubscribersManager";
 import { VisitorAnalytics } from "./admin/VisitorAnalytics";
 import { AITools } from "./admin/AITools";
 import {
   PenTool, Sparkles, FolderKanban, BarChart3, LineChart,
-  Image as ImageIcon, Settings, Inbox, Mail, Shield, LogOut, Activity,
+  Image as ImageIcon, Settings, Inbox, Mail, Users, Shield, LogOut, Activity,
 } from "lucide-react";
 
 const TABS = [
@@ -26,7 +27,8 @@ const TABS = [
   { value: "images", label: "Images", Icon: ImageIcon, hint: "Library" },
   { value: "settings", label: "Settings", Icon: Settings, hint: "Site config" },
   { value: "submissions", label: "Inbox", Icon: Inbox, hint: "Contact forms" },
-  { value: "newsletter", label: "Newsletter", Icon: Mail, hint: "Subscribers" },
+  { value: "newsletter", label: "Newsletter", Icon: Mail, hint: "Compose & send" },
+  { value: "subscribers", label: "Subscribers", Icon: Users, hint: "Filter & manage list" },
 ];
 
 export const AdminDashboard = () => {
@@ -116,6 +118,7 @@ export const AdminDashboard = () => {
             <TabsContent value="settings" className="mt-0"><AdminSettings /></TabsContent>
             <TabsContent value="submissions" className="mt-0"><ContactSubmissions /></TabsContent>
             <TabsContent value="newsletter" className="mt-0"><NewsletterManager /></TabsContent>
+            <TabsContent value="subscribers" className="mt-0"><SubscribersManager /></TabsContent>
           </div>
         </section>
       </Tabs>

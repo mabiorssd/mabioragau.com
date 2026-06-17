@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /confirm-subscription
+
+Sitemap: https://mabior-agau.lovable.app/sitemap.xml

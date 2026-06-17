@@ -33,6 +33,7 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight font-display">
               <span className="text-foreground">MABIOR</span>{" "}
               <span className="bg-gradient-primary bg-clip-text text-transparent">AGAU</span>
+              <span className="sr-only"> — Offensive Security & Penetration Testing</span>
             </h1>
 
             <p className="mt-3 text-sm sm:text-base text-foreground/90 font-mono">

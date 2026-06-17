@@ -109,7 +109,7 @@ export const ImageLibrary = () => {
           <Card key={image.name} className="p-4 space-y-2">
             <img
               src={image.url}
-              alt={image.name}
+              alt={`Uploaded media library image: ${image.name.replace(/[-_]/g, " ").replace(/\.[^.]+$/, "")}`}
               className="w-full h-48 object-cover rounded-md"
             />
             <div className="flex justify-between items-center">

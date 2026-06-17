@@ -1,0 +1,8 @@
+# Mabior Agau — Cybersecurity Expert
+
+> Portfolio and blog of Mabior Agau, an offensive security specialist offering penetration testing, red team simulation, and security engineering services from South Sudan.
+
+## Pages
+
+- [Home](/): Profile, services, projects, testimonials, and contact for Mabior Agau.
+- [Blog](/blog): Articles on offensive security, penetration testing, and threat research.

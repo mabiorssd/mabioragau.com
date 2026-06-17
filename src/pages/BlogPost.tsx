@@ -52,26 +52,10 @@ const BlogPost = () => {
   }, [post?.image_url, getImageUrl]);
 
   useEffect(() => {
-    const trackPageView = async () => {
-      if (post?.id) {
-        try {
-          const response = await fetch("https://ipapi.co/json/");
-          const locationData = await response.json();
-          const countryCode = locationData.country_code || "UNKNOWN";
-          const { error } = await supabase.rpc("increment_view_count", {
-            post_id: post.id,
-            country_code: countryCode,
-          });
-          if (error) {
-            console.error("Error tracking view:", error);
-          }
-        } catch (error) {
-          console.error("Error getting location:", error);
-        }
-      }
-    };
-    trackPageView();
+    // View tracking handled via visitor_analytics edge function elsewhere;
+    // the legacy increment_view_count RPC was removed during security hardening.
   }, [post?.id]);
+
 
   // Publish current blog post to AI Co-Pilot for context-aware summaries
   useEffect(() => {

@@ -75,7 +75,7 @@ export const ImageSelector = ({ onSelect }: ImageSelectorProps) => {
                 >
                   <img
                     src={image.url}
-                    alt={image.name}
+                    alt={`Selectable media library image: ${image.name.replace(/[-_]/g, " ").replace(/\.[^.]+$/, "")}`}
                     className="w-full h-32 object-cover"
                   />
                 </Card>

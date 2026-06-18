@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { Helmet } from "react-helmet";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { ServicesSection } from "@/components/ServicesSection";
@@ -59,6 +60,15 @@ const Portfolio = () => {
 
   return (
     <div className="min-h-screen text-foreground relative pt-7 pb-20 md:pb-0">
+      <Helmet>
+        <title>Mabior Agau — Cybersecurity Expert & Penetration Tester</title>
+        <meta name="description" content="Mabior Agau is an offensive security specialist offering penetration testing, red team simulation, and security engineering services from South Sudan." />
+        <link rel="canonical" href="https://mabior-agau.lovable.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Mabior Agau — Cybersecurity Expert & Penetration Tester" />
+        <meta property="og:description" content="Offensive security, penetration testing, and red team simulation by Mabior Agau." />
+        <meta property="og:url" content="https://mabior-agau.lovable.app/" />
+      </Helmet>
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
       <main>
         <HeroSection text={text} showCursor={showCursor} />

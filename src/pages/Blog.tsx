@@ -3,13 +3,26 @@ import { IntelligenceFeed } from "@/components/IntelligenceFeed";
 import { motion } from "framer-motion";
 import { Terminal } from "lucide-react";
 import { ScrambleText } from "@/components/soc/ScrambleText";
+import { Helmet } from "react-helmet";
 
 const Blog = () => {
+  const url = "https://mabior-agau.lovable.app/blog";
+  const title = "Intelligence Feed — Cybersecurity Research by Mabior Agau";
+  const description = "Briefings, post-mortems, exploit research, and defensive guidance from offensive security specialist Mabior Agau.";
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={url} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={url} />
+      </Helmet>
       <Navigation activeSection="blog" setActiveSection={() => {}} />
 
-      <motion.div
+      <motion.main
         className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -31,7 +44,7 @@ const Blog = () => {
 
           <IntelligenceFeed showControls />
         </div>
-      </motion.div>
+      </motion.main>
     </div>
   );
 };

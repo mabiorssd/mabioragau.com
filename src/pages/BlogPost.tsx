@@ -105,6 +105,19 @@ const BlogPost = () => {
   const description = post.content ? getExcerpt(post.content) : "Read this cybersecurity blog post";
   const imageUrl = ogImageUrl || ""; // Use the async loaded image URL
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": title,
+    "description": description,
+    "image": imageUrl || undefined,
+    "author": { "@type": "Person", "name": "Mabior Agau" },
+    "publisher": { "@type": "Person", "name": "Mabior Agau" },
+    "datePublished": post.created_at,
+    "dateModified": post.updated_at || post.created_at,
+    "mainEntityOfPage": currentUrl,
+  };
+
   return (
     <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
       <Helmet>
@@ -129,13 +142,16 @@ const BlogPost = () => {
         <meta property="og:site_name" content="Mabior Blog" />
         <meta property="og:locale" content="en_US" />
         <link rel="canonical" href={currentUrl} />
+        <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
       </Helmet>
       <Navigation activeSection="blog" setActiveSection={() => {}} />
-      <BlogPostContent
-        post={post}
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
-      />
+      <main>
+        <BlogPostContent
+          post={post}
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+        />
+      </main>
     </div>
   );
 }

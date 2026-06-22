@@ -43,6 +43,7 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/confirm-subscription" element={<ConfirmSubscription />} />
+              <Route path="/trust" element={<Trust />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <AIChatbot />

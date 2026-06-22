@@ -45,13 +45,13 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Unauthorized');
     }
 
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('is_admin')
-      .eq('id', user.id)
-      .single();
+    const { data: isAdmin, error: roleError } = await supabaseClient.rpc('has_role', {
+      _user_id: user.id,
+      _role: 'admin',
+    });
 
-    if (!profile?.is_admin) {
+    if (roleError || !isAdmin) {
+      console.error('Role check failed:', roleError);
       throw new Error('Unauthorized - Admin only');
     }
 

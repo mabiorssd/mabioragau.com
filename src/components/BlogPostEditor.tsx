@@ -10,6 +10,7 @@ import { ImageSelector } from "./ImageSelector";
 import { AlertCircle, Loader2, Sparkles } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { z } from "zod";
+import DOMPurify from "dompurify";
 
 const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required"),

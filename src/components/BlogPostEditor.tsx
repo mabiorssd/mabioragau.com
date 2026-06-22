@@ -291,7 +291,7 @@ export const BlogPostEditor = () => {
           </div>
           <div 
             className="prose max-w-none p-4 border rounded-md bg-muted/50"
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content, { USE_PROFILES: { html: true } }) }}
           />
         </div>
 

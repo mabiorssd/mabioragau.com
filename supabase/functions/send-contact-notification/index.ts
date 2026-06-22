@@ -89,7 +89,7 @@ const handler = async (req: Request): Promise<Response> => {
           </h1>
           
           <div style="background: #fff; padding: 30px;">
-            <h2 style="color: #333;">Hi ${name},</h2>
+            <h2 style="color: #333;">Hi ${safeName},</h2>
             
             <p style="line-height: 1.6; color: #555;">
               Thank you for contacting me! I've received your message and will review it shortly.
@@ -102,7 +102,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-left: 4px solid #00ff00;">
               <h3 style="color: #333; margin-top: 0;">Your Message:</h3>
-              <p style="white-space: pre-wrap; color: #555;">${message}</p>
+              <p style="white-space: pre-wrap; color: #555;">${safeMessage}</p>
             </div>
             
             <p style="line-height: 1.6; color: #555;">

@@ -10,6 +10,7 @@ import { ImageSelector } from "./ImageSelector";
 import { AlertCircle, Loader2, Sparkles } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { z } from "zod";
+import DOMPurify from "dompurify";
 
 const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -290,7 +291,7 @@ export const BlogPostEditor = () => {
           </div>
           <div 
             className="prose max-w-none p-4 border rounded-md bg-muted/50"
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content, { USE_PROFILES: { html: true } }) }}
           />
         </div>
 

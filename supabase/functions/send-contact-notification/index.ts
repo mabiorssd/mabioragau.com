@@ -16,6 +16,14 @@ interface ContactNotification {
   conversationSummary?: string;
 }
 
+const esc = (s: string) =>
+  String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -24,11 +32,16 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { name, email, message, conversationSummary }: ContactNotification = await req.json();
 
+    const safeName = esc(name);
+    const safeEmail = esc(email);
+    const safeMessage = esc(message);
+    const safeSummary = conversationSummary ? esc(conversationSummary) : '';
+
     // Send notification to admin
     const emailResponse = await resend.emails.send({
       from: "Mabior's Website <onboarding@resend.dev>",
       to: ["info@mabioragau.com"],
-      subject: `🔔 New Contact from ${name}`,
+      subject: `🔔 New Contact from ${safeName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #00ff00; background: #000; padding: 20px; text-align: center;">
@@ -37,20 +50,20 @@ const handler = async (req: Request): Promise<Response> => {
           
           <div style="background: #f5f5f5; padding: 20px; border-left: 4px solid #00ff00;">
             <h2 style="color: #333; margin-top: 0;">Contact Details</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+            <p><strong>Name:</strong> ${safeName}</p>
+            <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
             <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
           </div>
           
           <div style="background: #fff; padding: 20px; margin-top: 20px; border: 1px solid #ddd;">
             <h2 style="color: #333; margin-top: 0;">Message</h2>
-            <p style="white-space: pre-wrap; line-height: 1.6;">${message}</p>
+            <p style="white-space: pre-wrap; line-height: 1.6;">${safeMessage}</p>
           </div>
           
-          ${conversationSummary ? `
+          ${safeSummary ? `
           <div style="background: #f0f9ff; padding: 20px; margin-top: 20px; border-left: 4px solid #0066cc;">
             <h2 style="color: #333; margin-top: 0;">💬 AI Conversation Summary</h2>
-            <p style="white-space: pre-wrap; line-height: 1.6;">${conversationSummary}</p>
+            <p style="white-space: pre-wrap; line-height: 1.6;">${safeSummary}</p>
           </div>
           ` : ''}
           
@@ -76,7 +89,7 @@ const handler = async (req: Request): Promise<Response> => {
           </h1>
           
           <div style="background: #fff; padding: 30px;">
-            <h2 style="color: #333;">Hi ${name},</h2>
+            <h2 style="color: #333;">Hi ${safeName},</h2>
             
             <p style="line-height: 1.6; color: #555;">
               Thank you for contacting me! I've received your message and will review it shortly.
@@ -89,7 +102,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-left: 4px solid #00ff00;">
               <h3 style="color: #333; margin-top: 0;">Your Message:</h3>
-              <p style="white-space: pre-wrap; color: #555;">${message}</p>
+              <p style="white-space: pre-wrap; color: #555;">${safeMessage}</p>
             </div>
             
             <p style="line-height: 1.6; color: #555;">

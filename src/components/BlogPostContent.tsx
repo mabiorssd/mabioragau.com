@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Calendar, Eye, ArrowLeft, Twitter, Linkedin, Link2, Check, Copy } from "lucide-react";
@@ -155,7 +156,7 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
                 prose-pre:bg-secondary/60 prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-pre:p-4 prose-pre:font-mono prose-pre:text-[13px]
                 prose-code:text-primary prose-code:bg-secondary/60 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
                 prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary/30 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic"
-              dangerouslySetInnerHTML={{ __html: processedContent }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(processedContent, { USE_PROFILES: { html: true } }) }}
             />
 
             <div className="mt-8 pt-6 border-t border-border">

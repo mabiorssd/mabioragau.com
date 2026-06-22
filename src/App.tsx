@@ -14,6 +14,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import ConfirmSubscription from "./pages/ConfirmSubscription";
+import Trust from "./pages/Trust";
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -111,8 +111,8 @@ export const ContactForm = () => {
             className="col-span-12 lg:col-span-7"
           >
             <GlassCard className="p-6 sm:p-8">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div>
                     <label htmlFor="name" className="block text-xs font-mono uppercase tracking-widest text-muted-foreground mb-2">
                       Identifier
@@ -123,7 +123,7 @@ export const ContactForm = () => {
                         id="name" name="name" type="text" required disabled={isSubmitting}
                         value={formData.name} onChange={onChange}
                         placeholder="Your name"
-                        className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+                        className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus-visible:ring-4 focus-visible:ring-primary/20 transition-all duration-300 disabled:opacity-50"
                       />
                     </div>
                   </div>
@@ -137,7 +137,7 @@ export const ContactForm = () => {
                         id="email" name="email" type="email" required disabled={isSubmitting}
                         value={formData.email} onChange={onChange}
                         placeholder="you@domain.com"
-                        className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+                        className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus-visible:ring-4 focus-visible:ring-primary/20 transition-all duration-300 disabled:opacity-50"
                       />
                     </div>
                   </div>
@@ -154,7 +154,7 @@ export const ContactForm = () => {
                       value={formData.message} onChange={onChange}
                       rows={6}
                       placeholder="Briefly describe the engagement, scope, and timeline."
-                      className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none transition-colors"
+                      className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus-visible:ring-4 focus-visible:ring-primary/20 resize-none transition-all duration-300 disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -162,10 +162,10 @@ export const ContactForm = () => {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-glow transition-colors shadow-glow disabled:opacity-60 disabled:cursor-not-allowed"
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-glow transition-all duration-300 shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                   {isSubmitting ? "Transmitting..." : "Transmit message"}
                 </motion.button>
               </form>

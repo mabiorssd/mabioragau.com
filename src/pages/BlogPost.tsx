@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +9,7 @@ import { useTheme } from "@/components/ThemeProvider";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
 import { toast } from "sonner";
 import { setCopilotContext } from "@/lib/copilotContext";
+import { motion } from "framer-motion";
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -140,13 +140,17 @@ const BlogPost = () => {
         <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
       </Helmet>
       <Navigation activeSection="blog" setActiveSection={() => {}} />
-      <main>
+      <motion.main
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
         <BlogPostContent
           post={post}
           theme={theme}
           setTheme={setTheme}
         />
-      </main>
+      </motion.main>
     </div>
   );
 }

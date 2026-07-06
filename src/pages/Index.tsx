@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Helmet } from "react-helmet";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
@@ -24,8 +24,6 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
   const [text, setText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
-  const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const cursorRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useVisitorTracking();
 
@@ -41,19 +39,31 @@ const Portfolio = () => {
   }, []);
 
   useEffect(() => {
-    let i = 0;
-    typingRef.current = setInterval(() => {
-      setText(fullText.slice(0, i));
-      i++;
-      if (i > fullText.length && typingRef.current) clearInterval(typingRef.current);
-    }, 60);
+    // Smooth typing using requestAnimationFrame (cleaner, no setInterval)
+    let charIndex = 0;
+    let lastFrame = 0;
+    const TYPING_SPEED = 60;
+    let animFrameId: number;
 
-    cursorRef.current = setInterval(() => setShowCursor((c) => !c), 500);
+    const animate = (timestamp: number) => {
+      if (timestamp - lastFrame >= TYPING_SPEED) {
+        lastFrame = timestamp;
+        if (charIndex <= fullText.length) {
+          setText(fullText.slice(0, charIndex));
+          charIndex++;
+        }
+      }
+      if (charIndex <= fullText.length) {
+        animFrameId = requestAnimationFrame(animate);
+      }
+    };
+    animFrameId = requestAnimationFrame(animate);
+
+    // Cursor blink via CSS animation — state kept at true
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      if (typingRef.current) clearInterval(typingRef.current);
-      if (cursorRef.current) clearInterval(cursorRef.current);
+      cancelAnimationFrame(animFrameId);
       window.removeEventListener("scroll", handleScroll);
     };
   }, [handleScroll]);
@@ -63,11 +73,14 @@ const Portfolio = () => {
       <Helmet>
         <title>Mabior Agau — Cybersecurity Expert & Penetration Tester</title>
         <meta name="description" content="Mabior Agau is an offensive security specialist offering penetration testing, red team simulation, and security engineering services from South Sudan." />
-        <link rel="canonical" href="https://mabior-agau.lovable.app/" />
+        <link rel="canonical" href="https://mabioragau.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Mabior Agau — Cybersecurity Expert & Penetration Tester" />
         <meta property="og:description" content="Offensive security, penetration testing, and red team simulation by Mabior Agau." />
-        <meta property="og:url" content="https://mabior-agau.lovable.app/" />
+        <meta property="og:url" content="https://mabioragau.com/" />
+        <meta property="og:image" content="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200&h=630" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
       </Helmet>
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
       <main>

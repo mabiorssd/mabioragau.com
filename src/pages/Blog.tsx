@@ -6,7 +6,7 @@ import { ScrambleText } from "@/components/soc/ScrambleText";
 import { Helmet } from "react-helmet";
 
 const Blog = () => {
-  const url = "https://mabior-agau.lovable.app/blog";
+  const url = "https://mabioragau.com/blog";
   const title = "Intelligence Feed — Cybersecurity Research by Mabior Agau";
   const description = "Briefings, post-mortems, exploit research, and defensive guidance from offensive security specialist Mabior Agau.";
   return (
@@ -29,20 +29,41 @@ const Blog = () => {
         transition={{ duration: 0.4 }}
       >
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 mb-4 text-primary font-mono text-xs">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex items-center gap-3 mb-4 text-primary font-mono text-xs"
+          >
             <Terminal className="h-4 w-4" />
             <span>root@nca:~/intel $ cat ./feed --all</span>
-          </div>
+          </motion.div>
 
-          <h1 className="font-display font-extrabold tracking-tight text-[clamp(2rem,5vw,3.5rem)] mb-3">
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="font-display font-extrabold tracking-tight text-[clamp(2rem,5vw,3.5rem)] mb-3"
+          >
             <ScrambleText text="Intelligence Feed" />
-          </h1>
+          </motion.h1>
 
-          <p className="text-muted-foreground mb-10 max-w-2xl">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-muted-foreground mb-10 max-w-2xl"
+          >
             Briefings, post-mortems, exploit research, and defensive guidance — declassified for public review.
-          </p>
+          </motion.p>
 
-          <IntelligenceFeed showControls />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+          >
+            <IntelligenceFeed showControls />
+          </motion.div>
         </div>
       </motion.main>
     </div>

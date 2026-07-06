@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
 import { Helmet } from "react-helmet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { BlogPostContent } from "@/components/BlogPostContent";
 import { useTheme } from "@/components/ThemeProvider";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
@@ -66,6 +66,19 @@ const BlogPost = () => {
     return () => setCopilotContext(null);
   }, [post]);
 
+  // Track this view — 24h IP dedup handled server-side
+  const tracked = useRef(false);
+  useEffect(() => {
+    if (!post || tracked.current) return;
+    tracked.current = true;
+
+    supabase.functions.invoke("track-view", {
+      body: { slug: post.slug },
+    }).then(({ error }) => {
+      if (error) console.warn("View track error:", error);
+    });
+  }, [post]);
+
 
   if (isLoading) {
     return (
@@ -123,6 +136,7 @@ const BlogPost = () => {
         <meta property="og:description" content={description} />
         <meta property="og:url" content={currentUrl} />
         {imageUrl && <meta property="og:image" content={imageUrl} />}
+        {imageUrl && <meta property="og:image:secure_url" content={imageUrl} />}
         {imageUrl && <meta property="og:image:width" content="1200" />}
         {imageUrl && <meta property="og:image:height" content="630" />}
         <meta

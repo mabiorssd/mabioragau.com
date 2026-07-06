@@ -50,27 +50,26 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
           : "backdrop-blur-lg bg-background/20"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="relative w-9 h-9 rounded-xl bg-gradient-primary grid place-items-center shadow-glow">
-            <Shield className="w-5 h-5 text-primary-foreground" strokeWidth={2.5} />
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-primary grid place-items-center shadow-glow">
+            <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" strokeWidth={2.5} />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="font-bold text-sm text-foreground">MABIOR AGAU</span>
-            <span className="font-mono text-[10px] text-primary uppercase tracking-widest">SOC // Live</span>
+            <span className="font-bold text-xs sm:text-sm text-foreground">MABIOR AGAU</span>
           </div>
         </Link>
 
         {!isMobile ? (
           <div className="flex items-center">
-            <nav className="flex items-center gap-1 glass-panel rounded-full px-2 py-1.5">
+            <nav className="flex items-center gap-1 glass-panel rounded-full px-1.5 sm:px-2 py-1 sm:py-1.5">
               {items.map((it) => {
                 const active = activeSection === it.id;
                 return (
                   <button
                     key={it.id}
                     onClick={() => handleClick(it.id)}
-                    className={`relative px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    className={`relative px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-medium transition-colors ${
                       active ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                     }`}
                   >

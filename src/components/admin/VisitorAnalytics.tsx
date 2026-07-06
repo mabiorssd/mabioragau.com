@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, TrendingUp, Clock, Globe, Sparkles } from "lucide-react";
+import { Users, TrendingUp, Clock, Globe, Sparkles, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 
 type VisitorAnalytic = {
@@ -31,7 +31,7 @@ export const VisitorAnalytics = () => {
         .select("*")
         .order("visited_at", { ascending: false })
         .limit(100);
-      
+
       if (error) throw error;
       return data as VisitorAnalytic[];
     },
@@ -46,7 +46,7 @@ export const VisitorAnalytics = () => {
         .order("analyzed_at", { ascending: false })
         .limit(1)
         .single();
-      
+
       if (error) throw error;
       return data as VisitorInsight;
     },
@@ -55,7 +55,7 @@ export const VisitorAnalytics = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
       </div>
     );
   }
@@ -72,102 +72,76 @@ export const VisitorAnalytics = () => {
     aiInsights = null;
   }
 
+  const stats = [
+    { label: "Total Visitors", value: totalVisitors, icon: Users, desc: "All time tracked visits" },
+    { label: "Unique Pages", value: uniquePages, icon: Globe, desc: "Distinct pages viewed" },
+    { label: "Recent Activity", value: `${Math.floor(totalVisitors * 0.15)}%`, icon: TrendingUp, desc: "Growth trend" },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
-        <Users className="h-6 w-6 text-green-400" />
-        <h2 className="text-2xl font-bold text-green-400">
-          Visitor Analytics
-        </h2>
-        <Sparkles className="h-5 w-5 text-green-500 animate-pulse" />
+        <Activity className="h-5 w-5 text-primary" />
+        <h2 className="text-xl font-bold">Visitor Analytics</h2>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Card className="bg-black/50 border-green-500/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-green-400 flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Total Visitors
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-green-300">{totalVisitors}</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="bg-black/50 border-green-500/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-green-400 flex items-center gap-2">
-                <Globe className="h-4 w-4" />
-                Unique Pages
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-green-300">{uniquePages}</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="bg-black/50 border-green-500/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-green-400 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                Trend
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-green-300">+{Math.floor(totalVisitors * 0.15)}%</p>
-            </CardContent>
-          </Card>
-        </motion.div>
+        {stats.map((s, i) => (
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+          >
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-muted-foreground flex items-center gap-2 font-normal">
+                  <s.icon className="h-4 w-4 text-primary" />
+                  {s.label}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{s.value}</p>
+                <p className="text-xs text-muted-foreground mt-1">{s.desc}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
       </div>
 
       {/* AI Insights */}
       {aiInsights && (
-        <Card className="bg-gradient-to-br from-green-900/20 to-black/50 border-green-500/40">
+        <Card className="border-primary/20 bg-primary/5">
           <CardHeader>
-              <CardTitle className="text-green-400 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 animate-pulse" />
-                Analytics Insights
-              </CardTitle>
-              <CardDescription className="text-green-300/70">
-                Analyzed {insights?.sample_size || 0} recent visits
-              </CardDescription>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              Analytics Insights
+            </CardTitle>
+            <CardDescription>
+              Analyzed {insights?.sample_size || 0} recent visits
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {aiInsights.topPages && (
               <div>
-                <h4 className="font-semibold text-green-400 mb-2">Top Pages</h4>
-                <ul className="text-green-300 text-sm space-y-1">
+                <h4 className="text-sm font-semibold mb-2 text-foreground">Top Pages</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
                   {Array.isArray(aiInsights.topPages) ? 
                     aiInsights.topPages.map((page: string, i: number) => (
-                      <li key={i}>• {page}</li>
-                    )) : <li className="text-green-300/70">{aiInsights.topPages}</li>
+                      <li key={i} className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                        {page}
+                      </li>
+                    )) : <li>{aiInsights.topPages}</li>
                   }
                 </ul>
               </div>
             )}
             {aiInsights.insights && (
               <div>
-                <h4 className="font-semibold text-green-400 mb-2">Key Insights</h4>
-                <p className="text-green-300 text-sm">{aiInsights.insights}</p>
+                <h4 className="text-sm font-semibold mb-2 text-foreground">Key Insights</h4>
+                <p className="text-sm text-muted-foreground">{aiInsights.insights}</p>
               </div>
             )}
           </CardContent>
@@ -175,10 +149,10 @@ export const VisitorAnalytics = () => {
       )}
 
       {/* Recent Visitors */}
-      <Card className="bg-black/50 border-green-500/30">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-green-400 flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+          <CardTitle className="text-base flex items-center gap-2">
+            <Clock className="h-4 w-4 text-primary" />
             Recent Visitors
           </CardTitle>
         </CardHeader>
@@ -190,21 +164,24 @@ export const VisitorAnalytics = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-green-900/10 rounded-lg border border-green-500/20"
+                className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg border border-border"
               >
-                <div className="flex-1">
-                  <p className="text-green-300 font-medium">{visitor.page_url}</p>
-                  <p className="text-green-500/70 text-xs">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{visitor.page_url}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {new Date(visitor.visited_at).toLocaleString()}
                   </p>
                 </div>
                 {visitor.referrer && (
-                  <p className="text-green-400/60 text-xs max-w-xs truncate">
-                    from: {visitor.referrer}
-                  </p>
+                  <span className="text-xs text-muted-foreground/60 ml-3 max-w-[120px] truncate shrink-0">
+                    via {visitor.referrer}
+                  </span>
                 )}
               </motion.div>
             ))}
+            {recentVisitors.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-4">No visitors tracked yet.</p>
+            )}
           </div>
         </CardContent>
       </Card>

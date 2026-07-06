@@ -41,7 +41,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailResponse = await resend.emails.send({
       from: "Mabior's Website <onboarding@resend.dev>",
       to: ["info@mabioragau.com"],
-      subject: `🔔 New Contact from ${safeName}`,
+      subject: `New Contact from ${safeName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #00ff00; background: #000; padding: 20px; text-align: center;">

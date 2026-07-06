@@ -92,11 +92,7 @@ export const AIChatbot = () => {
 
   useEffect(() => { const u = subscribeCopilotContext((c) => setCtxTitle(c?.title ?? null)); return () => { u(); }; }, []);
 
-  useEffect(() => {
-    if (isOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
-    return () => { document.body.style.overflow = ""; };
-  }, [isOpen]);
+  // No body scroll lock — it freezes mobile scrolling. The panel itself handles its scroll.
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -294,7 +290,7 @@ export const AIChatbot = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 240 }}
-            className="fixed inset-0 sm:top-0 sm:right-0 sm:bottom-0 sm:left-auto sm:w-[440px] z-50 flex flex-col glass-panel sm:border-l sm:border-primary/20 rounded-none"
+            className="fixed inset-0 sm:top-0 sm:right-0 sm:bottom-0 sm:left-auto sm:w-[440px] z-50 flex flex-col glass-panel sm:border-l sm:border-primary/20 rounded-none overflow-hidden"
             style={{ boxShadow: "-20px 0 60px hsl(var(--background) / 0.6)" }}
             onKeyDown={(e) => { if (e.key === "Escape") { setIsOpen(false); abortRef.current?.abort(); } }}
           >
@@ -322,7 +318,7 @@ export const AIChatbot = () => {
             </div>
 
             {/* Messages */}
-            <ScrollArea className="flex-1" ref={scrollRef as any}>
+            <ScrollArea className="flex-1 overflow-y-auto" ref={scrollRef as any}>
               <div className="p-5 space-y-4">
                 {messages.map((m, index) => (
                   <motion.div

@@ -27,12 +27,10 @@ const ConfirmSubscription = () => {
       }
 
       try {
-        const { data, error } = await supabase
-          .from("newsletter_subscriptions")
-          .update({ confirmed: true })
-          .eq("confirmation_token", token)
-          .select()
-          .single();
+        // Use the edge function with service role to bypass RLS
+        const { data, error } = await supabase.functions.invoke("confirm-subscription", {
+          body: { token },
+        });
 
         if (error) throw error;
 
@@ -58,30 +56,31 @@ const ConfirmSubscription = () => {
   }, [token, toast]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-green-400">
-      <div className="max-w-md w-full p-8 bg-black/50 backdrop-blur-sm border border-green-500/30 rounded-lg shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="max-w-md w-full p-8 glass-panel rounded-2xl border border-border shadow-lg">
         <h1 className="text-2xl font-bold text-center mb-6">Newsletter Subscription</h1>
         {isConfirming ? (
           <div className="flex flex-col items-center space-y-4">
-            <Loader2 className="w-8 h-8 animate-spin" />
-            <p>Confirming your subscription...</p>
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <p className="text-muted-foreground">Confirming your subscription...</p>
           </div>
         ) : (
           <div className="flex flex-col items-center space-y-4">
             {isSuccess ? (
               <>
                 <CheckCircle2 className="w-16 h-16 text-green-500 animate-pulse" />
-                <p className="text-center">Your subscription has been confirmed successfully!</p>
+                <p className="text-center text-foreground">Your subscription has been confirmed successfully!</p>
               </>
             ) : (
               <>
-                <XCircle className="w-16 h-16 text-red-500 animate-pulse" />
-                <p className="text-center text-red-400">Failed to confirm your subscription.</p>
+                <XCircle className="w-16 h-16 text-destructive animate-pulse" />
+                <p className="text-center text-destructive">Failed to confirm your subscription.</p>
               </>
             )}
             <Button
               onClick={() => navigate("/")}
-              className="border border-green-500 hover:bg-green-500/10"
+              variant="default"
+              className="min-h-[44px]"
             >
               Return to Homepage
             </Button>

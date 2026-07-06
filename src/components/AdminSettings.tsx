@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
@@ -32,38 +32,46 @@ export const AdminSettings = () => {
       console.log("Site settings data:", data);
       return data;
     },
-    onSuccess: (data) => {
-      console.log("Processing site settings data...");
-      data?.forEach((setting) => {
-        switch (setting.key) {
-          case "site_title":
-            setSiteTitle(setting.value || "");
-            break;
-          case "site_description":
-            setSiteDescription(setting.value || "");
-            break;
-          case "meta_keywords":
-            setMetaKeywords(setting.value || "");
-            break;
-          case "social_links":
-            try {
-              setSocialLinks(JSON.parse(setting.value || "{}"));
-            } catch (e) {
-              console.error("Error parsing social links:", e);
-            }
-            break;
-        }
-      });
-    },
-    onError: (error: any) => {
+  });
+
+  // React Query v5 — onSuccess/onError are deprecated and won't fire.
+  // Use useEffect to react to data changes.
+  useEffect(() => {
+    if (!settings) return;
+    console.log("Processing site settings data...");
+    settings.forEach((setting: any) => {
+      switch (setting.key) {
+        case "site_title":
+          setSiteTitle(setting.value || "");
+          break;
+        case "site_description":
+          setSiteDescription(setting.value || "");
+          break;
+        case "meta_keywords":
+          setMetaKeywords(setting.value || "");
+          break;
+        case "social_links":
+          try {
+            setSocialLinks(JSON.parse(setting.value || "{}"));
+          } catch (e) {
+            console.error("Error parsing social links:", e);
+          }
+          break;
+      }
+    });
+  }, [settings]);
+
+  // Show error toast when fetch fails
+  useEffect(() => {
+    if (isError && error) {
       console.error("Query error:", error);
       toast({
         variant: "destructive",
         title: "Error loading settings",
-        description: error.message,
+        description: (error as Error).message,
       });
-    },
-  });
+    }
+  }, [isError, error, toast]);
 
   const handleSaveSettings = async () => {
     console.log("Saving settings...");
@@ -116,10 +124,10 @@ export const AdminSettings = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="w-full justify-start">
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="seo">SEO</TabsTrigger>
-            <TabsTrigger value="social">Social Media</TabsTrigger>
+          <TabsList className="w-full justify-start overflow-x-auto">
+            <TabsTrigger value="general" className="min-h-[40px]">General</TabsTrigger>
+            <TabsTrigger value="seo" className="min-h-[40px]">SEO</TabsTrigger>
+            <TabsTrigger value="social" className="min-h-[40px]">Social Media</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general">
@@ -146,7 +154,7 @@ export const AdminSettings = () => {
           </TabsContent>
         </Tabs>
 
-        <Button onClick={handleSaveSettings} className="mt-6">
+        <Button onClick={handleSaveSettings} className="mt-6 min-h-[44px]">
           Save Settings
         </Button>
       </CardContent>

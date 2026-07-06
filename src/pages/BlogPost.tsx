@@ -72,9 +72,9 @@ const BlogPost = () => {
       <div className="min-h-screen bg-background">
         <Navigation activeSection="blog" setActiveSection={() => {}} />
         <div className="flex justify-center items-center min-h-[50vh]">
-          <div className="animate-pulse text-green-500">
-            <div className="h-6 w-64 bg-green-500/20 rounded mb-4"></div>
-            <div className="h-4 w-32 bg-green-500/10 rounded"></div>
+          <div className="flex flex-col items-center gap-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
+            <span className="text-sm text-muted-foreground">Loading post...</span>
           </div>
         </div>
       </div>
@@ -85,10 +85,10 @@ const BlogPost = () => {
     return (
       <div className="min-h-screen bg-background">
         <Navigation activeSection="blog" setActiveSection={() => {}} />
-        <div className="flex justify-center items-center min-h-[50vh] flex-col">
-          <div className="text-destructive text-xl">Post not found</div>
-          <a href="/blog" className="mt-4 text-green-400 hover:text-green-300 transition-colors">
-            Return to blog
+        <div className="flex justify-center items-center min-h-[50vh] flex-col gap-4">
+          <h1 className="text-xl text-destructive font-bold">Post not found</h1>
+          <a href="/blog" className="text-primary hover:text-primary/80 transition-colors text-sm font-medium">
+            ← Return to blog
           </a>
         </div>
       </div>

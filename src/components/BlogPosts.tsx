@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { Eye, Calendar, ChevronRight, Clock, FileText } from "lucide-react";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
-import { ModernCard } from "./ModernCard";
 
 interface BlogPostsProps {
   limit?: number;
@@ -73,13 +72,8 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div className="relative">
-          <div className="h-16 w-16 rounded-full border-4 border-t-green-500 border-r-green-500/30 border-b-green-500/30 border-l-green-500/30 animate-spin"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-green-500 text-xs animate-pulse">Loading</span>
-          </div>
-        </div>
+      <div className="flex items-center justify-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
       </div>
     );
   }
@@ -88,9 +82,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
+      transition: { staggerChildren: 0.1 }
     }
   };
   
@@ -107,105 +99,79 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
       animate={isLoaded ? "show" : "hidden"}
     >
       {enrichedPosts.length === 0 && (
-        <div className="text-center py-12">
-          <ModernCard variant="minimal" className="max-w-md mx-auto">
-            <div className="text-center space-y-4">
-              <div className="h-16 w-16 mx-auto bg-green-500/10 rounded-full flex items-center justify-center">
-                <FileText className="h-8 w-8 text-green-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-green-400">No Posts Yet</h3>
-              <p className="text-green-300/70">Blog posts will appear here once they're published.</p>
+        <div className="text-center py-16">
+          <div className="max-w-md mx-auto space-y-4">
+            <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
+              <FileText className="h-8 w-8 text-primary" />
             </div>
-          </ModernCard>
+            <h3 className="text-lg font-semibold">No Posts Yet</h3>
+            <p className="text-muted-foreground text-sm">Blog posts will appear here once they're published.</p>
+          </div>
         </div>
       )}
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {enrichedPosts.map((post, index) => (
           <motion.div
             key={post.id}
             variants={item}
             transition={{ duration: 0.5 }}
           >
-            <Link to={`/blog/${post.slug}`} className="block h-full">
-              <ModernCard variant="premium" glow className="h-full group cursor-pointer">
-                <div className="space-y-6 h-full flex flex-col">
-                  {/* Image */}
-                  {post.image_url && (
-                    <div className="aspect-video w-full overflow-hidden rounded-lg relative">
-                      <img
-                        src={imageUrls[post.id] || "/placeholder.svg"}
-                        alt={post.image_alt || post.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        onError={(e) => {
-                          console.log('Image error:', post.image_url);
-                          e.currentTarget.src = "/placeholder.svg";
-                          e.currentTarget.onerror = null;
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </div>
-                  )}
-                  
-                  {/* Content */}
-                  <div className="flex-1 space-y-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-green-400 leading-tight group-hover:text-green-300 transition-colors duration-300 line-clamp-2">
-                        {post.title}
-                      </h3>
-                    </div>
-
-                    <p className="text-green-300/80 leading-relaxed line-clamp-3 flex-1">
-                      {post._excerpt}
-                    </p>
-
-                    {/* Meta info */}
-                    <div className="space-y-3 pt-4 border-t border-green-500/20">
-                      <div className="flex items-center justify-between text-xs text-green-500/70 font-mono">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {format(new Date(post.created_at), "MMM d, yyyy")}
-                        </div>
-                        {post.view_count !== undefined && (
-                          <div className="flex items-center gap-1">
-                            <Eye className="h-3 w-3" />
-                            {post.view_count} views
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Read more */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-green-400 text-sm font-mono group-hover:text-green-300 transition-colors">
-                          Read article
-                        </span>
-                        <div className="flex items-center gap-1 text-green-400 group-hover:gap-2 transition-all duration-300">
-                          <ChevronRight className="h-4 w-4" />
-                        </div>
-                      </div>
-                    </div>
+            <Link to={`/blog/${post.slug}`} className="block h-full group">
+              <Card className="h-full overflow-hidden hover:border-primary/30 transition-colors duration-300">
+                {post.image_url && (
+                  <div className="aspect-video w-full overflow-hidden">
+                    <img
+                      src={imageUrls[post.id] || "/placeholder.svg"}
+                      alt={post.image_alt || post.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      onError={(e) => {
+                        e.currentTarget.src = "/placeholder.svg";
+                        e.currentTarget.onerror = null;
+                      }}
+                    />
                   </div>
-                </div>
-              </ModernCard>
+                )}
+                <CardContent className="p-5 space-y-3">
+                  <h3 className="text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-3">
+                    {post._excerpt}
+                  </p>
+                  <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {format(new Date(post.created_at), "MMM d, yyyy")}
+                      </span>
+                      {post.view_count !== undefined && (
+                        <span className="flex items-center gap-1">
+                          <Eye className="h-3 w-3" />
+                          {post.view_count}
+                        </span>
+                      )}
+                    </div>
+                    <span className="flex items-center gap-1 text-primary font-medium group-hover:gap-2 transition-all">
+                      Read <ChevronRight className="h-3 w-3" />
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
             </Link>
           </motion.div>
         ))}
       </div>
       
       {limit && enrichedPosts.length > 0 && (
-        <motion.div 
-          className="text-center mt-12"
-          variants={item}
-        >
+        <motion.div className="text-center" variants={item}>
           <Link 
             to="/blog" 
-            className="inline-flex items-center px-8 py-4 border-2 border-green-500/40 text-green-400 rounded-xl hover:bg-green-500/10 hover:border-green-400/60 transition-all duration-300 font-mono text-sm group shadow-lg hover:shadow-green-500/20"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-all min-h-[44px]"
           >
-            <span className="flex items-center gap-3">
-              <FileText className="h-4 w-4" />
-              View All Posts 
-              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </span>
+            <FileText className="h-4 w-4" />
+            View All Posts
+            <ChevronRight className="h-4 w-4" />
           </Link>
         </motion.div>
       )}

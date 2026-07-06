@@ -98,10 +98,10 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
         <div className="flex justify-between items-center mb-6">
           <Link
             to="/blog"
-            className="inline-flex items-center gap-2 text-primary hover:text-primary-glow transition-colors min-h-[44px] font-mono text-sm"
+            className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors min-h-[44px] text-sm font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>cd ../intel</span>
+            <span>← Back to blog</span>
           </Link>
 
           <Button
@@ -134,10 +134,10 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
             <header className="space-y-5">
               <div className="flex items-center gap-2">
                 <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/30">
-                  [BRIEFING]
+                  ARTICLE
                 </span>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                  / classified · public
+                  / published
                 </span>
               </div>
 
@@ -186,7 +186,7 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
 
             <div className="mt-8 pt-6 border-t border-border">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest">// share_briefing</p>
+                <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest">// share</p>
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline" size="sm"

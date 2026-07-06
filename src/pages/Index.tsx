@@ -96,7 +96,7 @@ const Portfolio = () => {
         <section className="py-20 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
             <GlassCard className="p-8 sm:p-10 text-center">
-              <span className="eyebrow">// signal_subscribe</span>
+              <span className="eyebrow">// stay_connected</span>
               <h2 className="mt-4 font-display font-extrabold tracking-tight text-[clamp(1.75rem,3vw,2.5rem)]">
                 Get the <span className="bg-gradient-primary bg-clip-text text-transparent">briefing</span>
               </h2>

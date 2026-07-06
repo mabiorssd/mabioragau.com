@@ -54,27 +54,47 @@ export const NewsletterForm = () => {
 
       if (error) throw error;
 
-      // Send confirmation email
-      const response = await supabase.functions.invoke('send-newsletter', {
+      // Send confirmation email using the dedicated send-email edge function
+      const confirmUrl = `${window.location.origin}/confirm-subscription?token=${subscription.confirmation_token}`;
+      
+      const response = await supabase.functions.invoke('send-email', {
         body: {
           to: [validatedEmail],
           subject: "Confirm your newsletter subscription",
           html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <h1 style="color: #333; text-align: center;">Confirm Your Subscription</h1>
-              <p style="color: #666; line-height: 1.6;">
-                Thank you for subscribing to our newsletter! Please click the button below to confirm your subscription:
-              </p>
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="${window.location.origin}/confirm-subscription?token=${subscription.confirmation_token}"
-                   style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
-                  Confirm Subscription
-                </a>
-              </div>
-              <p style="color: #666; font-size: 14px; text-align: center;">
-                If you didn't request this subscription, you can safely ignore this email.
-              </p>
-            </div>
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              </head>
+              <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: linear-gradient(135deg, #0d9488, #0891b2); padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
+                  <h1 style="color: white; margin: 0; font-size: 24px;">Confirm Your Subscription</h1>
+                </div>
+                <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
+                  <p style="color: #374151; line-height: 1.6; font-size: 16px;">
+                    Thank you for subscribing to my newsletter! You'll receive occasional cybersecurity briefings, 
+                    field notes, and practical security guidance.
+                  </p>
+                  <div style="text-align: center; margin: 30px 0;">
+                    <a href="${confirmUrl}"
+                       style="background: #0d9488; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; display: inline-block; font-size: 16px; font-weight: 600;">
+                      Confirm Subscription
+                    </a>
+                  </div>
+                  <p style="color: #6b7280; font-size: 14px; line-height: 1.5;">
+                    If you didn't request this subscription, you can safely ignore this email.
+                    No further emails will be sent.
+                  </p>
+                  <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+                  <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+                    Mabior Agau — Cybersecurity Professional<br/>
+                    <a href="https://mabioragau.com" style="color: #0d9488;">mabioragau.com</a>
+                  </p>
+                </div>
+              </body>
+            </html>
           `
         }
       });
@@ -94,6 +114,7 @@ export const NewsletterForm = () => {
           description: error.errors[0].message,
         });
       } else {
+        console.error("Newsletter subscribe error:", error);
         toast({
           variant: "destructive",
           title: "Error",
@@ -108,29 +129,29 @@ export const NewsletterForm = () => {
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <p className="text-green-400">
-          Join our community of {subscriberCount ?? 0} active subscribers
+        <p className="text-muted-foreground text-sm">
+          Join {subscriberCount ?? 0} other subscribers
         </p>
       </div>
       <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
-            className="bg-black border border-green-500/30 text-green-400 placeholder:text-green-600"
+            className="flex-1 min-h-[44px]"
             disabled={isLoading}
           />
           <Button
             type="submit"
             disabled={isLoading}
-            className="border-2 border-green-500 text-green-400 hover:bg-green-500/10"
+            className="min-h-[44px]"
           >
             {isLoading ? (
-              <div className="flex items-center">
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <div className="flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
                 Subscribing...
               </div>
             ) : (

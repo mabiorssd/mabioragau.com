@@ -36,7 +36,7 @@ const Blog = () => {
             className="flex items-center gap-3 mb-4 text-primary font-mono text-xs"
           >
             <Terminal className="h-4 w-4" />
-            <span>root@nca:~/intel $ cat ./feed --all</span>
+            <span>~/intelligence-feed</span>
           </motion.div>
 
           <motion.h1

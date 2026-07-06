@@ -4,6 +4,17 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/api/og-image",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(bot|crawler|spider|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Slackbot|Discordbot|SkypeUriPreview|vkShare|W3C_Validator|redditbot|Applebot|flipboard|tumblr|bitlybot|nuzzel|Embedly|quora link preview|showyoubot|outbrain|pinterest|Slack|Slack-ImgProxy|googlebot|Googlebot|AdsBot|SemrushBot|AhrefsBot|MJ12bot|DotBot|BLEXBot|HTTrack|magpie-crawler|Pingdom).*"
+        }
+      ],
+      "destination": "https://zrvzcsdxbhzwfabvndbo.supabase.co/functions/v1/og-image"
+    },
+    {
       "source": "/blog/:slug",
       "has": [
         {

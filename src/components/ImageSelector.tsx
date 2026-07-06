@@ -58,7 +58,7 @@ export const ImageSelector = ({ onSelect }: ImageSelectorProps) => {
         <DialogHeader>
           <DialogTitle>Select Featured Image</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="h-[500px] pr-4">
+        <ScrollArea className="h-[300px] sm:h-[500px] pr-4">
           {loading ? (
             <div className="flex justify-center items-center h-32">
               <Loader2 className="h-6 w-6 animate-spin" />
@@ -68,7 +68,7 @@ export const ImageSelector = ({ onSelect }: ImageSelectorProps) => {
               {images.map((image) => (
                 <Card
                   key={image.name}
-                  className="overflow-hidden cursor-pointer hover:ring-2 hover:ring-green-500 transition-all"
+                  className="overflow-hidden cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all"
                   onClick={() => {
                     onSelect(image.url, image.name);
                   }}

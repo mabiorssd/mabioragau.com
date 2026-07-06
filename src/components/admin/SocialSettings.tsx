@@ -19,14 +19,15 @@ export const SocialSettings = ({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="twitter">Twitter URL</Label>
+        <Label htmlFor="twitter">Twitter / X URL</Label>
         <Input
           id="twitter"
+          type="url"
           value={socialLinks.twitter}
           onChange={(e) =>
             onSocialLinksChange({ ...socialLinks, twitter: e.target.value })
           }
-          placeholder="Enter Twitter URL"
+          placeholder="https://x.com/username"
           className="w-full"
         />
       </div>
@@ -34,11 +35,12 @@ export const SocialSettings = ({
         <Label htmlFor="linkedin">LinkedIn URL</Label>
         <Input
           id="linkedin"
+          type="url"
           value={socialLinks.linkedin}
           onChange={(e) =>
             onSocialLinksChange({ ...socialLinks, linkedin: e.target.value })
           }
-          placeholder="Enter LinkedIn URL"
+          placeholder="https://linkedin.com/in/username"
           className="w-full"
         />
       </div>
@@ -46,11 +48,12 @@ export const SocialSettings = ({
         <Label htmlFor="github">GitHub URL</Label>
         <Input
           id="github"
+          type="url"
           value={socialLinks.github}
           onChange={(e) =>
             onSocialLinksChange({ ...socialLinks, github: e.target.value })
           }
-          placeholder="Enter GitHub URL"
+          placeholder="https://github.com/username"
           className="w-full"
         />
       </div>

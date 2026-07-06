@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 interface SeoSettingsProps {
@@ -14,13 +15,17 @@ export const SeoSettings = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="meta-keywords">Meta Keywords</Label>
-        <Input
+        <Textarea
           id="meta-keywords"
           value={metaKeywords}
           onChange={(e) => onMetaKeywordsChange(e.target.value)}
-          placeholder="Enter meta keywords (comma-separated)"
-          className="w-full"
+          placeholder="cybersecurity, penetration testing, red team, south sudan"
+          className="w-full min-h-[80px]"
+          rows={3}
         />
+        <p className="text-xs text-muted-foreground">
+          Comma-separated keywords for search engine optimization.
+        </p>
       </div>
     </div>
   );

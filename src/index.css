@@ -4,12 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* RED-TEAM TERMINAL DESIGN SYSTEM
-   SECURE MODE (dark): Obsidian + Emerald
-   COMPROMISED MODE (light): Crisp white + Alert Red */
+/* PROFESSIONAL DESIGN SYSTEM
+   Dark mode: Deep navy + Teal/Cyan
+   Light mode: Clean white + Teal/Cyan */
 
 @layer base {
-  /* OVERT MODE — Light, white-hat, navy + alert red */
+  /* Light mode */
   :root {
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
@@ -20,10 +20,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    /* Alert red as primary */
-    --primary: 0 84% 48%;
+    /* Teal → Cyan gradient primary */
+    --primary: 170 75% 36%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 0 90% 60%;
+    --primary-glow: 195 85% 42%;
 
     --secondary: 222 25% 96%;
     --secondary-foreground: 222 47% 11%;
@@ -31,8 +31,7 @@
     --muted: 222 25% 96%;
     --muted-foreground: 222 20% 35%;
 
-    /* Navy accent */
-    --accent: 222 47% 18%;
+    --accent: 170 75% 36%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 48%;
@@ -43,30 +42,27 @@
 
     --border: 222 20% 84%;
     --input: 222 20% 92%;
-    --ring: 0 84% 48%;
+    --ring: 170 70% 40%;
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(170 75% 36%) 0%, hsl(195 85% 42%) 100%);
     --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.92) 0%, hsl(222 25% 98% / 0.82) 100%);
-    --gradient-mesh: radial-gradient(circle at 20% 20%, hsl(0 84% 48% / 0.06), transparent 50%),
-                     radial-gradient(circle at 80% 70%, hsl(222 47% 18% / 0.05), transparent 55%);
+    --gradient-mesh: radial-gradient(circle at 20% 20%, hsl(170 75% 36% / 0.05), transparent 50%),
+                     radial-gradient(circle at 80% 70%, hsl(195 85% 42% / 0.04), transparent 55%);
 
-    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.22);
-    --shadow-glow-blue: 0 0 30px hsl(var(--accent) / 0.18);
+    --shadow-glow: 0 0 30px hsl(170 75% 36% / 0.18);
+    --shadow-glow-blue: 0 0 30px hsl(195 85% 42% / 0.14);
     --shadow-panel: 0 1px 2px hsl(222 47% 11% / 0.04), 0 8px 24px hsl(222 47% 11% / 0.08);
 
     --font-display: 'Space Grotesk', system-ui, sans-serif;
     --font-sans: 'Inter', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-
-    --topo-line: 0 84% 48%;
-    --topo-node: 0 84% 48%;
   }
 
-  /* STEALTH MODE — Pure obsidian + emerald */
+  /* Dark mode — Refined deep navy */
   .dark {
-    --background: 222 47% 4%; /* close to #020617 */
+    --background: 222 47% 4%;
     --foreground: 150 20% 96%;
 
     --card: 222 47% 7%;
@@ -75,9 +71,10 @@
     --popover: 222 47% 6%;
     --popover-foreground: 150 20% 96%;
 
-    --primary: 152 90% 48%;
+    /* Teal → Cyan gradient primary */
+    --primary: 170 75% 45%;
     --primary-foreground: 222 47% 4%;
-    --primary-glow: 152 90% 62%;
+    --primary-glow: 195 85% 52%;
 
     --secondary: 222 35% 11%;
     --secondary-foreground: 150 20% 96%;
@@ -85,7 +82,7 @@
     --muted: 222 35% 9%;
     --muted-foreground: 150 10% 65%;
 
-    --accent: 152 90% 48%;
+    --accent: 170 75% 45%;
     --accent-foreground: 222 47% 4%;
 
     --destructive: 0 84% 60%;
@@ -96,19 +93,16 @@
 
     --border: 222 35% 16%;
     --input: 222 35% 12%;
-    --ring: 152 90% 48%;
+    --ring: 170 70% 48%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(170 75% 45%) 0%, hsl(195 85% 52%) 100%);
     --gradient-glass: linear-gradient(135deg, hsl(222 47% 8% / 0.7) 0%, hsl(222 47% 5% / 0.55) 100%);
-    --gradient-mesh: radial-gradient(circle at 20% 20%, hsl(152 90% 48% / 0.08), transparent 50%),
-                     radial-gradient(circle at 80% 70%, hsl(152 90% 48% / 0.04), transparent 55%);
+    --gradient-mesh: radial-gradient(circle at 20% 20%, hsl(170 75% 45% / 0.08), transparent 50%),
+                     radial-gradient(circle at 80% 70%, hsl(195 85% 52% / 0.04), transparent 55%);
 
-    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.28);
-    --shadow-glow-blue: 0 0 40px hsl(var(--accent) / 0.2);
+    --shadow-glow: 0 0 40px hsl(170 75% 45% / 0.25);
+    --shadow-glow-blue: 0 0 40px hsl(195 85% 52% / 0.18);
     --shadow-panel: 0 8px 32px hsl(222 47% 0% / 0.6), inset 0 1px 0 hsl(150 20% 96% / 0.04);
-
-    --topo-line: 152 90% 48%;
-    --topo-node: 152 90% 55%;
   }
 }
 
@@ -146,18 +140,18 @@
 @layer components {
   .glass-panel {
     background: var(--gradient-glass);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid hsl(var(--border));
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid hsl(var(--border) / 0.8);
     box-shadow: var(--shadow-panel);
   }
 
   .glass-panel-hover {
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-color 0.35s ease, box-shadow 0.35s ease;
   }
   .glass-panel-hover:hover {
-    border-color: hsl(var(--primary) / 0.5);
+    border-color: hsl(var(--primary) / 0.4);
     box-shadow: var(--shadow-panel), var(--shadow-glow);
     transform: translateY(-2px);
   }
@@ -215,71 +209,6 @@
     letter-spacing: 0.1em;
   }
 
-  /* Global CRT scanline overlay — 2% opacity */
-  .scanline-overlay {
-    position: fixed; inset: 0; pointer-events: none; z-index: 60;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 2px,
-      hsl(var(--foreground) / 0.02) 3px,
-      transparent 4px
-    );
-    mix-blend-mode: multiply;
-  }
-  .dark .scanline-overlay { mix-blend-mode: overlay; }
-  .scanline-overlay::after {
-    content: ''; position: absolute; inset: 0; opacity: 0.5;
-    background: linear-gradient(to bottom, transparent 0%, hsl(var(--primary) / 0.03) 50%, transparent 100%);
-    animation: scanline-sweep 10s linear infinite;
-  }
-  @keyframes scanline-sweep {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
-  }
-
-  /* Glitch / redaction text */
-  .redacted {
-    position: relative; display: inline-block;
-    background: hsl(var(--foreground));
-    color: transparent;
-    user-select: none;
-    border-radius: 2px;
-    padding: 0 0.25em;
-  }
-  .redacted::before {
-    content: ''; position: absolute; inset: 0;
-    background: repeating-linear-gradient(45deg,
-      transparent 0 4px, hsl(var(--background) / 0.1) 4px 5px);
-  }
-
-  .glitch {
-    position: relative;
-    animation: glitch-flicker 4s infinite;
-  }
-  .glitch::before, .glitch::after {
-    content: attr(data-text);
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
-    overflow: hidden;
-  }
-  .glitch::before {
-    color: hsl(var(--destructive));
-    transform: translate(-1px, 0);
-    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-  }
-  .glitch::after {
-    color: hsl(var(--primary));
-    transform: translate(1px, 0);
-    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-  }
-  @keyframes glitch-flicker {
-    0%, 92%, 100% { opacity: 1; }
-    93% { opacity: 0.7; transform: translate(1px, 0); }
-    94% { opacity: 1; transform: translate(-1px, 0); }
-    95% { opacity: 0.85; transform: translate(0, 1px); }
-  }
-
   /* Ticker */
   .ticker-track {
     display: inline-flex; gap: 3rem;
@@ -308,6 +237,17 @@
 
   /* Touch target safety on mobile — applied opt-in via .tap-target */
   .tap-target { min-height: 44px; min-width: 44px; }
+
+  /* Card hover lift effect */
+  .card-hover {
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-panel), var(--shadow-glow);
+  }
 }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }

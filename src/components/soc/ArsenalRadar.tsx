@@ -3,32 +3,32 @@ import { GlassCard } from "./GlassCard";
 import { Crosshair, Shield, Code2, Network, Lock, Bug, Cloud } from "lucide-react";
 
 const DOMAINS = [
-  { name: "NETWORK", value: 92 },
-  { name: "WEB APP", value: 95 },
-  { name: "CRYPTO", value: 78 },
-  { name: "CLOUD", value: 84 },
-  { name: "BINARY", value: 70 },
-  { name: "SOCIAL", value: 88 },
+  { name: "Network Security", value: 92 },
+  { name: "Web Application", value: 95 },
+  { name: "Cryptography", value: 78 },
+  { name: "Cloud Security", value: 84 },
+  { name: "Binary Analysis", value: 70 },
+  { name: "Social Engineering", value: 88 },
 ];
 
 const SUITES = [
   {
-    name: "Recon Suite",
+    name: "Reconnaissance",
     icon: Network,
     tools: ["Nmap", "Amass", "Subfinder", "theHarvester", "Shodan"],
   },
   {
-    name: "Exploitation Suite",
+    name: "Exploitation",
     icon: Bug,
     tools: ["Metasploit", "Burp Suite Pro", "sqlmap", "Hydra", "Responder"],
   },
   {
-    name: "Forensics Suite",
+    name: "Forensics & Analysis",
     icon: Shield,
     tools: ["Wireshark", "Volatility", "YARA", "Ghidra", "tcpdump"],
   },
   {
-    name: "Cloud & DevSec Suite",
+    name: "Cloud & DevSecOps",
     icon: Cloud,
     tools: ["Prowler", "Trivy", "AWS IAM", "Terraform", "Docker"],
   },
@@ -44,8 +44,8 @@ const Radar = () => {
     return {
       x: cx + Math.cos(angle) * r,
       y: cy + Math.sin(angle) * r,
-      lx: cx + Math.cos(angle) * (radius + 20),
-      ly: cy + Math.sin(angle) * (radius + 20),
+      lx: cx + Math.cos(angle) * (radius + 24),
+      ly: cy + Math.sin(angle) * (radius + 24),
       angle,
       name: d.name,
       value: d.value,
@@ -58,8 +58,8 @@ const Radar = () => {
     <svg viewBox="0 0 400 400" className="w-full max-w-sm mx-auto">
       <defs>
         <radialGradient id="radar-fill" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="hsl(var(--primary) / 0.4)" />
-          <stop offset="100%" stopColor="hsl(var(--primary) / 0.05)" />
+          <stop offset="0%" stopColor="hsl(var(--primary) / 0.25)" />
+          <stop offset="100%" stopColor="hsl(var(--primary) / 0.02)" />
         </radialGradient>
       </defs>
 
@@ -103,7 +103,7 @@ const Radar = () => {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        style={{ transformOrigin: `${cx}px ${cy}px`, filter: "drop-shadow(0 0 8px hsl(var(--primary) / 0.6))" }}
+        style={{ transformOrigin: `${cx}px ${cy}px` }}
       />
 
       {/* Vertex dots */}
@@ -114,7 +114,6 @@ const Radar = () => {
           cy={p.y}
           r="3"
           fill="hsl(var(--primary))"
-          style={{ filter: "drop-shadow(0 0 4px hsl(var(--primary)))" }}
         />
       ))}
 
@@ -127,23 +126,21 @@ const Radar = () => {
           textAnchor="middle"
           dominantBaseline="middle"
           fontSize="10"
-          fontFamily="var(--font-mono)"
+          fontFamily="var(--font-sans)"
           fill="hsl(var(--muted-foreground))"
-          letterSpacing="0.1em"
+          letterSpacing="0.05em"
+          fontWeight="500"
         >
-          {p.name} · {p.value}
+          {p.name}
         </text>
       ))}
 
-      {/* Center crosshair */}
+      {/* Center */}
       <g transform={`translate(${cx} ${cy})`}>
-        <circle r="20" fill="hsl(var(--background))" stroke="hsl(var(--primary))" strokeWidth="1" />
+        <circle r="24" fill="hsl(var(--background))" stroke="hsl(var(--primary))" strokeWidth="1" strokeOpacity="0.4" />
         <circle r="4" fill="hsl(var(--primary))" />
-        <text y="36" textAnchor="middle" fontSize="8" fontFamily="var(--font-mono)" fill="hsl(var(--primary))">
-          NCA CSIRT
-        </text>
-        <text y="46" textAnchor="middle" fontSize="8" fontFamily="var(--font-mono)" fill="hsl(var(--muted-foreground))">
-          core
+        <text y="38" textAnchor="middle" fontSize="9" fontFamily="var(--font-sans)" fill="hsl(var(--muted-foreground))" fontWeight="600">
+          Core
         </text>
       </g>
     </svg>
@@ -161,43 +158,42 @@ export const ArsenalRadar = () => {
           transition={{ duration: 0.5 }}
           className="mb-10"
         >
-          <span className="eyebrow">// the_arsenal</span>
-          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight font-display">
-            The{" "}
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-display">
+            Skills &amp;{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Arsenal
+              Expertise
             </span>
           </h2>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            Proficiency mapped across operational domains with the CSIRT core as origin.
-            Tactical suites grouped by mission phase.
+            Proficiency across core cybersecurity domains, with associated tooling and
+            methodologies for each practice area.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-6">
           <GlassCard className="col-span-12 lg:col-span-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-6">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-                Proficiency Radar
+                Domain Proficiency
               </h3>
-              <Crosshair className="w-4 h-4 text-primary" />
+              <Crosshair className="w-4 h-4 text-primary/60" />
             </div>
             <Radar />
           </GlassCard>
 
           <GlassCard className="col-span-12 lg:col-span-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-6">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-                Tactical Suites
+                Tooling &amp; Methodologies
               </h3>
-              <Code2 className="w-4 h-4 text-primary" />
+              <Code2 className="w-4 h-4 text-primary/60" />
             </div>
             <div className="space-y-4">
               {SUITES.map((s) => (
-                <div key={s.name} className="rounded-lg border border-border bg-background/30 p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <s.icon className="w-3.5 h-3.5 text-primary" />
-                    <span className="font-mono text-[11px] uppercase tracking-widest text-primary">
+                <div key={s.name} className="rounded-lg border border-border bg-background/30 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <s.icon className="w-3.5 h-3.5 text-primary/70" />
+                    <span className="font-medium text-xs uppercase tracking-wider text-foreground">
                       {s.name}
                     </span>
                     <div className="flex-1 h-px bg-border" />

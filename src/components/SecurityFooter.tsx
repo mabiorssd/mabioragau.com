@@ -1,6 +1,5 @@
 import { Shield, Copy, Check } from "lucide-react";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { NetworkStatusBar } from "./soc/NetworkStatusBar";
 import { socialLinks } from "@/lib/social-links";
 
 export const SecurityFooter = () => {
@@ -8,7 +7,6 @@ export const SecurityFooter = () => {
 
   return (
     <footer className="border-t border-border mt-12">
-      <NetworkStatusBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-12 gap-6 items-center">
           <div className="col-span-12 md:col-span-5 flex items-center gap-3">
@@ -46,10 +44,7 @@ export const SecurityFooter = () => {
         </div>
 
         <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row justify-between gap-3 text-[11px] font-mono text-muted-foreground">
-          <span>© {new Date().getFullYear()} Mabior Agau · All systems operational</span>
-          <span className="flex items-center gap-2">
-            <span className="status-dot" /> All testing performed with explicit authorization
-          </span>
+          <span>© {new Date().getFullYear()} Mabior Agau. All rights reserved.</span>
         </div>
       </div>
     </footer>

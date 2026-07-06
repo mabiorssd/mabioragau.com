@@ -11,12 +11,12 @@ interface NavigationProps {
 }
 
 const items = [
-  { id: "about", label: "Overview" },
+  { id: "about", label: "About" },
   { id: "services", label: "Services" },
-  { id: "skills", label: "Arsenal" },
-  { id: "experience", label: "History" },
-  { id: "projects", label: "Operations" },
-  { id: "news", label: "Threat Intel" },
+  { id: "skills", label: "Skills" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "news", label: "Intel" },
   { id: "blog", label: "Briefings" },
   { id: "contact", label: "Contact" },
 ];
@@ -44,10 +44,10 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
       initial={{ y: -80 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 120, damping: 18 }}
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "backdrop-blur-xl bg-background/70 border-b border-border"
-          : "backdrop-blur-md bg-background/30"
+          ? "backdrop-blur-2xl bg-background/75 border-b border-border/80 shadow-sm"
+          : "backdrop-blur-lg bg-background/20"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -62,7 +62,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
         </Link>
 
         {!isMobile ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <nav className="flex items-center gap-1 glass-panel rounded-full px-2 py-1.5">
               {items.map((it) => {
                 const active = activeSection === it.id;
@@ -85,8 +85,9 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
                   </button>
                 );
               })}
+              <span className="w-px h-5 bg-border/60 mx-1" />
+              <ThemeToggle />
             </nav>
-            <ThemeToggle />
           </div>
         ) : (
           <div className="flex items-center gap-2">

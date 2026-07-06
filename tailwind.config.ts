@@ -60,6 +60,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "bg-dark": {
+          950: "#0a0e14",
+          900: "#0f172a",
+        },
       },
       backgroundImage: {
         "gradient-primary": "var(--gradient-primary)",

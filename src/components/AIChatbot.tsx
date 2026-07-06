@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AIOrb, AIWaveform } from "./soc/AIOrb";
 import { getCopilotContext, subscribeCopilotContext } from "@/lib/copilotContext";
 
-type Message = { role: "user" | "assistant"; content: string };
+type Message = { role: "user" | "assistant"; content: string; id?: string };
 
 const QUICK_COMMANDS = [
   { label: "VET", prompt: "__hotkey__:VET" },
@@ -76,6 +76,7 @@ export const AIChatbot = () => {
   const [ctxTitle, setCtxTitle] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const open = () => setIsOpen(true);
@@ -96,6 +97,13 @@ export const AIChatbot = () => {
   }, [messages, isTyping]);
 
   useEffect(() => () => abortRef.current?.abort(), []);
+
+  // Auto-focus input when panel opens
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus();
+    }
+  }, [isOpen]);
 
   const streamChat = async (userMessage: string) => {
     const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-contact-chat`;
@@ -257,6 +265,7 @@ export const AIChatbot = () => {
             transition={{ type: "spring", damping: 28, stiffness: 240 }}
             className="fixed inset-0 sm:top-0 sm:right-0 sm:bottom-0 sm:left-auto sm:w-[440px] z-50 flex flex-col glass-panel sm:border-l sm:border-primary/20 rounded-none"
             style={{ boxShadow: "-20px 0 60px hsl(var(--background) / 0.6)" }}
+            onKeyDown={(e) => { if (e.key === "Escape") { setIsOpen(false); abortRef.current?.abort(); } }}
           >
             {/* Header */}
             <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-border flex items-center gap-3 pt-[max(env(safe-area-inset-top),0.75rem)]">
@@ -275,6 +284,7 @@ export const AIChatbot = () => {
                 size="icon"
                 onClick={() => { setIsOpen(false); abortRef.current?.abort(); }}
                 className="text-muted-foreground hover:text-foreground"
+                aria-label="Close Cyber Co-Pilot"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -283,9 +293,9 @@ export const AIChatbot = () => {
             {/* Messages */}
             <ScrollArea className="flex-1" ref={scrollRef as any}>
               <div className="p-5 space-y-4">
-                {messages.map((m, i) => (
+                {messages.map((m, index) => (
                   <motion.div
-                    key={i}
+                    key={m.id || index}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25 }}
@@ -356,6 +366,7 @@ export const AIChatbot = () => {
               <div className="flex-1 relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-primary font-mono text-xs">$</span>
                 <input
+                  ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Type a command or question…"

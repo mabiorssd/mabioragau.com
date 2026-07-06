@@ -6,14 +6,14 @@ import { Navigation } from "@/components/Navigation";
 import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import { BlogPostContent } from "@/components/BlogPostContent";
-import { useDarkMode } from "@/hooks/useDarkMode";
+import { useTheme } from "@/components/ThemeProvider";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
 import { toast } from "sonner";
 import { setCopilotContext } from "@/lib/copilotContext";
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const { isDarkMode, setIsDarkMode } = useDarkMode(true);
+  const { theme, setTheme } = useTheme();
   const { getImageUrl, getExcerpt } = useBlogPostUtils();
   const currentUrl = window.location.href;
   const [ogImageUrl, setOgImageUrl] = useState<string>("");
@@ -50,11 +50,6 @@ const BlogPost = () => {
     };
     loadOgImage();
   }, [post?.image_url, getImageUrl]);
-
-  useEffect(() => {
-    // View tracking handled via visitor_analytics edge function elsewhere;
-    // the legacy increment_view_count RPC was removed during security hardening.
-  }, [post?.id]);
 
 
   // Publish current blog post to AI Co-Pilot for context-aware summaries
@@ -119,7 +114,7 @@ const BlogPost = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-background ${isDarkMode ? "dark" : ""}`}>
+    <div className="min-h-screen bg-background">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -148,8 +143,8 @@ const BlogPost = () => {
       <main>
         <BlogPostContent
           post={post}
-          isDarkMode={isDarkMode}
-          setIsDarkMode={setIsDarkMode}
+          theme={theme}
+          setTheme={setTheme}
         />
       </main>
     </div>

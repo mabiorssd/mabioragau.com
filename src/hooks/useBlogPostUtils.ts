@@ -82,12 +82,8 @@ export const useBlogPostUtils = () => {
         img.setAttribute("src", originalSrc.replace(/^http:\/\//i, "https://"));
       }
       
-      // Add error handling to all images — NOTE: cannot use onerror (XSS vector), use CSS instead
+      // Style fallback background for images (error handling happens in the rendered DOM via BlogPostContent)
       img.style.backgroundColor = "#1a1a2e";
-      img.addEventListener("error", function() {
-        this.src = '/placeholder.svg';
-        this.style.backgroundColor = "#1a1a2e";
-      });
       
       // Add additional styling for better appearance
       img.classList.add("rounded-md", "shadow-md", "my-4");

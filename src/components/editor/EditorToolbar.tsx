@@ -27,6 +27,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().undo()}
           className="p-2 h-8 w-8"
+          aria-label="Undo"
         >
           <Undo className="h-4 w-4" />
         </Button>
@@ -36,6 +37,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!editor.can().redo()}
           className="p-2 h-8 w-8"
+          aria-label="Redo"
         >
           <Redo className="h-4 w-4" />
         </Button>
@@ -47,6 +49,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`p-2 h-8 w-8 ${editor.isActive('bold') ? 'bg-accent' : ''}`}
+          aria-label="Bold"
         >
           <Bold className="h-4 w-4" />
         </Button>
@@ -55,6 +58,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`p-2 h-8 w-8 ${editor.isActive('italic') ? 'bg-accent' : ''}`}
+          aria-label="Italic"
         >
           <Italic className="h-4 w-4" />
         </Button>
@@ -63,6 +67,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           className={`p-2 h-8 w-8 ${editor.isActive('underline') ? 'bg-accent' : ''}`}
+          aria-label="Underline"
         >
           <Underline className="h-4 w-4" />
         </Button>
@@ -74,6 +79,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={`p-2 h-8 w-8 ${editor.isActive('heading', { level: 1 }) ? 'bg-accent' : ''}`}
+          aria-label="Heading 1"
         >
           <Heading1 className="h-4 w-4" />
         </Button>
@@ -82,6 +88,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={`p-2 h-8 w-8 ${editor.isActive('heading', { level: 2 }) ? 'bg-accent' : ''}`}
+          aria-label="Heading 2"
         >
           <Heading2 className="h-4 w-4" />
         </Button>
@@ -90,6 +97,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           className={`p-2 h-8 w-8 ${editor.isActive('heading', { level: 3 }) ? 'bg-accent' : ''}`}
+          aria-label="Heading 3"
         >
           <Heading3 className="h-4 w-4" />
         </Button>
@@ -101,6 +109,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
           className={`p-2 h-8 w-8 ${editor.isActive({ textAlign: 'left' }) ? 'bg-accent' : ''}`}
+          aria-label="Align left"
         >
           <AlignLeft className="h-4 w-4" />
         </Button>
@@ -109,6 +118,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
           className={`p-2 h-8 w-8 ${editor.isActive({ textAlign: 'center' }) ? 'bg-accent' : ''}`}
+          aria-label="Align center"
         >
           <AlignCenter className="h-4 w-4" />
         </Button>
@@ -117,6 +127,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
           className={`p-2 h-8 w-8 ${editor.isActive({ textAlign: 'right' }) ? 'bg-accent' : ''}`}
+          aria-label="Align right"
         >
           <AlignRight className="h-4 w-4" />
         </Button>
@@ -125,6 +136,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().setTextAlign('justify').run()}
           className={`p-2 h-8 w-8 ${editor.isActive({ textAlign: 'justify' }) ? 'bg-accent' : ''}`}
+          aria-label="Align justify"
         >
           <AlignJustify className="h-4 w-4" />
         </Button>
@@ -136,6 +148,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`p-2 h-8 w-8 ${editor.isActive('bulletList') ? 'bg-accent' : ''}`}
+          aria-label="Bullet list"
         >
           <List className="h-4 w-4" />
         </Button>
@@ -144,6 +157,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`p-2 h-8 w-8 ${editor.isActive('orderedList') ? 'bg-accent' : ''}`}
+          aria-label="Ordered list"
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
@@ -152,6 +166,7 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={`p-2 h-8 w-8 ${editor.isActive('blockquote') ? 'bg-accent' : ''}`}
+          aria-label="Blockquote"
         >
           <Quote className="h-4 w-4" />
         </Button>
@@ -163,12 +178,13 @@ export const EditorToolbar = ({ editor, textColor, setTextColor }: EditorToolbar
           size="sm"
           onClick={() => editor.chain().focus().toggleHighlight().run()}
           className={`p-2 h-8 w-8 ${editor.isActive('highlight') ? 'bg-accent' : ''}`}
+          aria-label="Highlight"
         >
           <Highlighter className="h-4 w-4" />
         </Button>
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
+            <Button variant="ghost" size="sm" className="p-2 h-8 w-8" aria-label="Text color">
               <Palette className="h-4 w-4" />
             </Button>
           </PopoverTrigger>

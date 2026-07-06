@@ -14,11 +14,11 @@ import { toast } from "sonner";
 
 interface BlogPostContentProps {
   post: any;
-  isDarkMode: boolean;
-  setIsDarkMode: (v: boolean) => void;
+  theme: string;
+  setTheme: (t: string) => void;
 }
 
-export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostContentProps) {
+export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps) {
   const { getImageUrl, processContent } = useBlogPostUtils();
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.svg");
   const [processedContent, setProcessedContent] = useState<string>("");
@@ -33,9 +33,12 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
   // Inject "Copy" buttons into <pre> blocks once content is processed
   useEffect(() => {
     if (!articleRef.current) return;
+
+    // Cleanup: remove any stale copy buttons before re-creating them
+    articleRef.current.querySelectorAll("pre [data-copy-btn]").forEach((b) => b.remove());
+
     const pres = articleRef.current.querySelectorAll("pre");
     pres.forEach((pre) => {
-      if (pre.querySelector("[data-copy-btn]")) return;
       pre.classList.add("relative", "group/code");
       const btn = document.createElement("button");
       btn.setAttribute("data-copy-btn", "true");
@@ -59,6 +62,28 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
       });
       pre.appendChild(btn);
     });
+
+    return () => {
+      articleRef.current?.querySelectorAll("pre [data-copy-btn]").forEach((b) => b.remove());
+    };
+  }, [processedContent]);
+
+  // Image error handling on the rendered DOM (replaces dead event listeners in processContent)
+  useEffect(() => {
+    if (!articleRef.current) return;
+    const imgs = articleRef.current.querySelectorAll("img");
+    const handlers: Array<[HTMLImageElement, () => void]> = [];
+    imgs.forEach((img) => {
+      const handler = () => {
+        img.src = "/placeholder.svg";
+        img.style.backgroundColor = "#1a1a2e";
+      };
+      img.addEventListener("error", handler);
+      handlers.push([img, handler]);
+    });
+    return () => {
+      handlers.forEach(([img, handler]) => img.removeEventListener("error", handler));
+    };
   }, [processedContent]);
 
   return (
@@ -82,11 +107,11 @@ export function BlogPostContent({ post, isDarkMode, setIsDarkMode }: BlogPostCon
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setIsDarkMode(!isDarkMode)}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="rounded-full"
-            title={isDarkMode ? "Switch to overt mode" : "Switch to stealth mode"}
+            title={theme === "dark" ? "Switch to overt mode" : "Switch to stealth mode"}
           >
-            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
         </div>
 

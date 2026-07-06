@@ -32,38 +32,36 @@ export const AdminSettings = () => {
       console.log("Site settings data:", data);
       return data;
     },
-    meta: {
-      onSuccess: (data) => {
-        console.log("Processing site settings data...");
-        data?.forEach((setting) => {
-          switch (setting.key) {
-            case "site_title":
-              setSiteTitle(setting.value || "");
-              break;
-            case "site_description":
-              setSiteDescription(setting.value || "");
-              break;
-            case "meta_keywords":
-              setMetaKeywords(setting.value || "");
-              break;
-            case "social_links":
-              try {
-                setSocialLinks(JSON.parse(setting.value || "{}"));
-              } catch (e) {
-                console.error("Error parsing social links:", e);
-              }
-              break;
-          }
-        });
-      },
-      onError: (error: any) => {
-        console.error("Query error:", error);
-        toast({
-          variant: "destructive",
-          title: "Error loading settings",
-          description: error.message,
-        });
-      },
+    onSuccess: (data) => {
+      console.log("Processing site settings data...");
+      data?.forEach((setting) => {
+        switch (setting.key) {
+          case "site_title":
+            setSiteTitle(setting.value || "");
+            break;
+          case "site_description":
+            setSiteDescription(setting.value || "");
+            break;
+          case "meta_keywords":
+            setMetaKeywords(setting.value || "");
+            break;
+          case "social_links":
+            try {
+              setSocialLinks(JSON.parse(setting.value || "{}"));
+            } catch (e) {
+              console.error("Error parsing social links:", e);
+            }
+            break;
+        }
+      });
+    },
+    onError: (error: any) => {
+      console.error("Query error:", error);
+      toast({
+        variant: "destructive",
+        title: "Error loading settings",
+        description: error.message,
+      });
     },
   });
 

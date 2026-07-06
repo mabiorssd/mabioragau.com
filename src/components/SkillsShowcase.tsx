@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, Lock, Search, Bug, Eye, Zap, Terminal, Network } from "lucide-react";
+import { Shield, Lock, Search, Terminal, Network } from "lucide-react";
 import { GlassCard } from "./soc/GlassCard";
 
 const expertise = [

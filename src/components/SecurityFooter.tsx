@@ -1,13 +1,7 @@
-import { Github, Linkedin, Mail, Twitter, Shield, Copy, Check } from "lucide-react";
+import { Shield, Copy, Check } from "lucide-react";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { NetworkStatusBar } from "./soc/NetworkStatusBar";
-
-const social = [
-  { Icon: Github, href: "https://github.com/mabiorssd/", label: "GitHub", value: "github.com/mabiorssd" },
-  { Icon: Linkedin, href: "https://www.linkedin.com/in/mabior-agau-436825210/", label: "LinkedIn", value: "linkedin.com/in/mabior-agau" },
-  { Icon: Twitter, href: "https://x.com/_CyberMaster", label: "X", value: "@_CyberMaster" },
-  { Icon: Mail, href: "mailto:info@mabioragau.com", label: "Email", value: "info@mabioragau.com" },
-];
+import { socialLinks } from "@/lib/social-links";
 
 export const SecurityFooter = () => {
   const { copied, copy } = useCopyToClipboard();
@@ -28,7 +22,7 @@ export const SecurityFooter = () => {
           </div>
 
           <div className="col-span-12 md:col-span-7 flex md:justify-end items-center gap-2 flex-wrap">
-            {social.map(({ Icon, href, label, value }) => (
+            {socialLinks.map(({ Icon, href, label, value }) => (
               <div key={label} className="flex items-center gap-1">
                 <a
                   href={href}

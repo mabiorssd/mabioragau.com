@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Eye, Calendar, ChevronRight, Clock, FileText } from "lucide-react";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
 import { ModernCard } from "./ModernCard";
@@ -64,6 +64,13 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
     return () => clearTimeout(timer);
   }, []);
 
+  const enrichedPosts = useMemo(() => {
+    return (posts ?? []).map((p) => ({
+      ...p,
+      _excerpt: getExcerpt(p.content),
+    }));
+  }, [posts, getExcerpt]);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
@@ -99,7 +106,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
       initial="hidden"
       animate={isLoaded ? "show" : "hidden"}
     >
-      {posts?.length === 0 && (
+      {enrichedPosts.length === 0 && (
         <div className="text-center py-12">
           <ModernCard variant="minimal" className="max-w-md mx-auto">
             <div className="text-center space-y-4">
@@ -114,7 +121,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
       )}
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {posts?.map((post, index) => (
+        {enrichedPosts.map((post, index) => (
           <motion.div
             key={post.id}
             variants={item}
@@ -149,7 +156,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
                     </div>
 
                     <p className="text-green-300/80 leading-relaxed line-clamp-3 flex-1">
-                      {getExcerpt(post.content)}
+                      {post._excerpt}
                     </p>
 
                     {/* Meta info */}
@@ -185,7 +192,7 @@ export const BlogPosts = ({ limit }: BlogPostsProps) => {
         ))}
       </div>
       
-      {limit && posts && posts.length > 0 && (
+      {limit && enrichedPosts.length > 0 && (
         <motion.div 
           className="text-center mt-12"
           variants={item}

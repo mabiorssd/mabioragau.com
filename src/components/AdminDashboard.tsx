@@ -14,8 +14,8 @@ import { SubscribersManager } from "./admin/SubscribersManager";
 import { VisitorAnalytics } from "./admin/VisitorAnalytics";
 import { AITools } from "./admin/AITools";
 import {
-  PenTool, Sparkles, FolderKanban, BarChart3, LineChart,
-  Image as ImageIcon, Settings, Inbox, Mail, Users, Shield, LogOut, Activity,
+  PenTool, Sparkles, FolderKanban, BarChart3,
+  Image as ImageIcon, Settings, Inbox, Mail, Users, Shield, LogOut,
 } from "lucide-react";
 
 const TABS = [
@@ -23,7 +23,7 @@ const TABS = [
   { value: "ai-tools", label: "AI Tools", Icon: Sparkles, hint: "Generative assist" },
   { value: "manage", label: "Manage", Icon: FolderKanban, hint: "Edit & publish posts" },
   { value: "stats", label: "Stats", Icon: BarChart3, hint: "Per-post metrics" },
-  { value: "analytics", label: "Analytics", Icon: LineChart, hint: "AI insights" },
+  { value: "analytics", label: "Analytics", Icon: BarChart3, hint: "AI insights" },
   { value: "images", label: "Images", Icon: ImageIcon, hint: "Library" },
   { value: "settings", label: "Settings", Icon: Settings, hint: "Site config" },
   { value: "submissions", label: "Inbox", Icon: Inbox, hint: "Contact forms" },
@@ -53,7 +53,7 @@ export const AdminDashboard = () => {
             </div>
             <div className="min-w-0">
               <div className="font-mono text-[10px] uppercase tracking-widest text-primary flex items-center gap-1.5">
-                <Activity className="w-3 h-3" /> SOC // ADMIN CONSOLE
+                SOC // ADMIN CONSOLE
               </div>
               <h1 className="font-display text-lg sm:text-xl font-bold tracking-tight truncate">
                 Command Center

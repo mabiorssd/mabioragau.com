@@ -82,9 +82,10 @@ export const IntelligenceFeed = ({ limit, showControls = true }: IntelligenceFee
       _threat: pick(THREATS, p.id + "t"),
       _featured: i === 0 || (i > 0 && i % 5 === 0),
       _read: readingTime(p.content),
+      _excerpt: getExcerpt(p.content),
       _thumb: imageUrls[p.id] || pick(FALLBACK_THUMBS, p.id),
     }));
-  }, [posts, imageUrls]);
+  }, [posts, imageUrls, getExcerpt]);
 
   const filtered = useMemo(() => {
     return enriched.filter((p) => {
@@ -184,7 +185,7 @@ export const IntelligenceFeed = ({ limit, showControls = true }: IntelligenceFee
                     </h3>
 
                     <p className={`mt-3 text-sm text-muted-foreground ${p._featured ? "line-clamp-3" : "line-clamp-2"}`}>
-                      {getExcerpt(p.content)}
+                      {p._excerpt}
                     </p>
 
                     <div className="mt-auto pt-4 flex items-center justify-between text-[11px] font-mono text-muted-foreground border-t border-border">

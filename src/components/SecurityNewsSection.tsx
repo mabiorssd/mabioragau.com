@@ -87,7 +87,7 @@ export const SecurityNewsSection = () => {
             <div className="grid grid-cols-12 gap-4">
               {news.slice(0, showAll ? news.length : INITIAL).map((item, i) => (
                 <motion.a
-                  key={i}
+                  key={item.title}
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"

@@ -105,7 +105,6 @@ export const NewsletterManager = () => {
     setIsSending(true);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
       
       const emailTemplate = `
         <!DOCTYPE html>

@@ -107,6 +107,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           className="px-4 pb-4"
+          onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
         >
           <div className="glass-panel rounded-2xl p-2">
             {items.map((it) => {

@@ -1,3 +1,4 @@
+import React, { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,14 +8,16 @@ import { AIChatbot } from "./components/AIChatbot";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { SouthSudanMap } from "./components/soc/SouthSudanMap";
 import { HackerLogTicker } from "./components/soc/HackerLogTicker";
-import Index from "./pages/Index";
-import Login from "./pages/Login";
-import Admin from "./pages/Admin";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import NotFound from "./pages/NotFound";
-import ConfirmSubscription from "./pages/ConfirmSubscription";
-import Trust from "./pages/Trust";
+import { AnimatePresence } from "framer-motion";
+
+const Index = lazy(() => import("./pages/Index"));
+const Login = lazy(() => import("./pages/Login"));
+const Admin = lazy(() => import("./pages/Admin"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ConfirmSubscription = lazy(() => import("./pages/ConfirmSubscription"));
+const Trust = lazy(() => import("./pages/Trust"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +28,12 @@ const queryClient = new QueryClient({
   },
 });
 
+const LoadingFallback = () => (
+  <div className="flex min-h-[60vh] items-center justify-center">
+    <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/30 border-t-primary" />
+  </div>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
@@ -32,20 +41,23 @@ const App = () => (
         <div className="min-h-screen w-full bg-background">
           <SouthSudanMap />
           <HackerLogTicker />
-          <div className="scanline-overlay" />
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/confirm-subscription" element={<ConfirmSubscription />} />
-              <Route path="/trust" element={<Trust />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AnimatePresence mode="wait">
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/confirm-subscription" element={<ConfirmSubscription />} />
+                  <Route path="/trust" element={<Trust />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </AnimatePresence>
             <AIChatbot />
           </BrowserRouter>
         </div>

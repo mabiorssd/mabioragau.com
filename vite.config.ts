@@ -26,16 +26,29 @@ export default defineConfig(({ mode }) => ({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-toast',
-            'class-variance-authority',
-            'clsx',
-            'tailwind-merge',
-          ],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@tiptap/') || id.includes('/prosemirror-')) {
+              return 'blog-editor';
+            }
+            if (id.includes('@supabase/')) {
+              return 'supabase';
+            }
+            if (id.includes('recharts')) {
+              return 'recharts';
+            }
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor';
+            }
+            if (
+              id.includes('@radix-ui/') ||
+              id.includes('class-variance-authority') ||
+              id.includes('clsx') ||
+              id.includes('tailwind-merge')
+            ) {
+              return 'ui';
+            }
+          }
         },
       },
     },

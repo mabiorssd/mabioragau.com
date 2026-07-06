@@ -7,10 +7,10 @@ import { format } from "date-fns";
 import { Eye, Calendar, Clock, AlertTriangle, Search, FileText, ArrowUpRight } from "lucide-react";
 import { useBlogPostUtils } from "@/hooks/useBlogPostUtils";
 import { ScrambleText } from "./soc/ScrambleText";
-import circuit from "@/assets/intel-circuit.jpg";
-import network from "@/assets/intel-network.jpg";
-import matrix from "@/assets/intel-matrix.jpg";
-import redteam from "@/assets/intel-redteam.jpg";
+import circuit from "@/assets/intel-circuit.webp";
+import network from "@/assets/intel-network.webp";
+import matrix from "@/assets/intel-matrix.webp";
+import redteam from "@/assets/intel-redteam.webp";
 
 interface IntelligenceFeedProps {
   limit?: number;

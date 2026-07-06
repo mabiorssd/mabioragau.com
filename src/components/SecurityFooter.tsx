@@ -7,10 +7,10 @@ export const SecurityFooter = () => {
 
   return (
     <footer className="border-t border-border mt-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        <div className="grid grid-cols-12 gap-6 items-center">
-          <div className="col-span-12 md:col-span-5 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-primary grid place-items-center shadow-glow">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-primary grid place-items-center shadow-glow shrink-0">
               <Shield className="w-5 h-5 text-primary-foreground" strokeWidth={2.5} />
             </div>
             <div>
@@ -19,7 +19,7 @@ export const SecurityFooter = () => {
             </div>
           </div>
 
-          <div className="col-span-12 md:col-span-7 flex md:justify-end items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap justify-center">
             {socialLinks.map(({ Icon, href, label, value }) => (
               <div key={label} className="flex items-center gap-1">
                 <a
@@ -43,8 +43,9 @@ export const SecurityFooter = () => {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row justify-between gap-3 text-[11px] font-mono text-muted-foreground">
+        <div className="mt-6 pt-6 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0 text-[11px] font-mono text-muted-foreground">
           <span>© {new Date().getFullYear()} Mabior Agau. All rights reserved.</span>
+          <a href="/trust" className="hover:text-primary transition-colors">Trust &amp; Security</a>
         </div>
       </div>
     </footer>

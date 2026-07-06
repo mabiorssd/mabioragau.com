@@ -103,12 +103,21 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
       </div>
 
       {isMobile && open && (
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-4 pb-4"
-          onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
-        >
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-background/40 z-40"
+            onClick={() => setOpen(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative z-50 px-4 pb-4"
+            onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
+          >
           <div className="glass-panel rounded-2xl p-2">
             {items.map((it) => {
               const active = activeSection === it.id;
@@ -126,7 +135,8 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
             })}
           </div>
         </motion.div>
-      )}
+        </>
+        )}
     </motion.header>
   );
 };

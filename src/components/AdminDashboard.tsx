@@ -61,15 +61,15 @@ export const AdminDashboard = () => {
       {/* ── Top bar ── */}
       <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-primary grid place-items-center shadow-glow shrink-0">
-              <span className="text-primary-foreground text-xs font-bold font-display">M</span>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl bg-gradient-primary grid place-items-center shadow-glow shrink-0">
+              <span className="text-primary-foreground text-[10px] font-bold">M</span>
             </div>
             <div className="min-w-0">
               <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">
                 Dashboard
               </div>
-              <h1 className="font-display text-lg sm:text-xl font-bold tracking-tight truncate">
+              <h1 className="font-display text-base sm:text-xl font-bold tracking-tight truncate">
                 Mabior Agau
               </h1>
             </div>
@@ -90,10 +90,10 @@ export const AdminDashboard = () => {
       <Tabs
         value={active}
         onValueChange={setActive}
-        className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6"
+        className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6"
       >
         {/* ── Mobile tab bar: horizontal scrollable row ── */}
-        <div className="lg:hidden -mx-4 px-4 pb-4 overflow-x-auto">
+        <div className="lg:hidden -mx-4 px-4 pb-3 overflow-x-auto">
           <TabsList className="inline-flex w-auto h-auto p-1 gap-1 bg-muted/50 rounded-xl">
             {TABS.map(({ value, label, Icon }) => (
               <TabsTrigger
@@ -109,7 +109,7 @@ export const AdminDashboard = () => {
         </div>
 
         {/* ── Desktop grid: sidebar + workspace ── */}
-        <div className="grid lg:grid-cols-[240px_minmax(0,1fr)] gap-6">
+        <div className="grid lg:grid-cols-[200px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)] gap-4 sm:gap-6">
           {/* ── Desktop sidebar ── */}
           <aside className="hidden lg:flex lg:flex-col lg:sticky lg:top-[88px] lg:self-start gap-3">
             <nav className="glass-panel rounded-2xl p-2 flex flex-col gap-0.5">

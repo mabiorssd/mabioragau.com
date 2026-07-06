@@ -92,7 +92,10 @@ export const AIChatbot = () => {
 
   useEffect(() => { const u = subscribeCopilotContext((c) => setCtxTitle(c?.title ?? null)); return () => { u(); }; }, []);
 
-  // No body scroll lock — it freezes mobile scrolling. The panel itself handles its scroll.
+  // Backdrop — no body scroll lock (fixes mobile freeze)
+  const toggleOpen = () => {
+    setIsOpen((o) => !o);
+  };
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -268,16 +271,16 @@ export const AIChatbot = () => {
 
   return (
     <>
-      {/* Floating launcher */}
+      {/* Floating launcher — smaller on mobile */}
       <motion.button
-        onClick={() => setIsOpen((o) => !o)}
+        onClick={toggleOpen}
         aria-label="Open Cyber Co-Pilot"
-        className="fixed bottom-6 right-6 z-50 glass-panel rounded-2xl px-4 py-3 flex items-center gap-3 hover:border-primary/50 transition-colors"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 glass-panel rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 hover:border-primary/50 transition-colors"
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
         style={{ boxShadow: "var(--shadow-glow)" }}
       >
-        <AIOrb size={32} />
+        <AIOrb size={28} />
         <div className="text-left hidden sm:block">
           <div className="text-[10px] font-mono uppercase tracking-widest text-primary">Cyber Co-Pilot</div>
           <div className="text-[11px] text-muted-foreground">Press ⌘K or click</div>
@@ -297,7 +300,7 @@ export const AIChatbot = () => {
         )}
       </AnimatePresence>
 
-      {/* Slide-out panel */}
+      {/* Slide-out panel — fullscreen mobile, 440px sidebar desktop */}
       <AnimatePresence>
         {isOpen && (
           <motion.aside

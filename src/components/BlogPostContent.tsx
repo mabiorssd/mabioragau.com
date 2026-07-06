@@ -90,7 +90,7 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
     <>
       <ReadingProgress />
       <motion.main
-        className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 max-w-3xl"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-16 sm:pb-20 max-w-3xl"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -116,7 +116,7 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
         </div>
 
         <Card className="overflow-hidden glass-panel border-border">
-          <article className="p-6 sm:p-10 space-y-6">
+          <article className="p-5 sm:p-10 space-y-6">
             {post.image_url && (
               <div className="w-full aspect-[16/9] mb-2 overflow-hidden rounded-xl relative">
                 <img

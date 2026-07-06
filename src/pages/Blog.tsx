@@ -34,7 +34,7 @@ const Blog = () => {
       <Navigation activeSection="blog" setActiveSection={() => {}} />
 
       <motion.main
-        className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16 sm:pb-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
@@ -44,7 +44,7 @@ const Blog = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex items-center gap-3 mb-4 text-primary font-mono text-xs"
+            className="flex items-center gap-3 mb-4 text-primary font-mono text-[10px] sm:text-xs"
           >
             <Terminal className="h-4 w-4" />
             <span>~/intelligence-feed</span>

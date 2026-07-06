@@ -15,7 +15,7 @@ const stats = [
 
 export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
   return (
-    <section id="about" className="relative pt-32 pb-20 px-4 sm:px-6">
+    <section id="about" className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6">
       {/* Subtle gradient background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
@@ -25,13 +25,13 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
       <div className="max-w-7xl mx-auto relative">
         <div className="grid grid-cols-12 gap-6">
           {/* Main hero identity */}
-          <GlassCard className="col-span-12 lg:col-span-8 p-10 sm:p-12 relative overflow-hidden">
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold leading-[1.02] tracking-tight font-display">
+          <GlassCard className="col-span-12 lg:col-span-8 p-6 sm:p-10 lg:p-12 relative overflow-hidden">
+          <h1 className="text-4xl sm:text-7xl lg:text-8xl font-extrabold leading-[1.02] tracking-tight font-display">
               <span className="text-foreground">MABIOR</span>{" "}
               <span className="bg-gradient-primary bg-clip-text text-transparent">AGAU</span>
             </h1>
 
-            <p className="mt-4 max-w-2xl text-lg sm:text-xl text-muted-foreground leading-relaxed">
+            <p className="mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed">
               Cybersecurity professional specializing in offensive security, penetration testing,
               and red team operations. Building organizational resilience through precision and rigor.
             </p>
@@ -43,7 +43,7 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
             </p>
 
             {/* CTAs */}
-            <div className="mt-10 flex flex-wrap gap-4">
+            <div className="mt-8 sm:mt-10 flex flex-wrap gap-3 sm:gap-4">
               <a
                 href="#contact"
                 onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }}
@@ -61,7 +61,7 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
             </div>
 
             {/* Stats */}
-            <div className="mt-12 grid grid-cols-3 gap-4 max-w-lg">
+            <div className="mt-8 sm:mt-12 grid grid-cols-3 gap-3 sm:gap-4 max-w-lg">
               {stats.map((s, i) => (
                 <div key={s.label} className="relative">
                   <div className="text-2xl sm:text-3xl font-bold text-foreground font-display">{s.value}</div>

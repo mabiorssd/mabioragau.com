@@ -91,7 +91,7 @@ const Portfolio = () => {
   }, [activeSection]);
 
   return (
-    <div className="min-h-screen text-foreground relative pt-7 pb-20 md:pb-0">
+    <div className="min-h-screen text-foreground relative">
       <Helmet>
         <title>Mabior Agau — Cybersecurity Expert & Penetration Tester</title>
         <meta name="description" content="Mabior Agau is an offensive security specialist offering penetration testing, red team simulation, and security engineering services from South Sudan." />
@@ -115,9 +115,9 @@ const Portfolio = () => {
         <SecurityNewsSection />
         <BlogSection />
 
-        <section className="py-20 px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            <GlassCard className="p-8 sm:p-10 text-center">
+        <section className="py-16 sm:py-20 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto">
+        <GlassCard className="p-6 sm:p-10 text-center">
               <span className="eyebrow">// stay_connected</span>
               <h2 className="mt-4 font-display font-extrabold tracking-tight text-[clamp(1.75rem,3vw,2.5rem)]">
                 Get the <span className="bg-gradient-primary bg-clip-text text-transparent">briefing</span>

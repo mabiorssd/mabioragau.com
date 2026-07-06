@@ -34,8 +34,8 @@ const Gauge = ({ value, label, Icon }: { value: number; label: string; Icon: typ
   const offset = c - (value / 100) * c;
   return (
     <div className="flex flex-col items-center text-center">
-      <div className="relative w-24 h-24">
-        <svg className="w-24 h-24 -rotate-90" viewBox="0 0 100 100">
+      <div className="relative w-20 h-20 sm:w-24 sm:h-24">
+        <svg className="w-20 h-20 sm:w-24 sm:h-24 -rotate-90" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r={r} stroke="hsl(var(--secondary))" strokeWidth="6" fill="none" />
           <motion.circle
             cx="50" cy="50" r={r}
@@ -63,7 +63,7 @@ const Gauge = ({ value, label, Icon }: { value: number; label: string; Icon: typ
 
 export const SkillsShowcase = () => {
   return (
-    <section id="skills" className="py-24 px-4 sm:px-6">
+    <section id="skills" className="py-16 sm:py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -89,7 +89,7 @@ export const SkillsShowcase = () => {
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">Core Expertise</h3>
               <span className="text-[10px] font-mono text-primary">live</span>
             </div>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 sm:gap-6">
               {expertise.map((e) => (
                 <Gauge key={e.title} value={e.level} label={e.title} Icon={e.icon} />
               ))}

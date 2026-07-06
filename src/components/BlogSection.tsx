@@ -6,7 +6,7 @@ import { ScrambleText } from "./soc/ScrambleText";
 
 export const BlogSection = () => {
   return (
-    <section id="blog" className="py-24 px-4 sm:px-6">
+    <section id="blog" className="py-16 sm:py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 16 }}

@@ -64,8 +64,7 @@ export const ContactForm = () => {
               <span className="bg-gradient-primary bg-clip-text text-transparent">touch</span>
             </h2>
             <p className="mt-4 text-muted-foreground text-base leading-relaxed">
-              For security engagements, vulnerability disclosures, or research collaboration.
-              All messages are reviewed personally and responded to promptly.
+              For security engagements, disclosures, or collaboration.
             </p>
 
             <div className="mt-8 space-y-3">

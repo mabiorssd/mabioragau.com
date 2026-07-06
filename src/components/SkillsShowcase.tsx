@@ -72,13 +72,12 @@ export const SkillsShowcase = () => {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <span className="eyebrow">// tactical_proficiency</span>
-          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Tactical <span className="bg-gradient-primary bg-clip-text text-transparent">proficiency</span>
+          <span className="eyebrow">Skills</span>
+          <h2 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Technical <span className="bg-gradient-primary bg-clip-text text-transparent">proficiencies</span>
           </h2>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            Core proficiencies measured against industry baselines, plus the operational tooling
-            stack used in active engagements.
+          <p className="mt-2 max-w-2xl text-muted-foreground text-sm">
+            Core capabilities and operational tooling used in active engagements.
           </p>
         </motion.div>
 

@@ -1,10 +1,8 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Lock, Eye, Shield, Code, ArrowUpRight, Github, ExternalLink, X } from "lucide-react";
+import { Lock, Eye, Shield, Code, ArrowUpRight, Github, ExternalLink } from "lucide-react";
 import { GlassCard } from "./soc/GlassCard";
-import {
-  Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { ScrambleText } from "./soc/ScrambleText";
 import { setCopilotContext } from "@/lib/copilotContext";
 
@@ -96,13 +94,12 @@ export const ProjectsSection = () => {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <span className="eyebrow">// deployment_history</span>
-          <h2 className="mt-4 font-display font-extrabold tracking-tight text-[clamp(1.875rem,4vw,3rem)]">
-            <ScrambleText text="Deployment" /> <span className="bg-gradient-primary bg-clip-text text-transparent">history</span>
+          <span className="eyebrow">Projects</span>
+          <h2 className="mt-3 font-display font-extrabold tracking-tight text-[clamp(1.875rem,4vw,3rem)]">
+            Selected <span className="bg-gradient-primary bg-clip-text text-transparent">work</span>
           </h2>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            A redacted look at research, tooling, and platforms developed across offensive security engagements.
-            Click a card for the full case study.
+          <p className="mt-2 max-w-2xl text-muted-foreground text-sm">
+            Research, tooling, and platforms developed across offensive security engagements.
           </p>
         </motion.div>
 

@@ -1,42 +1,42 @@
 import { motion } from "framer-motion";
-import { Shield, Bug, Lock, Server, Code, Search, ArrowRight } from "lucide-react";
+import { Shield, Bug, Lock, Server, Code, Search } from "lucide-react";
 import { GlassCard } from "./soc/GlassCard";
 
 const services = [
   {
     icon: Shield,
     title: "Penetration Testing",
-    description: "Black, grey, and white-box assessments against web applications, APIs, network infrastructure, and cloud environments. Methodical testing aligned with industry standards.",
+    description: "Black, grey, and white-box assessments for web apps, APIs, network infrastructure, and cloud environments.",
     tools: ["Burp Suite", "Nmap", "Metasploit"],
   },
   {
     icon: Bug,
     title: "Vulnerability Assessment",
-    description: "Continuous scanning, triage, and prioritized remediation roadmaps mapped to your organization's risk profile and regulatory requirements.",
+    description: "Continuous scanning, triage, and prioritized remediation aligned to your risk profile.",
     tools: ["Nessus", "OpenVAS", "Nuclei"],
   },
   {
     icon: Lock,
     title: "Web Application Security",
-    description: "Deep manual testing for OWASP Top 10 vulnerabilities, business logic flaws, authentication weaknesses, and authorization bypasses.",
+    description: "Manual testing for OWASP Top 10, business logic flaws, and authentication weaknesses.",
     tools: ["Burp Suite", "ZAP", "ffuf"],
   },
   {
     icon: Server,
     title: "Network Security Review",
-    description: "Architecture review, segmentation testing, and lateral-movement simulation across hybrid and multi-cloud network environments.",
+    description: "Architecture review, segmentation testing, and lateral-movement simulation across hybrid environments.",
     tools: ["Wireshark", "tcpdump", "Responder"],
   },
   {
     icon: Code,
     title: "Security Training",
-    description: "Hands-on workshops for engineering and IT teams covering secure SDLC practices, threat modeling, and incident response drills.",
+    description: "Hands-on workshops covering secure SDLC practices, threat modeling, and incident response.",
     tools: ["Workshops", "Labs", "Simulations"],
   },
   {
     icon: Search,
     title: "Security Consulting",
-    description: "Strategic advisory, compliance alignment, and security program development tailored to organizational maturity and threat landscape.",
+    description: "Strategic advisory, compliance alignment, and program development tailored to your organization.",
     tools: ["Risk Assessment", "Policy", "GRC"],
   },
 ];
@@ -48,15 +48,6 @@ const iconBgColors = [
   "bg-violet-500/10 border-violet-500/20",
   "bg-rose-500/10 border-rose-500/20",
   "bg-cyan-500/10 border-cyan-500/20",
-];
-
-const iconColors = [
-  "text-blue-500",
-  "text-emerald-500",
-  "text-amber-500",
-  "text-violet-500",
-  "text-rose-500",
-  "text-cyan-500",
 ];
 
 export const ServicesSection = () => {
@@ -76,9 +67,8 @@ export const ServicesSection = () => {
               Capabilities
             </span>
           </h2>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            Modular security engagements designed to integrate with your existing program —
-            from single-target assessments to ongoing offensive operations.
+          <p className="mt-2 max-w-2xl text-muted-foreground text-sm">
+            Modular engagements — from single-target assessments to ongoing operations.
           </p>
         </motion.div>
 
@@ -92,12 +82,9 @@ export const ServicesSection = () => {
               transition={{ duration: 0.4, delay: i * 0.05 }}
               className="col-span-12 sm:col-span-6 lg:col-span-4"
             >
-              <GlassCard className="h-full flex flex-col group">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-11 h-11 rounded-xl ${iconBgColors[i]} grid place-items-center`}>
-                    <s.icon className={`w-5 h-5 ${iconColors[i]}`} />
-                  </div>
-                  <ArrowRight className={`w-4 h-4 ${iconColors[i]} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -ml-1`} />
+              <GlassCard className="h-full flex flex-col p-5">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 grid place-items-center mb-3">
+                  <s.icon className="w-5 h-5 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground">{s.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground flex-1 leading-relaxed">

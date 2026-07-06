@@ -61,13 +61,7 @@ const MAX_CHARS = 10_000;
 const initialMessage = (): Message => ({
   role: "assistant",
   content:
-    "System initialized. Authorized visitor detected.\n\nAccessing Mabior's operational logs…\n\n" +
-    "I'm the Cyber Co-Pilot. Type a hotkey for instant intel:\n" +
-    "▸ **VET** — credentials\n" +
-    "▸ **NCA** — role details\n" +
-    "▸ **SKILLS** — proficiency map\n" +
-    "▸ **CONTACT** — secure channel\n\n" +
-    "Or ask anything in natural language.",
+    "Hi, I'm Mabior's AI assistant. I can help you understand my services, answer questions about my work, or guide you to the right contact.\n\nTry asking about:\n▸ **Services** — what I offer\n▸ **Experience** — background and skills\n▸ **Contact** — how to reach me\n\nOr just ask anything.",
 });
 
 export const AIChatbot = () => {

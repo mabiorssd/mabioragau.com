@@ -32,8 +32,7 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
             </h1>
 
             <p className="mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed">
-              Cybersecurity professional specializing in offensive security, penetration testing,
-              and red team operations. Building organizational resilience through precision and rigor.
+              Offensive security professional — penetration testing, red team operations, and vulnerability research.
             </p>
 
             {/* Subtle typing subtitle */}
@@ -49,7 +48,7 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
                 onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-all duration-300 shadow-lg shadow-primary/20"
               >
-                Start an Engagement
+                Start an Engagement →
               </a>
               <a
                 href="#projects"

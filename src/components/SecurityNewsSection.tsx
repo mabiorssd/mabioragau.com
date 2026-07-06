@@ -68,12 +68,12 @@ export const SecurityNewsSection = () => {
           className="mb-12 flex items-end justify-between gap-6 flex-wrap"
         >
           <div>
-            <span className="eyebrow"><Radio className="w-3 h-3" /> // threat_feed</span>
-            <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
-              Live <span className="bg-gradient-primary bg-clip-text text-transparent">intel feed</span>
+            <span className="eyebrow"><Radio className="w-3 h-3" /> Intel Feed</span>
+            <h2 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
+              Security <span className="bg-gradient-primary bg-clip-text text-transparent">intelligence</span>
             </h2>
-            <p className="mt-3 max-w-2xl text-muted-foreground">
-              Curated stream of breaking vulnerabilities, breaches, and advisories from trusted security desks.
+            <p className="mt-2 max-w-2xl text-muted-foreground text-sm">
+              Breaking vulnerabilities, breaches, and advisories from trusted sources.
             </p>
           </div>
         </motion.div>

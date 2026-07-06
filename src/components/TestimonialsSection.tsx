@@ -37,9 +37,9 @@ export const TestimonialsSection = () => {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <span className="eyebrow">// client_signals</span>
-          <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Trusted by organizations across <span className="bg-gradient-primary bg-clip-text text-transparent">East Africa</span>
+          <span className="eyebrow">Testimonials</span>
+          <h2 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
+            Trusted across <span className="bg-gradient-primary bg-clip-text text-transparent">East Africa</span>
           </h2>
         </motion.div>
 

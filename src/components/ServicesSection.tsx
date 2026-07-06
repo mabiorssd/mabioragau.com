@@ -41,15 +41,6 @@ const services = [
   },
 ];
 
-const iconBgColors = [
-  "bg-blue-500/10 border-blue-500/20",
-  "bg-emerald-500/10 border-emerald-500/20",
-  "bg-amber-500/10 border-amber-500/20",
-  "bg-violet-500/10 border-violet-500/20",
-  "bg-rose-500/10 border-rose-500/20",
-  "bg-cyan-500/10 border-cyan-500/20",
-];
-
 export const ServicesSection = () => {
   return (
     <section id="services" className="py-16 sm:py-24 px-4 sm:px-6">

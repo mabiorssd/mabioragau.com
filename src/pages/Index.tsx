@@ -116,8 +116,8 @@ const Portfolio = () => {
         <BlogSection />
 
         <section className="py-16 sm:py-20 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto">
-        <GlassCard className="p-6 sm:p-10 text-center">
+          <div className="max-w-4xl mx-auto">
+            <GlassCard className="p-6 sm:p-10 text-center">
               <span className="eyebrow">Newsletter</span>
               <h2 className="mt-3 font-display font-extrabold tracking-tight text-[clamp(1.75rem,3vw,2.5rem)]">
                 Stay <span className="bg-gradient-primary bg-clip-text text-transparent">informed</span>

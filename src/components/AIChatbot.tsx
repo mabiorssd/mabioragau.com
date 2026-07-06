@@ -55,6 +55,9 @@ const HOTKEY_RESPONSES: Record<string, string> = {
     "Booking Q2 engagements. State scope, target environment, and authorization context.",
 };
 
+const MAX_MESSAGES = 50;
+const MAX_CHARS = 10_000;
+
 const initialMessage = (): Message => ({
   role: "assistant",
   content:
@@ -76,7 +79,10 @@ export const AIChatbot = () => {
   const [ctxTitle, setCtxTitle] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const messagesRef = useRef<Message[]>(messages);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => { messagesRef.current = messages; }, [messages]);
 
   useEffect(() => {
     const open = () => setIsOpen(true);
@@ -110,7 +116,15 @@ export const AIChatbot = () => {
     abortRef.current = new AbortController();
     setIsTyping(true);
 
-    const recent = messages.slice(-20);
+    // Guard: max messages (fix #3)
+    if (messagesRef.current.length >= MAX_MESSAGES) {
+      throw new Error("Message limit reached. Please start a new conversation.");
+    }
+
+    // Use messagesRef (ref, not stale closure) instead of closure messages (fix #1)
+    const recent = messagesRef.current.slice(-19);
+    const timeoutId = setTimeout(() => abortRef.current?.abort(), 30000);
+
     const resp = await fetch(url, {
       method: "POST",
       headers: {
@@ -120,6 +134,7 @@ export const AIChatbot = () => {
       body: JSON.stringify({ messages: [...recent, { role: "user", content: userMessage }] }),
       signal: abortRef.current.signal,
     });
+    clearTimeout(timeoutId); // (fix #2)
 
     if (!resp.ok) {
       if (resp.status === 429) throw new Error("Rate limit reached. Please try again shortly.");
@@ -135,35 +150,51 @@ export const AIChatbot = () => {
     setMessages((p) => [...p, { role: "assistant", content: "" }]);
     setIsTyping(false);
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buf += decoder.decode(value, { stream: true });
+    // (fix #4) try/catch around streaming loop
+    try {
+      readLoop: while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
 
-      let nl: number;
-      while ((nl = buf.indexOf("\n")) !== -1) {
-        let line = buf.slice(0, nl);
-        buf = buf.slice(nl + 1);
-        if (line.endsWith("\r")) line = line.slice(0, -1);
-        if (!line.startsWith("data: ")) continue;
-        const json = line.slice(6).trim();
-        if (json === "[DONE]") { buf = ""; break; }
-        try {
-          const parsed = JSON.parse(json);
-          const delta = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (delta) {
-            assistant += delta;
-            setMessages((prev) => {
-              const next = [...prev];
-              next[next.length - 1] = { role: "assistant", content: assistant };
-              return next;
-            });
+        // (fix #6) simpler line-by-line SSE parser — split-based, can't infinite loop
+        const lines = buf.split("\n");
+        buf = lines.pop() || "";
+
+        for (const rawLine of lines) {
+          let line = rawLine;
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (!line.startsWith("data: ")) continue;
+          const payload = line.slice(6).trim();
+          if (payload === "[DONE]") break readLoop;
+          try {
+            const parsed = JSON.parse(payload);
+            const delta = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (delta) {
+              assistant += delta;
+              // (fix #5) MAX_CHARS guard
+              if (assistant.length > MAX_CHARS) break readLoop;
+              setMessages((prev) => {
+                const next = [...prev];
+                next[next.length - 1] = { role: "assistant", content: assistant };
+                return next;
+              });
+            }
+          } catch {
+            // skip malformed lines — can't hang anymore
           }
-        } catch {
-          buf = line + "\n" + buf;
-          break;
         }
       }
+    } catch (e) {
+      console.error("Stream parse error:", e);
+      setMessages((prev) => {
+        const next = [...prev];
+        next[next.length - 1] = {
+          role: "assistant",
+          content: assistant || "⚠️ Stream interrupted.",
+        };
+        return next;
+      });
     }
   };
 

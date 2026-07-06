@@ -8,7 +8,6 @@ import { AIChatbot } from "./components/AIChatbot";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { SouthSudanMap } from "./components/soc/SouthSudanMap";
 import { HackerLogTicker } from "./components/soc/HackerLogTicker";
-import { AnimatePresence } from "framer-motion";
 
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
@@ -44,20 +43,18 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <AnimatePresence mode="wait">
-              <Suspense fallback={<LoadingFallback />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/blog/:slug" element={<BlogPost />} />
-                  <Route path="/confirm-subscription" element={<ConfirmSubscription />} />
-                  <Route path="/trust" element={<Trust />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </AnimatePresence>
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/confirm-subscription" element={<ConfirmSubscription />} />
+                <Route path="/trust" element={<Trust />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
             <AIChatbot />
           </BrowserRouter>
         </div>

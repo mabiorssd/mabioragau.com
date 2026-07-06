@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useBlogStorageSetup } from "./useBlogStorageSetup";
+import DOMPurify from "dompurify";
 
 export const useBlogPostUtils = () => {
   const { setupBlogStorage } = useBlogStorageSetup();
@@ -59,7 +60,7 @@ export const useBlogPostUtils = () => {
     if (!content) return "";
     
     const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = content;
+    tempDiv.innerHTML = DOMPurify.sanitize(content, { USE_PROFILES: { html: true } });
     
     const images = tempDiv.querySelectorAll("img");
     
@@ -81,8 +82,12 @@ export const useBlogPostUtils = () => {
         img.setAttribute("src", originalSrc.replace(/^http:\/\//i, "https://"));
       }
       
-      // Add error handling to all images
-      img.setAttribute("onerror", "this.onerror=null; this.src='/placeholder.svg';");
+      // Add error handling to all images — NOTE: cannot use onerror (XSS vector), use CSS instead
+      img.style.backgroundColor = "#1a1a2e";
+      img.addEventListener("error", function() {
+        this.src = '/placeholder.svg';
+        this.style.backgroundColor = "#1a1a2e";
+      });
       
       // Add additional styling for better appearance
       img.classList.add("rounded-md", "shadow-md", "my-4");
@@ -110,7 +115,7 @@ export const useBlogPostUtils = () => {
     const safeContent = String(content);
     
     const div = document.createElement("div");
-    div.innerHTML = safeContent;
+    div.innerHTML = DOMPurify.sanitize(safeContent, { USE_PROFILES: { html: true } });
     
     // Get plain text and remove any potential symbols or special characters
     const text = (div.textContent || div.innerText || "")

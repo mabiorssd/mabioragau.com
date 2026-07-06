@@ -44,3 +44,6 @@ verify_jwt = true
 
 [functions.og-blog]
 verify_jwt = false
+
+[functions.track-view]
+verify_jwt = false

@@ -120,6 +120,16 @@ export const AIChatbot = () => {
 
     // Use messagesRef (ref, not stale closure) instead of closure messages (fix #1)
     const recent = messagesRef.current.slice(-19);
+
+    // Build page context — tell the AI what the user is currently viewing
+    const ctx = getCopilotContext();
+    const pageContext = [
+      `URL: ${window.location.pathname}`,
+      `Page Title: ${document.title}`,
+      ctx ? `Viewing: ${ctx.kind} — "${ctx.title}"` : "",
+    ].filter(Boolean).join("\n");
+    const copilotContext = ctx ? `${ctx.kind}: "${ctx.title}"\n\nContent preview:\n${ctx.body.slice(0, 1500)}` : "";
+
     const timeoutId = setTimeout(() => abortRef.current?.abort(), 30000);
 
     const resp = await fetch(url, {
@@ -128,7 +138,11 @@ export const AIChatbot = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer eyJhbG...07BU`,
       },
-      body: JSON.stringify({ messages: [...recent, { role: "user", content: userMessage }] }),
+      body: JSON.stringify({
+        messages: [...recent, { role: "user", content: userMessage }],
+        pageContext,
+        copilotContext,
+      }),
       signal: abortRef.current.signal,
     });
     clearTimeout(timeoutId); // (fix #2)

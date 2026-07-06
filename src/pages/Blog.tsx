@@ -4,11 +4,22 @@ import { motion } from "framer-motion";
 import { Terminal } from "lucide-react";
 import { ScrambleText } from "@/components/soc/ScrambleText";
 import { Helmet } from "react-helmet";
+import { useEffect } from "react";
+import { setCopilotContext } from "@/lib/copilotContext";
 
 const Blog = () => {
   const url = "https://mabioragau.com/blog";
   const title = "Intelligence Feed — Cybersecurity Research by Mabior Agau";
   const description = "Briefings, post-mortems, exploit research, and defensive guidance from offensive security specialist Mabior Agau.";
+
+  useEffect(() => {
+    setCopilotContext({
+      kind: "section",
+      title: "Intelligence Feed",
+      body: "Blog listing page — cybersecurity briefings, post-mortems, exploit research, and defensive guidance. Browse all published articles here.",
+    });
+    return () => setCopilotContext(null);
+  }, []);
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Helmet>

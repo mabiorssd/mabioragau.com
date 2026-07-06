@@ -17,6 +17,7 @@ import { CommandHistoryTimeline } from "@/components/soc/CommandHistoryTimeline"
 import { ArsenalRadar } from "@/components/soc/ArsenalRadar";
 import { MobileDock } from "@/components/soc/MobileDock";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
+import { setCopilotContext } from "@/lib/copilotContext";
 
 const fullText = "Security Researcher · Penetration Tester · Ethical Hacker";
 
@@ -67,6 +68,27 @@ const Portfolio = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [handleScroll]);
+
+  // Set copilot context for the AI chatbot — tells it what section the user is on
+  useEffect(() => {
+    const sectionLabels: Record<string, string> = {
+      about: "Home page hero — Mabior's bio, stats, and contact",
+      services: "Services section — penetration testing, security audits, training",
+      skills: "Skills & arsenal radar — technical proficiencies",
+      experience: "Professional experience timeline",
+      projects: "Security projects and case studies",
+      testimonials: "Client testimonials",
+      news: "Security news feed — cybersecurity intelligence",
+      blog: "Blog/intelligence feed",
+      contact: "Contact form and engagement booking",
+    };
+    const label = sectionLabels[activeSection] || `Section: ${activeSection}`;
+    setCopilotContext({
+      kind: "section",
+      title: activeSection.charAt(0).toUpperCase() + activeSection.slice(1),
+      body: label,
+    });
+  }, [activeSection]);
 
   return (
     <div className="min-h-screen text-foreground relative pt-7 pb-20 md:pb-0">

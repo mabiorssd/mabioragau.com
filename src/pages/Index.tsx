@@ -60,12 +60,22 @@ const Portfolio = () => {
     };
     animFrameId = requestAnimationFrame(animate);
 
-    // Cursor blink via CSS animation — state kept at true
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    // RAF-throttled scroll handler — prevents layout thrashing from 9× getBoundingClientRect
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       cancelAnimationFrame(animFrameId);
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", onScroll);
     };
   }, [handleScroll]);
 

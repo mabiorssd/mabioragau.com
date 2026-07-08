@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributes, MouseEvent } from "react";
+import { forwardRef, HTMLAttributes, MouseEvent, useRef, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
@@ -8,12 +8,19 @@ interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
 
 export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
   ({ className, interactive = true, glow = false, onMouseMove, children, ...props }, ref) => {
-    const handleMove = (e: MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-      e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+    const rafRef = useRef<number>(0);
+
+    const handleMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
+      // Throttle to once per animation frame — prevents layout thrashing
+      if (rafRef.current) return;
+      rafRef.current = requestAnimationFrame(() => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+        e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+        rafRef.current = 0;
+      });
       onMouseMove?.(e);
-    };
+    }, [onMouseMove]);
 
     return (
       <div

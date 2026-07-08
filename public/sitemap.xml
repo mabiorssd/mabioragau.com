@@ -7,7 +7,12 @@
   </url>
   <url>
     <loc>https://mabioragau.com/blog</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mabioragau.com/trust</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

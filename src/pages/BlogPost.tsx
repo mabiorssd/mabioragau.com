@@ -162,7 +162,6 @@ const BlogPost = () => {
         <BlogPostContent
           post={post}
           theme={theme}
-          setTheme={setTheme}
         />
       </motion.main>
     </div>

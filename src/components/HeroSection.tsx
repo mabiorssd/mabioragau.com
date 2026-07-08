@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, Twitter, MapPin, Shield, Activity, Target } from "lucide-react";
 import { GlassCard } from "./soc/GlassCard";
+import portraitImg from "@/assets/portrait-mabior.jpg";
 
 interface HeroSectionProps {
   text: string;
@@ -76,19 +77,22 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
             </div>
           </GlassCard>
 
-          {/* Profile sidebar — clean professional card */}
-          <GlassCard className="col-span-12 lg:col-span-4 p-8 flex flex-col justify-between">
+          {/* Profile sidebar — portrait card */}
+          <GlassCard className="col-span-12 lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between">
             <div>
-              {/* Avatar + contact */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-primary grid place-items-center text-xl font-extrabold text-primary-foreground shadow-lg">
-                  MA
+              {/* Portrait + name */}
+              <div className="flex flex-col items-center text-center mb-6">
+                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden ring-2 ring-primary/20 shadow-glow mb-4 group">
+                  <img
+                    src={portraitImg}
+                    alt="Mabior Agau"
+                    loading="eager"
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                  />
                 </div>
-                <div>
-                  <div className="font-bold text-foreground text-lg">Mabior Agau</div>
-                  <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                    <MapPin className="w-3 h-3" /> Juba, South Sudan
-                  </div>
+                <div className="font-bold text-foreground text-xl">Mabior Agau</div>
+                <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1.5">
+                  <MapPin className="w-3 h-3 shrink-0" /> Juba, South Sudan
                 </div>
               </div>
 
@@ -105,7 +109,7 @@ export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
             </div>
 
             {/* Social links */}
-            <div className="mt-8 pt-6 border-t border-border">
+            <div className="mt-6 pt-5 border-t border-border">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground font-medium">Connect</span>
                 <div className="flex items-center gap-2">

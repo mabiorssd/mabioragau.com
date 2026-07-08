@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,7 +27,7 @@
     --secondary-foreground: 222 47% 11%;
 
     --muted: 222 25% 96%;
-    --muted-foreground: 222 20% 40%;
+    --muted-foreground: 222 22% 35%;
 
     --accent: 172 68% 32%;
     --accent-foreground: 0 0% 100%;
@@ -40,24 +38,28 @@
     --warning: 32 95% 44%;
     --warning-foreground: 0 0% 100%;
 
-    --border: 222 20% 88%;
-    --input: 222 20% 94%;
+    --border: 222 20% 82%;
+    --input: 222 20% 92%;
     --ring: 172 65% 36%;
 
     --radius: 0.75rem;
 
     --gradient-primary: linear-gradient(135deg, hsl(172 68% 32%) 0%, hsl(190 75% 40%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.95) 0%, hsl(222 25% 98% / 0.85) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.92) 0%, hsl(222 25% 98% / 0.88) 100%);
     --gradient-mesh: radial-gradient(circle at 20% 20%, hsl(172 68% 32% / 0.05), transparent 50%),
                      radial-gradient(circle at 80% 70%, hsl(190 75% 40% / 0.04), transparent 55%);
 
     --shadow-glow: 0 0 30px hsl(172 68% 32% / 0.18);
     --shadow-glow-blue: 0 0 30px hsl(190 75% 40% / 0.14);
-    --shadow-panel: 0 1px 2px hsl(222 47% 11% / 0.04), 0 8px 24px hsl(222 47% 11% / 0.08);
+    --shadow-panel: 0 1px 2px hsl(222 47% 11% / 0.06), 0 8px 24px hsl(222 47% 11% / 0.10);
 
     --font-display: 'Outfit', system-ui, sans-serif;
     --font-sans: 'DM Sans', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    /* SVG map topography lines */
+    --topo-line: 172 68% 32%;
+    --topo-node: 172 65% 40%;
   }
 
   /* Dark mode — Deep navy */
@@ -103,6 +105,10 @@
     --shadow-glow: 0 0 40px hsl(172 68% 42% / 0.25);
     --shadow-glow-blue: 0 0 40px hsl(190 75% 50% / 0.18);
     --shadow-panel: 0 8px 32px hsl(222 47% 0% / 0.6), inset 0 1px 0 hsl(150 20% 96% / 0.04);
+
+    /* SVG map topography lines */
+    --topo-line: 172 68% 42%;
+    --topo-node: 172 65% 50%;
   }
 }
 
@@ -110,6 +116,15 @@
   * { @apply border-border; }
   html { @apply antialiased scroll-smooth; }
   html, body { @apply min-h-screen w-full m-0 p-0 overflow-x-hidden; }
+
+  /* Smooth theme transition on color-dependent properties */
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.25s ease, box-shadow 0.3s ease !important;
+  }
+  /* Remove the transition class after animation completes to avoid perf impact */
+  html.theme-transition { transition: none; }
 
   body {
     @apply bg-background text-foreground;
@@ -132,7 +147,7 @@
     letter-spacing: -0.02em;
   }
 
-  p { @apply text-muted-foreground leading-relaxed; }
+  p { @apply text-foreground/85 leading-relaxed; }
   code, pre, .font-mono { font-family: var(--font-mono); }
   .font-display { font-family: var(--font-display); }
 }

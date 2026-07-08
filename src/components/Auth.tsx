@@ -1,8 +1,10 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
+import { useTheme } from "./ThemeProvider";
 
 export const AuthComponent = () => {
+  const { theme } = useTheme();
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-md glass-panel rounded-2xl border border-border p-6 sm:p-8 shadow-lg">
@@ -63,7 +65,7 @@ export const AuthComponent = () => {
               divider: 'my-4',
             },
           }}
-          theme="dark"
+          theme={theme === "dark" ? "dark" : "default"}
           providers={[]}
         />
       </div>

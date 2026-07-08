@@ -179,17 +179,17 @@ export const IntelligenceFeed = ({ limit, showControls = true }: IntelligenceFee
                     </div>
                   </div>
 
-                  <div className="flex-1 flex flex-col p-5 sm:p-6">
-                    <h3 className={`font-display font-bold text-foreground leading-tight tracking-tight ${p._featured ? "text-2xl sm:text-3xl" : "text-lg"}`}>
+                  <div className="flex-1 flex flex-col p-4 sm:p-6">
+                    <h3 className={`font-display font-bold text-foreground leading-tight tracking-tight ${p._featured ? "text-xl sm:text-2xl lg:text-3xl" : "text-base sm:text-lg"}`}>
                       <ScrambleText text={p.title} duration={700} />
                     </h3>
 
-                    <p className={`mt-3 text-sm text-muted-foreground ${p._featured ? "line-clamp-3" : "line-clamp-2"}`}>
+                    <p className={`mt-2 sm:mt-3 text-sm text-muted-foreground ${p._featured ? "line-clamp-3" : "line-clamp-2"}`}>
                       {p._excerpt}
                     </p>
 
-                    <div className="mt-auto pt-4 flex items-center justify-between text-[11px] font-mono text-muted-foreground border-t border-border">
-                      <div className="flex items-center gap-3">
+                    <div className="mt-auto pt-3 sm:pt-4 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-muted-foreground border-t border-border">
+                      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {format(new Date(p.created_at), "MMM d")}
@@ -205,7 +205,7 @@ export const IntelligenceFeed = ({ limit, showControls = true }: IntelligenceFee
                           </span>
                         )}
                       </div>
-                      <ArrowUpRight className="w-4 h-4 text-primary opacity-60 group-hover:opacity-100 transition-opacity" />
+                      <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary opacity-60 group-hover:opacity-100 transition-opacity shrink-0" />
                     </div>
                   </div>
                 </Link>

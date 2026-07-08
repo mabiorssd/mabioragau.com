@@ -11,15 +11,16 @@ import { ReadingProgress } from "./soc/ReadingProgress";
 import { ScrambleText } from "./soc/ScrambleText";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { toast } from "sonner";
+import { useTheme } from "./ThemeProvider";
 
 interface BlogPostContentProps {
   post: any;
   theme: string;
-  setTheme: (t: string) => void;
 }
 
-export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps) {
+export function BlogPostContent({ post, theme }: BlogPostContentProps) {
   const { getImageUrl, processContent } = useBlogPostUtils();
+  const { toggle } = useTheme();
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.svg");
   const [processedContent, setProcessedContent] = useState<string>("");
   const articleRef = useRef<HTMLDivElement>(null);
@@ -104,19 +105,27 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
             <span>← Back to blog</span>
           </Link>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full"
-            title={theme === "dark" ? "Switch to overt mode" : "Switch to stealth mode"}
+          <button
+            onClick={toggle}
+            className="flex items-center gap-1.5 h-9 px-3 rounded-xl bg-secondary border border-border hover:border-primary/50 hover:bg-secondary/80 transition-all duration-200 text-xs font-mono"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
+            {theme === "dark" ? (
+              <>
+                <Sun className="h-4 w-4 text-amber-500" strokeWidth={2} />
+                <span className="hidden sm:inline uppercase tracking-widest text-amber-600 font-semibold">LIGHT</span>
+              </>
+            ) : (
+              <>
+                <Moon className="h-4 w-4 text-primary" strokeWidth={2} />
+                <span className="hidden sm:inline uppercase tracking-widest text-primary font-semibold">DARK</span>
+              </>
+            )}
+          </button>
         </div>
 
         <Card className="overflow-hidden glass-panel border-border">
-          <article className="p-5 sm:p-10 space-y-6">
+          <article className="p-4 sm:p-8 md:p-10 space-y-5 sm:space-y-6">
             {post.image_url && (
               <div className="w-full aspect-[16/9] mb-2 overflow-hidden rounded-xl relative">
                 <img
@@ -131,7 +140,7 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
               </div>
             )}
 
-            <header className="space-y-5">
+            <header className="space-y-4 sm:space-y-5">
               <div className="flex items-center gap-2">
                 <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/30">
                   ARTICLE
@@ -141,11 +150,11 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
                 </span>
               </div>
 
-              <h1 className="font-display font-extrabold tracking-tight text-[clamp(1.875rem,5vw,3rem)] leading-[1.05] text-foreground">
+              <h1 className="font-display font-extrabold tracking-tight text-[clamp(1.5rem,5vw,3rem)] leading-[1.05] text-foreground">
                 <ScrambleText text={post.title} duration={1100} />
               </h1>
 
-              <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground border-y border-border py-3 font-mono">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[11px] sm:text-xs text-muted-foreground border-y border-border py-3 font-mono">
                 <span className="flex items-center gap-1.5">
                   <Calendar className="h-3.5 w-3.5" />
                   {format(new Date(post.created_at), "MMM d, yyyy")}
@@ -172,39 +181,43 @@ export function BlogPostContent({ post, theme, setTheme }: BlogPostContentProps)
               ref={articleRef}
               className="prose prose-neutral dark:prose-invert max-w-none
                 prose-headings:font-display prose-headings:tracking-tight
-                prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-b prose-h2:border-border prose-h2:pb-2
-                prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-                prose-p:leading-relaxed prose-p:text-foreground/90
-                prose-a:text-primary hover:prose-a:text-primary-glow prose-a:no-underline hover:prose-a:underline
+                prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-3 prose-h2:border-b prose-h2:border-border prose-h2:pb-2
+                prose-h3:text-lg sm:prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-2
+                prose-p:text-[0.95rem] sm:prose-p:text-base prose-p:leading-relaxed prose-p:text-foreground/90
+                prose-a:text-primary hover:prose-a:text-primary-glow prose-a:no-underline hover:prose-a:underline prose-a:break-words
                 prose-strong:text-foreground
-                prose-img:rounded-xl prose-img:my-8
-                prose-pre:bg-secondary/60 prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-pre:p-4 prose-pre:font-mono prose-pre:text-[13px]
-                prose-code:text-primary prose-code:bg-secondary/60 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
-                prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary/30 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic"
+                prose-img:rounded-xl prose-img:my-6 prose-img:max-w-full prose-img:h-auto
+                prose-pre:bg-secondary/60 prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-pre:p-3 sm:prose-pre:p-4 prose-pre:font-mono prose-pre:text-[12px] sm:prose-pre:text-[13px] prose-pre:overflow-x-auto prose-pre:whitespace-pre-wrap sm:prose-pre:whitespace-pre
+                prose-code:text-primary prose-code:bg-secondary/60 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-code:text-[0.85em] prose-code:break-words
+                prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary/30 prose-blockquote:py-1 prose-blockquote:px-3 sm:prose-blockquote:px-4 prose-blockquote:not-italic prose-blockquote:text-sm sm:prose-blockquote:text-base
+                prose-li:text-foreground/90 prose-li:my-1
+                prose-ul:pl-4 sm:prose-ul:pl-6
+                prose-ol:pl-4 sm:prose-ol:pl-6
+                prose-hr:border-border"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(processedContent, { USE_PROFILES: { html: true } }) }}
             />
 
             <div className="mt-8 pt-6 border-t border-border">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest">// share</p>
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline" size="sm"
-                    className="min-h-[40px]"
+                    className="min-h-[40px] flex-1 sm:flex-none"
                     onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, "_blank")}
                   >
                     <Twitter className="h-3.5 w-3.5 mr-1.5" /> Twitter
                   </Button>
                   <Button
                     variant="outline" size="sm"
-                    className="min-h-[40px]"
+                    className="min-h-[40px] flex-1 sm:flex-none"
                     onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, "_blank")}
                   >
                     <Linkedin className="h-3.5 w-3.5 mr-1.5" /> LinkedIn
                   </Button>
                   <Button
                     variant="outline" size="sm"
-                    className="min-h-[40px]"
+                    className="min-h-[40px] flex-1 sm:flex-none"
                     onClick={() => copy(window.location.href, "Link copied")}
                   >
                     <Link2 className="h-3.5 w-3.5 mr-1.5" /> Link

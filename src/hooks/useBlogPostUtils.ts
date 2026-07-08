@@ -92,12 +92,12 @@ export const useBlogPostUtils = () => {
     // Add styling to other elements for a more professional look
     const headings = tempDiv.querySelectorAll("h1, h2, h3, h4, h5, h6");
     headings.forEach(heading => {
-      heading.classList.add("font-bold", "mt-8", "mb-4", "text-green-400");
+      heading.classList.add("font-bold", "mt-8", "mb-4", "text-primary");
     });
     
     const paragraphs = tempDiv.querySelectorAll("p");
     paragraphs.forEach(p => {
-      p.classList.add("mb-4", "text-green-300", "leading-relaxed");
+      p.classList.add("mb-4", "text-primary/80", "leading-relaxed");
     });
     
     return tempDiv.innerHTML;

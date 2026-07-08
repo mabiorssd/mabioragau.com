@@ -1,69 +1,68 @@
-# Welcome to your Lovable project
+# Mabior Agau — Portfolio
 
-## Project info
+> **Cybersecurity Expert & Penetration Tester** operating from Juba, South Sudan.
 
-**URL**: https://lovable.dev/projects/3b2959dc-ffbb-4637-906a-4e53a2bf2c4a
+[![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000?logo=vercel)](https://mabioragau.com)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-## How can I edit this code?
+Modern portfolio built with React, TypeScript, and Tailwind CSS — featuring a reactive cyber-topographic map, blog with rich editor, admin dashboard, and AI chatbot.
 
-There are several ways of editing your application.
+## Stack
 
-**Use Lovable**
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | React 18 + TypeScript |
+| **Build** | Vite 5 (SWC) |
+| **Styling** | Tailwind CSS 3 + shadcn/ui |
+| **Backend** | Supabase (auth, database, edge functions, storage) |
+| **Deploy** | Vercel (static SPA) |
+| **CMS** | TipTap editor + Supabase blog backend |
+| **State** | TanStack Query (React Query) |
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3b2959dc-ffbb-4637-906a-4e53a2bf2c4a) and start prompting.
+## Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- ⚡ Lazy-loaded routes with manual chunk splitting
+- 🌗 Dark/light theme with smooth transition
+- 🗺️ Interactive SVG map of South Sudan with network nodes
+- 📝 Full-featured blog editor (TipTap + image upload)
+- 🤖 AI-powered assistant chatbot
+- 📊 Admin dashboard with blog analytics
+- 📬 Newsletter + contact form (Supabase edge functions)
+- 🔒 Security: CSP, HSTS, DOMPurify, Zod validation
+- 🕷️ OG image generation for social share previews
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Development
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm install
+npm run dev     # http://localhost:5173
+npm run build   # production build → dist/
+npm run preview # preview built output
 ```
 
-**Edit a file directly in GitHub**
+### Environment
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Copy `.env.example` to `.env` and fill in:
 
-**Use GitHub Codespaces**
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+src/
+├── components/    # UI components (shadcn + custom)
+│   ├── soc/       # South Sudan map, scramble text
+│   └── ui/        # shadcn/ui primitives
+├── hooks/         # Custom React hooks
+├── integrations/  # Supabase client + types
+├── pages/         # Route-level pages (lazy loaded)
+├── lib/           # Utilities
+└── assets/        # Static images (WebP)
+```
 
-This project is built with .
+## License
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/3b2959dc-ffbb-4637-906a-4e53a2bf2c4a) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+MIT — feel free to use as a reference for your own portfolio.

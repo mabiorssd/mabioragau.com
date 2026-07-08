@@ -1,13 +1,11 @@
-import React, { lazy, Suspense } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { lazy, Suspense } from "react";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AIChatbot } from "./components/AIChatbot";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { SouthSudanMap } from "./components/soc/SouthSudanMap";
-import { HackerLogTicker } from "./components/soc/HackerLogTicker";
 
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
@@ -21,6 +19,7 @@ const Trust = lazy(() => import("./pages/Trust"));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      staleTime: 30_000, // 30s — avoid refetching same data on mount
       retry: 1,
       refetchOnWindowFocus: false,
     },
@@ -38,11 +37,9 @@ const App = () => (
     <ThemeProvider>
       <TooltipProvider>
         <div className="min-h-screen w-full bg-background">
-          <SouthSudanMap />
-          <HackerLogTicker />
-          <Toaster />
-          <Sonner />
           <BrowserRouter>
+            <SouthSudanMap />
+            <Toaster />
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
                 <Route path="/" element={<Index />} />

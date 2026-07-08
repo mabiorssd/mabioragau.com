@@ -57,6 +57,8 @@ const HOTKEY_RESPONSES: Record<string, string> = {
 
 const MAX_MESSAGES = 50;
 const MAX_CHARS = 10_000;
+/** If no SSE data arrives within this many ms, abort the stream */
+const STREAM_IDLE_TIMEOUT = 15_000;
 
 const initialMessage = (): Message => ({
   role: "assistant",
@@ -75,6 +77,7 @@ export const AIChatbot = () => {
   const abortRef = useRef<AbortController | null>(null);
   const messagesRef = useRef<Message[]>(messages);
   const inputRef = useRef<HTMLInputElement>(null);
+  const streamIdleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => { messagesRef.current = messages; }, [messages]);
 
@@ -104,6 +107,24 @@ export const AIChatbot = () => {
     }
   }, [isOpen]);
 
+  /** Reset the stream-idle watchdog — call on every data chunk */
+  const resetStreamWatchdog = () => {
+    if (streamIdleRef.current) clearTimeout(streamIdleRef.current);
+    streamIdleRef.current = setTimeout(() => {
+      console.warn("[Chatbot] Stream idle timeout — aborting");
+      abortRef.current?.abort();
+      // Show a message so the user knows what happened
+      setMessages((prev) => {
+        const next = [...prev];
+        const last = next[next.length - 1];
+        if (last?.role === "assistant" && !last.content) {
+          next[next.length - 1] = { role: "assistant", content: "⚠️ Stream timed out. Please try again." };
+        }
+        return next;
+      });
+    }, STREAM_IDLE_TIMEOUT);
+  };
+
   const streamChat = async (userMessage: string) => {
     const supabaseUrl = "https://zrvzcsdxbhzwfabvndbo.supabase.co";
     const url = `${supabaseUrl}/functions/v1/ai-contact-chat`;
@@ -127,13 +148,14 @@ export const AIChatbot = () => {
     ].filter(Boolean).join("\n");
     const copilotContext = ctx ? `${ctx.kind}: "${ctx.title}"\n\nContent preview:\n${ctx.body.slice(0, 1500)}` : "";
 
-    const timeoutId = setTimeout(() => abortRef.current?.abort(), 30000);
+    // Request-level timeout (30s)
+    const requestTimeoutId = setTimeout(() => abortRef.current?.abort(), 30000);
 
     const resp = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer eyJhbG...07BU`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyenZjc2R4Ymh6d2ZhYnZuZGJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI3Mzk3NzgsImV4cCI6MjA1ODMxNTc3OH0.cRXvyVW6q5A0TdFPpzNt7J0npFJ8tRUUYrXmM8m07BU`,
       },
       body: JSON.stringify({
         messages: [...recent, { role: "user", content: userMessage }],
@@ -142,12 +164,19 @@ export const AIChatbot = () => {
       }),
       signal: abortRef.current.signal,
     });
-    clearTimeout(timeoutId); // (fix #2)
+    clearTimeout(requestTimeoutId); // request arrived — clear the request timeout
 
-    if (!resp.ok) {
-      if (resp.status === 429) throw new Error("Rate limit reached. Please try again shortly.");
-      if (resp.status === 402) throw new Error("AI credits exhausted. Please contact admin.");
-      throw new Error("Connection to Co-Pilot failed.");
+    // --- Handle non-streaming (JSON) error responses ---
+    const contentType = resp.headers.get("content-type") || "";
+    if (!resp.ok || contentType.includes("json")) {
+      let errMsg = "Connection to Co-Pilot failed.";
+      try {
+        const body = await resp.json();
+        errMsg = body.error || errMsg;
+      } catch { /* use default */ }
+      if (resp.status === 429) errMsg = "Rate limit reached. Please try again shortly.";
+      if (resp.status === 402) errMsg = "AI credits exhausted. Please contact admin.";
+      throw new Error(errMsg);
     }
     if (!resp.body) throw new Error("Empty response stream.");
 
@@ -158,11 +187,18 @@ export const AIChatbot = () => {
     setMessages((p) => [...p, { role: "assistant", content: "" }]);
     setIsTyping(false);
 
+    // Start the stream-level watchdog now
+    resetStreamWatchdog();
+
     // (fix #4) try/catch around streaming loop
     try {
       readLoop: while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+
+        // Data arrived — reset watchdog
+        resetStreamWatchdog();
+
         buf += decoder.decode(value, { stream: true });
 
         // (fix #6) simpler line-by-line SSE parser — split-based, can't infinite loop
@@ -193,7 +229,21 @@ export const AIChatbot = () => {
           }
         }
       }
-    } catch (e) {
+    } catch (e: any) {
+      // AbortError is expected when we time out — show what we have
+      if (e.name === "AbortError") {
+        setMessages((prev) => {
+          const next = [...prev];
+          const last = next[next.length - 1];
+          if (last?.role === "assistant" && !last.content) {
+            next[next.length - 1] = { role: "assistant", content: assistant || "⚠️ Request cancelled." };
+          } else if (assistant && last?.role === "assistant") {
+            next[next.length - 1] = { role: "assistant", content: assistant };
+          }
+          return next;
+        });
+        return; // don't set error for AbortError
+      }
       console.error("Stream parse error:", e);
       setMessages((prev) => {
         const next = [...prev];
@@ -203,6 +253,9 @@ export const AIChatbot = () => {
         };
         return next;
       });
+    } finally {
+      if (streamIdleRef.current) clearTimeout(streamIdleRef.current);
+      streamIdleRef.current = null;
     }
   };
 

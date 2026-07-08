@@ -82,7 +82,7 @@ const BlogPost = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Navigation activeSection="blog" setActiveSection={() => {}} />
         <div className="flex justify-center items-center min-h-[50vh]">
           <div className="flex flex-col items-center gap-3">
@@ -96,7 +96,7 @@ const BlogPost = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Navigation activeSection="blog" setActiveSection={() => {}} />
         <div className="flex justify-center items-center min-h-[50vh] flex-col gap-4">
           <h1 className="text-xl text-destructive font-bold">Post not found</h1>
@@ -127,7 +127,7 @@ const BlogPost = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />

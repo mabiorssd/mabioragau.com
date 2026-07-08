@@ -153,9 +153,9 @@
 @layer components {
   .glass-panel {
     background: var(--gradient-glass);
-    backdrop-filter: blur(24px) saturate(140%);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
-    border: 1px solid hsl(var(--border) / 0.8);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid hsl(var(--border) / 0.7);
     box-shadow: var(--shadow-panel);
   }
 

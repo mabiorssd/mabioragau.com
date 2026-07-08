@@ -21,7 +21,7 @@ const Blog = () => {
     return () => setCopilotContext(null);
   }, []);
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen text-foreground">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />

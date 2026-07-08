@@ -23,13 +23,11 @@ export const AdminSettings = () => {
   const { data: settings, isError, error } = useQuery({
     queryKey: ["site-settings"],
     queryFn: async () => {
-      console.log("Fetching site settings...");
       const { data, error } = await supabase.from("site_settings").select("*");
       if (error) {
         console.error("Error fetching site settings:", error);
         throw error;
       }
-      console.log("Site settings data:", data);
       return data;
     },
   });
@@ -38,7 +36,6 @@ export const AdminSettings = () => {
   // Use useEffect to react to data changes.
   useEffect(() => {
     if (!settings) return;
-    console.log("Processing site settings data...");
     settings.forEach((setting: any) => {
       switch (setting.key) {
         case "site_title":
@@ -74,7 +71,6 @@ export const AdminSettings = () => {
   }, [isError, error, toast]);
 
   const handleSaveSettings = async () => {
-    console.log("Saving settings...");
     const updates = [
       { key: "site_title", value: siteTitle },
       { key: "site_description", value: siteDescription },
@@ -83,7 +79,6 @@ export const AdminSettings = () => {
     ];
 
     for (const update of updates) {
-      console.log("Updating setting:", update);
       const { error } = await supabase
         .from("site_settings")
         .upsert({ key: update.key, value: update.value });

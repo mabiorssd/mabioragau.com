@@ -26,8 +26,6 @@ export const useBlogStorageSetup = () => {
           console.error("Error creating blog-images bucket:", createError);
           return false;
         }
-
-        console.log("Blog-images bucket created successfully");
       }
 
       return true;

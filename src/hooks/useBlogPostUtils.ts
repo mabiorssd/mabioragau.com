@@ -36,8 +36,6 @@ export const useBlogPostUtils = () => {
       // Try to get the public URL for the file in the blog-images bucket
       const { data } = supabase.storage.from("blog-images").getPublicUrl(cleanPath);
       
-      console.log('Original URL:', url, 'Clean path:', cleanPath, 'Generated URL:', data?.publicUrl);
-      
       // If we get a valid URL back, use it, otherwise fall back to placeholder
       if (data?.publicUrl && data.publicUrl !== 'https://zrvzcsdxbhzwfabvndbo.supabase.co/storage/v1/object/public/blog-images/') {
         return data.publicUrl;

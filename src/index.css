@@ -45,7 +45,7 @@
     --radius: 0.75rem;
 
     --gradient-primary: linear-gradient(135deg, hsl(172 68% 32%) 0%, hsl(190 75% 40%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.35) 0%, hsl(222 25% 98% / 0.20) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.50) 0%, hsl(222 25% 98% / 0.35) 100%);
     --shadow-glow: 0 0 30px hsl(172 68% 32% / 0.18);
     --shadow-glow-blue: 0 0 30px hsl(190 75% 40% / 0.14);
     --shadow-panel: 0 1px 2px hsl(222 47% 11% / 0.06), 0 8px 24px hsl(222 47% 11% / 0.10);
@@ -91,7 +91,7 @@
     --ring: 172 65% 45%;
 
     --gradient-primary: linear-gradient(135deg, hsl(172 68% 42%) 0%, hsl(190 75% 50%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(222 47% 7% / 0.18) 0%, hsl(222 47% 4% / 0.08) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(222 47% 7% / 0.28) 0%, hsl(222 47% 4% / 0.15) 100%);
 
     --shadow-glow: 0 0 40px hsl(172 68% 42% / 0.25);
     --shadow-glow-blue: 0 0 40px hsl(190 75% 50% / 0.18);
@@ -116,15 +116,28 @@
   body {
     @apply text-foreground;
     font-family: var(--font-sans);
-    background-attachment: fixed;
   }
 
   body {
-    /* Pure image — fully solid, no overlay */
-    background: url('/bg-hero.jpg') center / cover fixed;
+    /* Dark overlay for richness + image fixed in place */
+    background:
+      linear-gradient(rgba(8, 12, 20, 0.60) 0%, rgba(8, 12, 20, 0.40) 50%, rgba(8, 12, 20, 0.60) 100%),
+      url('/bg-hero.jpg') center center / cover fixed no-repeat;
+  }
+  :root:not(.dark) body {
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.10) 50%, rgba(255, 255, 255, 0.15) 100%),
+      url('/bg-hero.jpg') center center / cover fixed no-repeat;
   }
 
-  #root { @apply min-h-screen w-full relative; z-index: 1; }
+  #root {
+    @apply min-h-screen w-full relative;
+    z-index: 1;
+    background: rgba(8, 12, 20, 0.06);
+  }
+  :root:not(.dark) #root {
+    background: rgba(255, 255, 255, 0.04);
+  }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -132,7 +145,7 @@
     letter-spacing: -0.02em;
   }
 
-  p { @apply text-foreground/85 leading-relaxed; }
+  p { @apply text-foreground leading-relaxed; }
   code, pre, .font-mono { font-family: var(--font-mono); }
   .font-display { font-family: var(--font-display); }
 }

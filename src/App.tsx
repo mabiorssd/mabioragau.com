@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AIChatbot } from "./components/AIChatbot";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { AmbientBackground } from "./components/AmbientBackground";
+import { ScrollProgress } from "./components/ScrollProgress";
 
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
@@ -36,6 +38,8 @@ const App = () => (
     <ThemeProvider>
       <TooltipProvider>
         <div className="min-h-screen w-full">
+          <AmbientBackground />
+          <ScrollProgress />
           <BrowserRouter>
             <Toaster />
             <Suspense fallback={<LoadingFallback />}>

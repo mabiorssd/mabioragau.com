@@ -46,23 +46,32 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
       transition={{ type: "spring", stiffness: 120, damping: 18 }}
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "backdrop-blur-2xl bg-background/75 border-b border-border/80 shadow-sm"
-          : "backdrop-blur-lg bg-background/20"
+          ? "backdrop-blur-2xl bg-background/60 border-b border-border/60 shadow-lg shadow-black/5"
+          : "bg-transparent"
       }`}
     >
+      {/* Thin accent line when scrolled */}
+      {scrolled && (
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-primary grid place-items-center shadow-glow">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-primary grid place-items-center shadow-glow transition-transform duration-300 group-hover:scale-105">
             <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" strokeWidth={2.5} />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="font-bold text-xs sm:text-sm text-foreground">MABIOR AGAU</span>
+            <span className="font-bold text-xs sm:text-sm text-foreground tracking-tight">MABIOR AGAU</span>
           </div>
         </Link>
 
         {!isMobile ? (
           <div className="flex items-center">
-            <nav className="flex items-center gap-1 glass-panel rounded-full px-1.5 sm:px-2 py-1 sm:py-1.5">
+            <nav className={`flex items-center gap-1 rounded-full px-1.5 sm:px-2 py-1 sm:py-1.5 transition-all duration-500 ${
+              scrolled
+                ? "glass-panel shadow-sm"
+                : "backdrop-blur-md bg-background/10 border border-border/20"
+            }`}>
               {items.map((it) => {
                 const active = activeSection === it.id;
                 return (
@@ -70,13 +79,13 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
                     key={it.id}
                     onClick={() => handleClick(it.id)}
                     className={`relative px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-medium transition-colors ${
-                      active ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                      active ? "text-primary-foreground" : "text-muted-foreground/70 hover:text-foreground"
                     }`}
                   >
                     {active && (
                       <motion.span
                         layoutId="nav-pill"
-                        className="absolute inset-0 rounded-full bg-primary"
+                        className="absolute inset-0 rounded-full bg-primary shadow-glow"
                         transition={{ type: "spring", stiffness: 400, damping: 32 }}
                       />
                     )}
@@ -84,7 +93,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
                   </button>
                 );
               })}
-              <span className="w-px h-5 bg-border/60 mx-1" />
+              <span className="w-px h-5 bg-border/40 mx-1" />
               <ThemeToggle />
             </nav>
           </div>
@@ -93,7 +102,9 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
             <ThemeToggle />
             <button
               onClick={() => setOpen((o) => !o)}
-              className="glass-panel w-10 h-10 rounded-xl grid place-items-center text-foreground"
+              className={`w-10 h-10 rounded-xl grid place-items-center text-foreground transition-all duration-300 ${
+                scrolled ? "glass-panel" : "backdrop-blur-md bg-background/10 border border-border/20"
+              }`}
               aria-label="Toggle menu"
             >
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -109,7 +120,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/40 z-40"
+            className="fixed inset-0 bg-background/40 backdrop-blur-sm z-40"
             onClick={() => setOpen(false)}
           />
           <motion.div
@@ -118,7 +129,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
             className="relative z-50 px-4 pb-4"
             onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
           >
-          <div className="glass-panel rounded-2xl p-2">
+          <div className="glass-panel rounded-2xl p-2 shadow-xl">
             {items.map((it) => {
               const active = activeSection === it.id;
               return (

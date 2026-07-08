@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AIChatbot } from "./components/AIChatbot";
 import { ThemeProvider } from "./components/ThemeProvider";
-import { SouthSudanMap } from "./components/soc/SouthSudanMap";
 
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
@@ -38,7 +37,6 @@ const App = () => (
       <TooltipProvider>
         <div className="min-h-screen w-full">
           <BrowserRouter>
-            <SouthSudanMap />
             <Toaster />
             <Suspense fallback={<LoadingFallback />}>
               <Routes>

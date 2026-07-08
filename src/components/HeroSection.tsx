@@ -17,12 +17,6 @@ const stats = [
 export const HeroSection = ({ text, showCursor }: HeroSectionProps) => {
   return (
     <section id="about" className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6">
-      {/* Subtle gradient background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-primary/3 blur-3xl" />
-      </div>
-
       <div className="max-w-7xl mx-auto relative">
         <div className="grid grid-cols-12 gap-6">
           {/* Main hero identity */}

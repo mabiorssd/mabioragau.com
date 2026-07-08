@@ -36,7 +36,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <TooltipProvider>
-        <div className="min-h-screen w-full bg-background">
+        <div className="min-h-screen w-full">
           <BrowserRouter>
             <SouthSudanMap />
             <Toaster />

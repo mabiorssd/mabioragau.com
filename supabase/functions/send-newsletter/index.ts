@@ -96,7 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email using Resend
     const emailResponse = await resend.emails.send({
-      from: "Mabior Agau <news@newsletter.mabioragau.com>",
+      from: "Mabior Agau <info@mabioragau.com>",
       bcc: subscribers.map(sub => sub.email),
       subject: subject,
       html: html,

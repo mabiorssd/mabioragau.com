@@ -31,7 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const fromAddress = from || "Mabior Agau <onboarding@resend.dev>";
+    const fromAddress = from || "Mabior Agau <info@mabioragau.com>";
 
     console.log("Sending email:", { to, subject, from: fromAddress });
 

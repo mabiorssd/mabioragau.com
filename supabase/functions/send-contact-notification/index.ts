@@ -39,7 +39,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to admin
     const emailResponse = await resend.emails.send({
-      from: "Mabior's Website <onboarding@resend.dev>",
+      from: "Mabior Agau <info@mabioragau.com>",
       to: ["info@mabioragau.com"],
       subject: `New Contact from ${safeName}`,
       html: `
@@ -79,7 +79,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation to user
     const confirmationResponse = await resend.emails.send({
-      from: "Mabior Agau <onboarding@resend.dev>",
+      from: "Mabior Agau <info@mabioragau.com>",
       to: [email],
       subject: "Thank you for reaching out!",
       html: `

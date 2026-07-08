@@ -107,27 +107,31 @@ export const NewsletterManager = () => {
     try {
       
       const emailTemplate = `
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0f1520;border-radius:8px;overflow:hidden;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;border-radius:10px;overflow:hidden;">
           <tr>
-            <td style="padding:28px 32px 20px;text-align:center;background:linear-gradient(135deg,#0d9488,#0891b2);">
-              <div style="font-size:24px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">${subject}</div>
+            <td style="padding:32px 28px 16px;text-align:center;background:linear-gradient(160deg,#0d1b2a,#0f172a);">
+              <img src="https://www.mabioragau.com/portrait-mabior.jpg" alt="Mabior Agau" width="80" height="80" style="display:block;width:80px;height:80px;border-radius:50%;border:2px solid #0d9488;object-fit:cover;margin:0 auto 12px;" />
+              <div style="font-size:22px;font-weight:700;color:#f1f5f9;letter-spacing:-0.3px;">${subject}</div>
+              <div style="font-size:11px;color:#0d9488;text-transform:uppercase;letter-spacing:2px;font-weight:500;margin-top:4px;">Mabior Agau &bull; Cybersecurity Briefing</div>
             </td>
           </tr>
-          <tr><td style="height:3px;background:#00ff88;"></td></tr>
+          <tr><td style="height:3px;background:linear-gradient(90deg,#0f172a,#0d9488,#00ff88,#0f172a);"></td></tr>
           <tr>
-            <td style="padding:32px;font-size:15px;line-height:1.8;color:#e2e8f0;">
+            <td style="padding:32px;font-size:14px;line-height:1.8;color:#e2e8f0;">
               ${content}
             </td>
           </tr>
           <tr>
-            <td style="padding:24px 32px;text-align:center;background:#0a0e17;border-top:1px solid #1e293b;">
-              <div style="font-size:13px;color:#64748b;margin-bottom:4px;">
-                Mabior Agau &mdash; Cybersecurity Professional
+            <td style="padding:24px 28px;text-align:center;background:#080c14;border-top:1px solid #1e293b;">
+              <div style="font-size:12px;color:#64748b;margin-bottom:2px;">
+                Mabior Agau &mdash; Offensive Security &bull; South Sudan
               </div>
-              <div style="font-size:12px;color:#475569;">
-                Juba, South Sudan &bull; <a href="https://mabioragau.com" style="color:#0d9488;text-decoration:none;">mabioragau.com</a>
+              <div style="font-size:11px;color:#475569;">
+                <a href="https://mabioragau.com" style="color:#0d9488;text-decoration:none;">mabioragau.com</a>
+                &nbsp;&bull;&nbsp;
+                <a href="mailto:info@mabioragau.com" style="color:#0d9488;text-decoration:none;">info@mabioragau.com</a>
               </div>
-              <div style="margin-top:12px;font-size:11px;color:#334155;">
+              <div style="margin-top:10px;font-size:10px;color:#1e293b;">
                 You received this because you subscribed. &copy; ${new Date().getFullYear()} Mabior Agau.
               </div>
             </td>

@@ -62,39 +62,44 @@ export const NewsletterForm = () => {
           to: [validatedEmail],
           subject: "Confirm your newsletter subscription",
           html: `
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0f1520;border-radius:8px;overflow:hidden;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;border-radius:10px;overflow:hidden;">
               <tr>
-                <td style="padding:24px 28px;text-align:center;background:linear-gradient(135deg,#0d9488,#0891b2);">
-                  <div style="font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px;">Confirm Your Subscription</div>
+                <td style="padding:32px 28px 16px;text-align:center;background:linear-gradient(160deg,#0d1b2a,#0f172a);">
+                  <img src="https://www.mabioragau.com/portrait-mabior.jpg" alt="Mabior Agau" width="80" height="80" style="display:block;width:80px;height:80px;border-radius:50%;border:2px solid #0d9488;object-fit:cover;margin:0 auto 12px;" />
+                  <div style="font-size:20px;font-weight:700;color:#f1f5f9;letter-spacing:-0.3px;">Confirm Your Subscription</div>
+                  <div style="font-size:11px;color:#0d9488;text-transform:uppercase;letter-spacing:2px;font-weight:500;margin-top:4px;">Mabior Agau &bull; Cybersecurity</div>
                 </td>
               </tr>
-              <tr><td style="height:3px;background:#00ff88;"></td></tr>
+              <tr><td style="height:3px;background:linear-gradient(90deg,#0f172a,#0d9488,#00ff88,#0f172a);"></td></tr>
               <tr>
                 <td style="padding:28px;">
-                  <p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#cbd5e1;">
-                    Thanks for subscribing to my newsletter. You'll receive occasional cybersecurity briefings, field notes from South Sudan, and practical security guidance.
+                  <p style="margin:0 0 16px;font-size:14px;line-height:1.75;color:#cbd5e1;">
+                    Thanks for subscribing! You'll receive occasional cybersecurity briefings, field notes from South Sudan, and practical security guidance.
                   </p>
-                  <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px auto;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px auto;">
                     <tr>
-                      <td style="border-radius:8px;background:linear-gradient(135deg,#0d9488,#0891b2);padding:0;">
+                      <td style="border-radius:8px;padding:0;">
                         <a href="${confirmUrl}"
-                           style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;">
+                           style="display:inline-block;padding:13px 32px;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;background:linear-gradient(135deg,#0d9488,#0891b2);">
                           Confirm Subscription
                         </a>
                       </td>
                     </tr>
                   </table>
-                  <p style="margin:20px 0 0;font-size:13px;color:#64748b;line-height:1.5;">
+                  <p style="margin:18px 0 0;font-size:12px;color:#64748b;line-height:1.5;">
                     If you didn't request this, ignore this email. No further emails will be sent.
                   </p>
                 </td>
               </tr>
               <tr>
-                <td style="padding:20px 28px;text-align:center;background:#0a0e17;border-top:1px solid #1e293b;">
+                <td style="padding:20px 28px;text-align:center;background:#080c14;border-top:1px solid #1e293b;">
                   <div style="font-size:11px;color:#475569;">
-                    Mabior Agau &mdash; Cybersecurity Professional<br/>
+                    Mabior Agau &mdash; Offensive Security &bull; South Sudan<br/>
                     <a href="https://mabioragau.com" style="color:#0d9488;text-decoration:none;">mabioragau.com</a>
+                    &nbsp;&bull;&nbsp;
+                    <a href="mailto:info@mabioragau.com" style="color:#0d9488;text-decoration:none;">info@mabioragau.com</a>
                   </div>
+                  <div style="font-size:10px;color:#1e293b;margin-top:8px;">&copy; ${new Date().getFullYear()} Mabior Agau</div>
                 </td>
               </tr>
             </table>

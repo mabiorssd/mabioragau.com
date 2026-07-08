@@ -62,39 +62,42 @@ export const NewsletterForm = () => {
           to: [validatedEmail],
           subject: "Confirm your newsletter subscription",
           html: `
-            <!DOCTYPE html>
-            <html>
-              <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              </head>
-              <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="background: linear-gradient(135deg, #0d9488, #0891b2); padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
-                  <h1 style="color: white; margin: 0; font-size: 24px;">Confirm Your Subscription</h1>
-                </div>
-                <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
-                  <p style="color: #374151; line-height: 1.6; font-size: 16px;">
-                    Thank you for subscribing to my newsletter! You'll receive occasional cybersecurity briefings, 
-                    field notes, and practical security guidance.
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0f1520;border-radius:8px;overflow:hidden;">
+              <tr>
+                <td style="padding:24px 28px;text-align:center;background:linear-gradient(135deg,#0d9488,#0891b2);">
+                  <div style="font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px;">Confirm Your Subscription</div>
+                </td>
+              </tr>
+              <tr><td style="height:3px;background:#00ff88;"></td></tr>
+              <tr>
+                <td style="padding:28px;">
+                  <p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#cbd5e1;">
+                    Thanks for subscribing to my newsletter. You'll receive occasional cybersecurity briefings, field notes from South Sudan, and practical security guidance.
                   </p>
-                  <div style="text-align: center; margin: 30px 0;">
-                    <a href="${confirmUrl}"
-                       style="background: #0d9488; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; display: inline-block; font-size: 16px; font-weight: 600;">
-                      Confirm Subscription
-                    </a>
+                  <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px auto;">
+                    <tr>
+                      <td style="border-radius:8px;background:linear-gradient(135deg,#0d9488,#0891b2);padding:0;">
+                        <a href="${confirmUrl}"
+                           style="display:inline-block;padding:14px 36px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;">
+                          Confirm Subscription
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin:20px 0 0;font-size:13px;color:#64748b;line-height:1.5;">
+                    If you didn't request this, ignore this email. No further emails will be sent.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:20px 28px;text-align:center;background:#0a0e17;border-top:1px solid #1e293b;">
+                  <div style="font-size:11px;color:#475569;">
+                    Mabior Agau &mdash; Cybersecurity Professional<br/>
+                    <a href="https://mabioragau.com" style="color:#0d9488;text-decoration:none;">mabioragau.com</a>
                   </div>
-                  <p style="color: #6b7280; font-size: 14px; line-height: 1.5;">
-                    If you didn't request this subscription, you can safely ignore this email.
-                    No further emails will be sent.
-                  </p>
-                  <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
-                  <p style="color: #9ca3af; font-size: 12px; text-align: center;">
-                    Mabior Agau — Cybersecurity Professional<br/>
-                    <a href="https://mabioragau.com" style="color: #0d9488;">mabioragau.com</a>
-                  </p>
-                </div>
-              </body>
-            </html>
+                </td>
+              </tr>
+            </table>
           `
         }
       });

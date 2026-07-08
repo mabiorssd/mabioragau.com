@@ -107,32 +107,32 @@ export const NewsletterManager = () => {
     try {
       
       const emailTemplate = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>${subject}</title>
-            <style>
-              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-              .header { text-align: center; padding: 20px 0; }
-              .content { padding: 20px 0; }
-              .footer { text-align: center; padding: 20px 0; font-size: 12px; color: #666; }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1>${subject}</h1>
-            </div>
-            <div class="content">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0f1520;border-radius:8px;overflow:hidden;">
+          <tr>
+            <td style="padding:28px 32px 20px;text-align:center;background:linear-gradient(135deg,#0d9488,#0891b2);">
+              <div style="font-size:24px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">${subject}</div>
+            </td>
+          </tr>
+          <tr><td style="height:3px;background:#00ff88;"></td></tr>
+          <tr>
+            <td style="padding:32px;font-size:15px;line-height:1.8;color:#e2e8f0;">
               ${content}
-            </div>
-            <div class="footer">
-              <p>You're receiving this email because you subscribed to our newsletter.</p>
-              <p>© ${new Date().getFullYear()} Mabior Agau. All rights reserved.</p>
-            </div>
-          </body>
-        </html>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px 32px;text-align:center;background:#0a0e17;border-top:1px solid #1e293b;">
+              <div style="font-size:13px;color:#64748b;margin-bottom:4px;">
+                Mabior Agau &mdash; Cybersecurity Professional
+              </div>
+              <div style="font-size:12px;color:#475569;">
+                Juba, South Sudan &bull; <a href="https://mabioragau.com" style="color:#0d9488;text-decoration:none;">mabioragau.com</a>
+              </div>
+              <div style="margin-top:12px;font-size:11px;color:#334155;">
+                You received this because you subscribed. &copy; ${new Date().getFullYear()} Mabior Agau.
+              </div>
+            </td>
+          </tr>
+        </table>
       `;
 
       const response = await supabase.functions.invoke('send-newsletter', {

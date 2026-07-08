@@ -45,7 +45,7 @@
     --radius: 0.75rem;
 
     --gradient-primary: linear-gradient(135deg, hsl(172 68% 32%) 0%, hsl(190 75% 40%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.92) 0%, hsl(222 25% 98% / 0.88) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.78) 0%, hsl(222 25% 98% / 0.7) 100%);
     --gradient-mesh: radial-gradient(circle at 20% 20%, hsl(172 68% 32% / 0.05), transparent 50%),
                      radial-gradient(circle at 80% 70%, hsl(190 75% 40% / 0.04), transparent 55%);
 
@@ -98,7 +98,7 @@
     --ring: 172 65% 45%;
 
     --gradient-primary: linear-gradient(135deg, hsl(172 68% 42%) 0%, hsl(190 75% 50%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(222 47% 7% / 0.75) 0%, hsl(222 47% 4% / 0.6) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(222 47% 7% / 0.65) 0%, hsl(222 47% 4% / 0.5) 100%);
     --gradient-mesh: radial-gradient(circle at 20% 20%, hsl(172 68% 42% / 0.08), transparent 50%),
                      radial-gradient(circle at 80% 70%, hsl(190 75% 50% / 0.04), transparent 55%);
 
@@ -127,16 +127,24 @@
   html.theme-transition { transition: none; }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     font-family: var(--font-sans);
     background-attachment: fixed;
   }
 
   .dark body {
-    background: radial-gradient(ellipse at top, hsl(220 25% 6%) 0%, hsl(var(--background)) 60%);
+    /* Layered background: image + teal tint + dark overlay for readability */
+    background:
+      linear-gradient(rgba(8, 12, 20, 0.82), rgba(8, 12, 20, 0.55) 35%, rgba(8, 12, 20, 0.78) 70%, rgba(8, 12, 20, 0.92)),
+      linear-gradient(135deg, rgba(13, 148, 136, 0.12), transparent 50%, rgba(0, 255, 136, 0.04)),
+      url('/bg-hero.jpg') center / cover fixed;
   }
   :root:not(.dark) body {
-    background: radial-gradient(ellipse at top, hsl(0 0% 100%) 0%, hsl(var(--background)) 60%);
+    /* Lighter overlay for light mode — keeps image subtle */
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.72) 40%, rgba(255, 255, 255, 0.92)),
+      linear-gradient(135deg, rgba(13, 148, 136, 0.06), transparent 50%),
+      url('/bg-hero.jpg') center / cover fixed;
   }
 
   #root { @apply min-h-screen w-full relative; z-index: 1; }
